@@ -1,5 +1,5 @@
 import crypto from 'node:crypto';
-import { db, ensureSchema } from '../_db.mjs';
+import { db, ensureSchema } from '../../api/_db.mjs';
 const hash=(v)=>crypto.createHash('sha256').update(v).digest('hex');
 const cookie=(name,value,maxAge)=>`${name}=${value}; Path=/; Max-Age=${maxAge}; HttpOnly; Secure; SameSite=Lax`;
 export default async function handler(req,res){

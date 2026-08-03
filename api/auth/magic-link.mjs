@@ -1,6 +1,6 @@
 import crypto from 'node:crypto';
 import nodemailer from 'nodemailer';
-import { db, ensureSchema } from '../_db.mjs';
+import { db, ensureSchema } from '../../api/_db.mjs';
 const hash=(v)=>crypto.createHash('sha256').update(v).digest('hex');
 const json=(res,b,s=200)=>res.status(s).setHeader('Cache-Control','no-store').json(b);
 const emailRe=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
