@@ -39,11 +39,14 @@ const RUBY_ANNOTATION = /([\u4E00-\u9FFF\u3005\u3006\u30F6]+)\[([\u3041-\u309F\u
 function AnnotatedText({field,mode='kanji',as='p',className=''}){
   const Tag=as;
   if(field==null) return null;
-  const raw=typeof field==='string'?field:(field.ja||field.id||'');
+  const raw=typeof field==='string'?field:(mode==='id'?field.id:(field.ja||field.id||''));
   if(mode==='id' && typeof field==='object' && field.id) return <Tag className={className}>{field.id}</Tag>;
+  const source=raw||'';
+  const generated=mode==='furigana' && !RUBY_ANNOTATION.test(source) ? furigana(source) : source;
+  RUBY_ANNOTATION.lastIndex=0;
   const html=mode==='furigana'
-    ? raw.replace(RUBY_ANNOTATION,'<ruby>$1<rt>$2</rt></ruby>')
-    : raw.replace(RUBY_ANNOTATION,'$1');
+    ? generated.replace(RUBY_ANNOTATION,'<ruby>$1<rt>$2</rt></ruby>')
+    : generated.replace(RUBY_ANNOTATION,'$1');
   return <Tag className={`annotatedText ${mode==='furigana'?'showFuri':''} ${className}`} dangerouslySetInnerHTML={{__html:html}}/>;
 }
 
@@ -257,7 +260,7 @@ function RichCardBody({card,mode}){
   if(card.type==='hook') return <><Mascot variant="materi" size="sm"/><F field={body} className="richBody"/></>;
   if(card.type==='term'){const t=card.term;return <div className="richTerm"><div className="termReading">{t.reading}</div><div className="termKanji">{t.kanji}</div><div className="termRoman">{t.romaji} / {t.meaning}</div><div className="termExample">{t.example&&mode==='id'?<p>{t.example.id}</p>:t.example&&<F field={t.example}/>}</div></div>}
   if(card.type==='explain') return <><F field={heading} as="h2"/><F field={body} className="richBody"/> </>;
-  if(card.type==='compare') return <><F field={card.heading} as="h2"/><div className="compareGrid">{card.rows.map(r=><div className="compareRow" key={r.term.kanji}><b>{r.term.reading}<br/><span>{r.term.kanji}</span></b><span>{r.meaning}</span><small>{r.when}</small></div>)}</div>{card.note&&<F field={card.note} className="richNote"/>}</>;
+  if(card.type==='compare') return <><F field={card.heading||heading} as="h2"/><div className="compareGrid">{card.rows.map(r=><div className="compareRow" key={r.term.kanji}><b>{r.term.reading}<br/><span>{r.term.kanji}</span></b><F field={{ja:r.meaning,id:r.meaning}}/><F field={{ja:r.when,id:r.when}}/></div>)}</div>{(card.note||heading)&&<F field={card.note||heading} className="richNote"/>}</>;
   if(card.type==='checkpoint') return <><span className="richTag">Cek cepat · tidak dinilai</span><F field={card.question?.prompt} className="richQuestion"/><div className="checkpointOpts">{card.question.options.map(o=><div key={o.key} className="checkpointOption"><F field={o.text}/></div>)}</div><p className="richNote">Jawabannya akan dibahas setelah kamu lanjut membaca materi.</p></>;
   if(card.type==='case') return <><span className="richTag">Kasus lapangan</span><F field={heading} as="h2"/><F field={card.scenario} className="richBody"/><F field={card.prompt} className="richPrompt"/><F field={card.reveal} className="richReveal"/></>;
   if(card.type==='exam-tip') return <><span className="richTag">Sudut pandang ujian</span><F field={heading} as="h2"/><F field={body} className="richBody"/></>;

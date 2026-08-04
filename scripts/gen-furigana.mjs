@@ -14,19 +14,15 @@ const kuroshiro = new Kuroshiro();
 await kuroshiro.init(new KuromojiAnalyzer());
 
 const strings = new Set();
-sections.forEach(s => {
-  strings.add(s.titleJa);
-  s.levels.forEach(l => {
-    strings.add(l.titleJa);
-    strings.add(l.objective);
-    l.materi.forEach(m => strings.add(m.bodyJa));
-    l.questions.forEach(q => {
-      strings.add(q.questionJa);
-      strings.add(q.explanationJa);
-      q.choices.forEach(c => strings.add(c));
-    });
-  });
-});
+function collectJapanese(value){
+  if(typeof value==='string') return;
+  if(Array.isArray(value)){value.forEach(collectJapanese);return;}
+  if(value&&typeof value==='object'){
+    if(typeof value.ja==='string') strings.add(value.ja);
+    Object.entries(value).forEach(([key,v])=>{if(key!=='id'||!value.ja)collectJapanese(v)});
+  }
+}
+sections.forEach(s => collectJapanese(s));
 
 console.log(`Generating furigana for ${strings.size} unique strings...`);
 
