@@ -59,7 +59,7 @@ async function buildSectionsMap(sql, userId) {
       if (rec?.status === 'completed') completedLevels++;
       levels.push({
         levelId: l,
-        status: rec?.status || 'locked',
+        status,
         bestScore: rec?.best_score || 0,
         stars: rec?.stars || 0,
         attempts: rec?.attempts || 0,
