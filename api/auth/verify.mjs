@@ -18,7 +18,7 @@ export default async function handler(req, res) {
     const users = await sql`
       INSERT INTO app_users(email, name)
       VALUES(${email}, ${email.split('@')[0]})
-      ON CONFLICT (email) DO UPDATE SET updated_at = now()
+      ON CONFLICT (lower(email)) DO UPDATE SET updated_at = now()
       RETURNING id
     `;
     const userId = users[0].id;
