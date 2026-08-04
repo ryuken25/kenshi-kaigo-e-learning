@@ -201,7 +201,14 @@ nav a.active{color:var(--pink-deep)}
 @media (min-width: 960px){
   .app{max-width:none;width:calc(100% - 228px);margin:0 0 0 228px;padding-bottom:30px;min-height:100vh}
   header{position:sticky;top:0;padding:0 34px;z-index:40;width:min(100%,1100px);margin:0 auto}
-  .app>main{width:min(100%,980px);margin-left:auto;margin-right:auto}
+  .app>main{width:min(100%,1100px);max-width:1100px;margin-left:auto;margin-right:auto}
+  .app>main.page{max-width:1100px}
+  .welcome{padding-left:30px;padding-right:30px}
+  .daily{margin-left:30px;margin-right:30px}
+  .objective{margin-left:30px;margin-right:30px}
+  .sectionHead{padding-left:30px;padding-right:30px}
+  .sectionGrid{grid-template-columns:repeat(2,minmax(0,1fr));padding-left:30px;padding-right:30px;gap:16px}
+  .sectionCard{min-height:126px}
   nav{
     left:0;top:0;bottom:0;transform:none;width:228px;height:100vh;
     flex-direction:column;justify-content:flex-start;align-items:stretch;gap:8px;
@@ -213,6 +220,6 @@ nav a.active{color:var(--pink-deep)}
   .navEmoji{width:36px;height:36px;font-size:20px;background:var(--pink-paler)}
   nav a.active .navEmoji{transform:none}
   nav a.active{background:var(--pink-pale)}
-  .skillPage,.page{max-width:980px;margin:0 auto}
+  .skillPage,.page{max-width:1100px;margin:0 auto}
   .skillPath{max-width:650px;margin:0 auto}
 }
