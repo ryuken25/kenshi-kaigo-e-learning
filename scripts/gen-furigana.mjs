@@ -5,6 +5,7 @@
 import KuroshiroImport from 'kuroshiro';
 import KuromojiAnalyzerImport from 'kuroshiro-analyzer-kuromoji';
 import { sections } from '../src/data.js';
+import s1l1Ja from '../src/content/s1l1-ja.json' with { type: 'json' };
 import { writeFileSync } from 'node:fs';
 
 const Kuroshiro = KuroshiroImport.default || KuroshiroImport;
@@ -23,6 +24,7 @@ function collectJapanese(value){
   }
 }
 sections.forEach(s => collectJapanese(s));
+collectJapanese(s1l1Ja);
 
 console.log(`Generating furigana for ${strings.size} unique strings...`);
 

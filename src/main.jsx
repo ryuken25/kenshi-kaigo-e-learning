@@ -42,7 +42,7 @@ function AnnotatedText({field,mode='kanji',as='p',className=''}){
   const raw=typeof field==='string'?field:(mode==='id'?field.id:(field.ja||field.id||''));
   if(mode==='id' && typeof field==='object' && field.id) return <Tag className={className}>{field.id}</Tag>;
   const source=raw||'';
-  const generated=mode==='furigana' && !RUBY_ANNOTATION.test(source) ? furigana(source) : source;
+  const generated=mode==='furigana' ? (RUBY_ANNOTATION.test(source) ? source : furigana(source)) : source;
   RUBY_ANNOTATION.lastIndex=0;
   const html=mode==='furigana'
     ? generated.replace(RUBY_ANNOTATION,'<ruby>$1<rt>$2</rt></ruby>')
