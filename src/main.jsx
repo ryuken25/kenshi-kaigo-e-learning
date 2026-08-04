@@ -252,15 +252,17 @@ function Materi(){
 
 function RichCardBody({card,mode}){
   const F=({field,as='p',className=''})=><AnnotatedText field={field} mode={mode} as={as} className={className}/>;
-  if(card.type==='hook') return <><Mascot variant="materi" size="sm"/><F field={card.body} className="richBody"/></>;
+  const heading=card.heading||((card.titleJa||card.titleId)?{ja:card.titleJa||'',id:card.titleId||''}:null);
+  const body=card.body||((card.bodyJa||card.bodyId)?{ja:card.bodyJa||'',id:card.bodyId||''}:null);
+  if(card.type==='hook') return <><Mascot variant="materi" size="sm"/><F field={body} className="richBody"/></>;
   if(card.type==='term'){const t=card.term;return <div className="richTerm"><div className="termReading">{t.reading}</div><div className="termKanji">{t.kanji}</div><div className="termRoman">{t.romaji} / {t.meaning}</div><div className="termExample">{t.example&&mode==='id'?<p>{t.example.id}</p>:t.example&&<F field={t.example}/>}</div></div>}
-  if(card.type==='explain') return <><F field={card.heading} as="h2"/><F field={card.body} className="richBody"/> </>;
+  if(card.type==='explain') return <><F field={heading} as="h2"/><F field={body} className="richBody"/> </>;
   if(card.type==='compare') return <><F field={card.heading} as="h2"/><div className="compareGrid">{card.rows.map(r=><div className="compareRow" key={r.term.kanji}><b>{r.term.reading}<br/><span>{r.term.kanji}</span></b><span>{r.meaning}</span><small>{r.when}</small></div>)}</div>{card.note&&<F field={card.note} className="richNote"/>}</>;
   if(card.type==='checkpoint') return <><span className="richTag">Cek cepat · tidak dinilai</span><F field={card.question?.prompt} className="richQuestion"/><div className="checkpointOpts">{card.question.options.map(o=><div key={o.key} className="checkpointOption"><F field={o.text}/></div>)}</div><p className="richNote">Jawabannya akan dibahas setelah kamu lanjut membaca materi.</p></>;
-  if(card.type==='case') return <><span className="richTag">Kasus lapangan</span><F field={card.heading} as="h2"/><F field={card.scenario} className="richBody"/><F field={card.prompt} className="richPrompt"/><F field={card.reveal} className="richReveal"/></>;
-  if(card.type==='exam-tip') return <><span className="richTag">Sudut pandang ujian</span><F field={card.heading} as="h2"/><F field={card.body} className="richBody"/></>;
-  if(card.type==='recap') return <><F field={card.heading} as="h2"/><ul className="richRecap">{card.points.map((p,n)=><li key={n}>{typeof p==='string'?p:p.id}</li>)}</ul></>;
-  return <><F field={card.heading} as="h2"/><F field={card.body} className="richBody"/></>;
+  if(card.type==='case') return <><span className="richTag">Kasus lapangan</span><F field={heading} as="h2"/><F field={card.scenario} className="richBody"/><F field={card.prompt} className="richPrompt"/><F field={card.reveal} className="richReveal"/></>;
+  if(card.type==='exam-tip') return <><span className="richTag">Sudut pandang ujian</span><F field={heading} as="h2"/><F field={body} className="richBody"/></>;
+  if(card.type==='recap') return <><F field={heading} as="h2"/><ul className="richRecap">{card.points.map((p,n)=><li key={n}><F field={p}/></li>)}</ul></>;
+  return <><F field={heading} as="h2"/><F field={body} className="richBody"/> </>;
 }
 
 /* ---------- shared quiz pieces (dipakai Quiz level & Practice) ---------- */
