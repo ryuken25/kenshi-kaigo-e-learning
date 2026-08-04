@@ -5,6 +5,7 @@ import {Heart,Lock,ChevronRight,BookOpen,Flame,UserRound,Star,Check,X,Volume2,In
 import {sections,getSection,getLevel,glossary,allQuestions,randomQuestion} from './data.js';
 import {furigana} from './furigana.generated.js';
 import s1l1Content from './content/s1l1.json';
+import s1l1Ja from './content/s1l1-ja.json';
 import {GlossaryPage,GlossaryDetail} from './GlossaryPage.jsx';
 import Login from './Login.jsx';
 import {AuthProvider, useAuth} from './context/AuthContext.jsx';
@@ -217,10 +218,22 @@ function LevelHub(){
   </main>;
 }
 
+function mergeJapaneseCard(card){
+  const ja=s1l1Ja[card.id];
+  if(!ja)return card;
+  const merge=(base,override)=>override?{...base,...override}:base;
+  const out={...card};
+  for(const key of ['body','heading','scenario','prompt','reveal','note']) out[key]=merge(card[key],ja[key]);
+  if(card.type==='compare'&&ja.rows)out.rows=card.rows.map((r,i)=>({...r,...ja.rows[i],term:{...r.term,...ja.rows[i]?.term}}));
+  if(card.type==='checkpoint'&&ja.question)out.question={...card.question,...ja.question,explanation:merge(card.question.explanation,ja.question.explanation)};
+  if(card.type==='recap'&&ja.points)out.points=card.points.map((p,i)=>merge(p,ja.points[i]));
+  return out;
+}
+
 function Materi(){
   const {sectionId,levelId}=useParams();const s=getSection(sectionId),l=getLevel(sectionId,levelId);const nav=useNavigate();
   const rich = Number(sectionId)===1 && Number(levelId)===1 ? s1l1Content : null;
-  const cards = rich?.materi || l?.materi || [];
+  const cards = rich?.materi ? rich.materi.map(mergeJapaneseCard) : l?.materi || [];
   const storeKey=`kk_materi_pos_${sectionId}_${levelId}`;
   const [i,setI]=useState(()=>{try{const n=Number(sessionStorage.getItem(storeKey));return Number.isInteger(n)&&n>=0&&n<cards.length?n:0}catch{return 0}});
   const [mode,setMode]=useState('kanji');
@@ -240,7 +253,8 @@ function Materi(){
 function RichCardBody({card,mode}){
   const F=({field,as='p',className=''})=><AnnotatedText field={field} mode={mode} as={as} className={className}/>;
   if(card.type==='hook') return <><Mascot variant="materi" size="sm"/><F field={card.body} className="richBody"/></>;
-  if(card.type==='term'){const t=card.term;return <div className="richTerm"><div className="termReading">{t.reading}</div><div className="termKanji">{t.kanji}</div><div className="termRoman">{t.romaji} · {t.meaning}</div>{t.example&&<div className="termExample"><F field={t.example}/>{mode!=='id'&&<p>{t.example.id}</p>}</div>}</div>}
+  if(card.type==='term'){const t=card.term;return <div className="richTerm"><div className="termReading">{t.reading}</div><div className="termKanji">{t.kanji}</div><div className="termRoman">{t.romaji} / {t.meaning}</div><div className="termExample">{t.example&&mode==='id'?<p>{t.example.id}</p>:t.example&&<F field={t.example}/>}</div></div>}
+  if(card.type==='explain') return <><F field={card.heading} as="h2"/><F field={card.body} className="richBody"/> </>;
   if(card.type==='compare') return <><F field={card.heading} as="h2"/><div className="compareGrid">{card.rows.map(r=><div className="compareRow" key={r.term.kanji}><b>{r.term.reading}<br/><span>{r.term.kanji}</span></b><span>{r.meaning}</span><small>{r.when}</small></div>)}</div>{card.note&&<F field={card.note} className="richNote"/>}</>;
   if(card.type==='checkpoint') return <><span className="richTag">Cek cepat · tidak dinilai</span><F field={card.question?.prompt} className="richQuestion"/><div className="checkpointOpts">{card.question.options.map(o=><div key={o.key} className="checkpointOption"><F field={o.text}/></div>)}</div><p className="richNote">Jawabannya akan dibahas setelah kamu lanjut membaca materi.</p></>;
   if(card.type==='case') return <><span className="richTag">Kasus lapangan</span><F field={card.heading} as="h2"/><F field={card.scenario} className="richBody"/><F field={card.prompt} className="richPrompt"/><F field={card.reveal} className="richReveal"/></>;
