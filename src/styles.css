@@ -196,3 +196,23 @@ nav a{background:none;color:#b79aa9;display:flex;flex-direction:column;gap:3px;a
 nav a:active .navEmoji{transform:scale(.82)}
 nav a.active .navEmoji{background:var(--pink-pale);transform:translateY(-2px);box-shadow:0 4px 10px -3px rgba(255,120,170,.5);animation:bounceIn .4s ease}
 nav a.active{color:var(--pink-deep)}
+
+/* Desktop shell: sidebar kiri seperti learning apps desktop; mobile tetap bottom nav 4 item */
+@media (min-width: 960px){
+  .app{max-width:none;margin:0 0 0 228px;padding-bottom:30px;min-height:100vh}
+  header{position:sticky;top:0;padding:0 34px;z-index:40}
+  header,.app>main{max-width:980px}
+  nav{
+    left:0;top:0;bottom:0;transform:none;width:228px;height:100vh;
+    flex-direction:column;justify-content:flex-start;align-items:stretch;gap:8px;
+    padding:28px 16px;background:#fffafd;border-top:0;border-right:1px solid var(--line);
+    box-shadow:8px 0 28px -18px rgba(255,120,170,.45)
+  }
+  nav a{flex:none;flex-direction:row;justify-content:flex-start;gap:12px;padding:12px 14px;border-radius:16px;font-size:13px}
+  nav a:hover{background:var(--pink-paler);transform:translateX(2px)}
+  .navEmoji{width:36px;height:36px;font-size:20px;background:var(--pink-paler)}
+  nav a.active .navEmoji{transform:none}
+  nav a.active{background:var(--pink-pale)}
+  .skillPage,.page{max-width:980px;margin:0 auto}
+  .skillPath{max-width:650px;margin:0 auto}
+}

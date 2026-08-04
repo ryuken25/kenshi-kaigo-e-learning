@@ -217,26 +217,29 @@ function Materi(){
 
 /* ---------- shared quiz pieces (dipakai Quiz level & Practice) ---------- */
 
-function QuestionFlipCard({q}){
-  const [mode,setMode]=useState('kanji');
+function QuestionFlipCard({q,mode='kanji',setMode}){
+  const [localMode,setLocalMode]=useState('kanji');
+  const activeMode = setMode ? mode : localMode;
+  const changeMode = setMode || setLocalMode;
   return <div className="qCard" key={q.id}>
     <div className="qCardHead">
       <p className="source">{q.sourceYear} · {q.difficulty}</p>
-      <LangSwitch mode={mode} setMode={setMode}/>
+      <LangSwitch mode={activeMode} setMode={changeMode}/>
     </div>
-    <LangText as="h1" ja={q.questionJa} id={q.questionId} mode={mode}/>
+    <LangText as="h1" ja={q.questionJa} id={q.questionId} mode={activeMode}/>
   </div>;
 }
 
-function ChoiceCard({choice,choiceId,index,selected,correctIndex,onAnswer}){
-  const [mode,setMode]=useState('kanji');
+function ChoiceCard({choice,choiceId,index,selected,correctIndex,onAnswer,mode,setMode}){
+  const [localMode,setLocalMode]=useState('kanji');
+  const activeMode = setMode ? mode : localMode;
   const answered = selected!==null;
   const isCorrect = answered && index===correctIndex;
   const isWrong = answered && index===selected && index!==correctIndex;
   return <div className={`choiceCard tap ${answered?'answered':''} ${isCorrect?'isCorrect':''} ${isWrong?'isWrong':''}`} onClick={()=>onAnswer(index)}>
     <div className="choiceRow">
-      <LangText as="span" ja={choice} id={choiceId} mode={mode} className="choiceText"/>
-      <LangSwitch mode={mode} setMode={setMode} className="mini"/>
+      <LangText as="span" ja={choice} id={choiceId} mode={activeMode} className="choiceText"/>
+      {setMode ? null : <LangSwitch mode={activeMode} setMode={setLocalMode} className="mini"/>}
       {isCorrect && <Check className="checkIcon" size={18}/>}
       {isWrong && <X className="xIcon" size={18}/>}
     </div>
@@ -282,6 +285,7 @@ function Quiz(){
   const [retryRound,setRetryRound]=useState(0);
   const [saving,setSaving]=useState(false);
   const [popup,setPopup]=useState(null);
+  const [quizMode,setQuizMode]=useState('kanji');
   const nav=useNavigate();
   const {submitAttempt} = useProgress();
   const [startedAt] = useState(()=>Date.now());
@@ -334,9 +338,9 @@ function Quiz(){
     <div className="quizTop"><Link to={`/section/${s.id}/level/${l.id}`} className="back">‹ Exit</Link><span>{phase==='retry'?'RETRY · ':''}{qi+1} / {roundQuestions.length}</span></div>
     <div className="quizProgress"><i style={{width:`${(qi+1)/roundQuestions.length*100}%`}}/></div>
     {phase==='retry' && <div className="retryBanner"><RotateCcw/><div><b>Yuk ulangi soal yang belum tepat!</b><span>Ronde retry #{retryRound} · {roundQuestions.length} soal tersisa</span></div><div className="retryDots">{roundQuestions.map((rq,idx)=><i key={rq.id+idx} className={idx<qi?'done':''}/>)}</div></div>}
-    <QuestionFlipCard q={q} key={`qc-${q.id}-${phase}-${qi}`}/>
-    <button className="listen tap"><Volume2 size={17}/> 用語を聞く · Dengarkan istilah</button>
-    <div className="choices">{q.choices.map((c,i)=><ChoiceCard key={`${q.id}-${i}-${phase}-${qi}`} choice={c} choiceId={q.choiceIds?.[i]||''} index={i} selected={selected} correctIndex={q.correctIndex} onAnswer={answer}/>)}</div>
+    <QuestionFlipCard q={q} mode={quizMode} setMode={setQuizMode} key={`qc-${q.id}-${phase}-${qi}`}/>
+    <button className="listen tap" type="button"><Volume2 size={17}/> 用語を聞く · Dengarkan istilah</button>
+    <div className="choices">{q.choices.map((c,i)=><ChoiceCard key={`${q.id}-${i}-${phase}-${qi}`} choice={c} choiceId={q.choiceIds?.[i]||''} index={i} selected={selected} correctIndex={q.correctIndex} onAnswer={answer} mode={quizMode} setMode={setQuizMode}/>)}</div>
     {selected!==null && <ExplanationBox q={q}/>}
     <div className="quizFooter"><button className="primary big tap" disabled={selected===null||saving} onClick={next}>{nextLabel} <ChevronRight/></button></div>
   </main>;
@@ -350,6 +354,7 @@ function Practice(){
   const [answered,setAnswered]=useState(0);
   const [correct,setCorrect]=useState(0);
   const [popup,setPopup]=useState(null);
+  const [quizMode,setQuizMode]=useState('kanji');
   const answer=(i)=>{
     if(selected!==null) return;
     setSelected(i);
@@ -358,7 +363,7 @@ function Practice(){
     setPopup(isCorrect);
     if(isCorrect) setCorrect(c=>c+1);
   };
-  const nextQuestion=()=>{ setQ(randomQuestion(q.id)); setSelected(null); };
+  const nextQuestion=()=>{ setQ(randomQuestion(q.id)); setSelected(null); setQuizMode('kanji'); };
   return <main className="page quizPage">
     {popup!==null && <AnswerPopup correct={popup} onClose={()=>setPopup(null)}/>}
     <div className="practiceHero">
@@ -367,10 +372,10 @@ function Practice(){
       <p className="muted">Soal acak dari semua section — {answered} dijawab, {correct} benar. XP tidak resmi & tidak memengaruhi unlock.</p>
     </div>
     <div className="quizTop"><span>{q.sectionTitleId} · {q.levelTitleId}</span></div>
-    <QuestionFlipCard q={q} key={`pq-${q.id}`}/>
-    <div className="choices">{q.choices.map((c,i)=><ChoiceCard key={`${q.id}-${i}`} choice={c} choiceId={q.choiceIds?.[i]||''} index={i} selected={selected} correctIndex={q.correctIndex} onAnswer={answer}/>)}</div>
+    <QuestionFlipCard q={q} mode={quizMode} setMode={setQuizMode} key={`pq-${q.id}`}/>
+    <div className="choices">{q.choices.map((c,i)=><ChoiceCard key={`${q.id}-${i}`} choice={c} choiceId={q.choiceIds?.[i]||''} index={i} selected={selected} correctIndex={q.correctIndex} onAnswer={answer} mode={quizMode} setMode={setQuizMode}/>)}</div>
     {selected!==null && <ExplanationBox q={q}/>}
-    <div className="quizFooter"><button className="primary big tap" disabled={selected===null} onClick={nextQuestion}>Soal berikutnya <ChevronRight/></button></div>
+    <div className="quizFooter"><button className="primary big tap" type="button" disabled={selected===null} onClick={nextQuestion}>Soal berikutnya <ChevronRight/></button></div>
   </main>;
 }
 
