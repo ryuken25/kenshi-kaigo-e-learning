@@ -3,10 +3,34 @@ import {createRoot} from 'react-dom/client';
 import {BrowserRouter,Routes,Route,Link,useNavigate,useParams,useLocation,Navigate} from 'react-router-dom';
 import {Heart,Lock,ChevronRight,BookOpen,Flame,UserRound,Star,Check,X,Volume2,Info,Menu,Home as HomeIcon,Languages,ArrowLeft,SkipForward,RotateCcw,Shuffle,Sparkles} from 'lucide-react';
 import {sections,getSection,getLevel,glossary,allQuestions,randomQuestion} from './data.js';
+import {furigana} from './furigana.generated.js';
 import Login from './Login.jsx';
 import {AuthProvider, useAuth} from './context/AuthContext.jsx';
 import {ProgressProvider, useProgress, readGuestProgress} from './context/ProgressContext.jsx';
 import './styles.css';import './translation.css';import './routing.css';import './auth.css';
+
+/* ---------- 3-mode language switch: 漢字(kanji) / ふりがな(furigana) / ID (Indonesia) ----------
+   Icon-button kecil di pojok kanan atas tiap card (soal, choice, explanation, materi paragraf).
+   Bukan tulisan "translate" — cuma 3 tombol mini yang ganti mode tampilan teks itu sendiri. */
+const LANG_MODES = [
+  {key:'kanji', label:'漢字'},
+  {key:'furigana', label:'ふり'},
+  {key:'id', label:'ID'},
+];
+
+function LangSwitch({mode,setMode,className=''}){
+  return <div className={`langSwitch ${className}`} role="group" aria-label="Ganti bahasa">
+    {LANG_MODES.map(m=><button key={m.key} type="button" className={mode===m.key?'active':''}
+      onClick={e=>{e.stopPropagation();setMode(m.key);}}>{m.label}</button>)}
+  </div>;
+}
+
+function LangText({ja,id,mode,as='p',className=''}){
+  const Tag = as;
+  if(mode==='id') return <Tag className={className}>{id}</Tag>;
+  if(mode==='furigana') return <Tag className={className} dangerouslySetInnerHTML={{__html:furigana(ja)}}/>;
+  return <Tag className={className}>{ja}</Tag>;
+}
 
 const ASSET = p=>`/assets/hellokitty/${p}`;
 const MASCOT_MAP = {
@@ -44,21 +68,37 @@ function Shell({children}){
   const loc=useLocation();
   const {isAuthenticated, loading, streakCurrent, totalXp} = useProgress();
   const {status} = useAuth();
+  const [menuOpen,setMenuOpen]=useState(false);
+  useEffect(()=>{ setMenuOpen(false); },[loc.pathname]);
+  useEffect(()=>{
+    document.body.style.overflow = menuOpen ? 'hidden' : '';
+    return ()=>{ document.body.style.overflow=''; };
+  },[menuOpen]);
+  const navItems = [
+    {to:'/', icon:<HomeIcon/>, label:'Home', match:p=>p==='/'},
+    {to:'/practice', icon:<Shuffle/>, label:'Latihan', match:p=>p==='/practice'},
+    {to:'/glossary', icon:<BookOpen/>, label:'Lesson', match:p=>p.startsWith('/glossary')},
+    {to:isAuthenticated?'/profile':'/login', icon:<UserRound/>, label:isAuthenticated?'Profile':'Login', match:p=>p==='/profile'||p==='/login'},
+  ];
   return <div className="app">
     <header>
       <Link to="/" className="brand"><div className="kitty"><img src={ASSET('hk-face-icon.png')} alt="Kaigo Kitty"/></div><div><b>kaigo kitty</b><small>learn with care</small></div></Link>
       <div className="topStats">
         <span><Flame size={16} fill="#ff718f"/> {loading && status==='authenticated' ? '…' : streakCurrent}</span>
-        <span><Heart size={16} fill="#ff718f"/> {loading && status==='authenticated' ? '…' : totalXp} XP</span>
-        <Link to={isAuthenticated?'/profile':'/login'}><UserRound size={19}/></Link>
+        <span className="xpStat"><Heart size={16} fill="#ff718f"/> {loading && status==='authenticated' ? '…' : totalXp} XP</span>
+        <button className="hamburgerBtn tap" onClick={()=>setMenuOpen(v=>!v)} aria-label="Menu" aria-expanded={menuOpen}>
+          <span/><span/><span/>
+        </button>
       </div>
     </header>
+    {menuOpen && <div className="navOverlay" onClick={()=>setMenuOpen(false)}/>}
+    <div className={`navDrawer ${menuOpen?'open':''}`}>
+      <div className="navDrawerHead"><Mascot variant="welcome" size="sm"/><b>Menu</b><button className="navDrawerClose tap" onClick={()=>setMenuOpen(false)} aria-label="Tutup">×</button></div>
+      {navItems.map(n=><Link key={n.label} className={`navDrawerItem tap ${n.match(loc.pathname)?'active':''}`} to={n.to}>{n.icon}<span>{n.label}</span><ChevronRight size={16}/></Link>)}
+    </div>
     {children}
     <nav>
-      <Link className={loc.pathname==='/'?'active':''} to="/"><HomeIcon/><span>Home</span></Link>
-      <Link className={loc.pathname==='/practice'?'active':''} to="/practice"><Shuffle/><span>Latihan</span></Link>
-      <Link className={loc.pathname.startsWith('/glossary')?'active':''} to="/glossary"><Languages/><span>Glossary</span></Link>
-      <Link className={loc.pathname==='/profile'?'active':''} to="/profile"><UserRound/><span>Profile</span></Link>
+      {navItems.map(n=><Link key={n.label} className={`tap ${n.match(loc.pathname)?'active':''}`} to={n.to}>{n.icon}<span>{n.label}</span></Link>)}
     </nav>
   </div>;
 }
@@ -162,62 +202,49 @@ function LevelHub(){
 
 function Materi(){
   const {sectionId,levelId}=useParams();const s=getSection(sectionId),l=getLevel(sectionId,levelId);const [i,setI]=useState(0);const nav=useNavigate();const card=l?.materi[i];
+  const [mode,setMode]=useState('kanji');
+  useEffect(()=>{ setMode('kanji'); },[i]);
   if(!s||!l)return <Navigate to="/"/>;
-  return <main className="page materiPage"><div className="quizTop"><Link to={`/section/${s.id}/level/${l.id}`} className="back">× Tutup</Link><span>MATERI {i+1}/{l.materi.length}</span></div><div className="quizProgress"><i style={{width:`${(i+1)/l.materi.length*100}%`}}/></div><div className="materiCard"><Mascot variant="materi" size="sm"/><small>MINI LESSON</small><h1>{card.titleJa}</h1><h2>{card.titleId}</h2><p className="japanese">{card.bodyJa}</p><div className="translation">{card.bodyId}</div>{card.terms.length>0&&<div className="terms">{card.terms.map(t=><Link key={t} to={`/glossary?term=${encodeURIComponent(t)}`}>#{t}</Link>)}</div>}</div><div className="materiActions"><button className="secondary tap" onClick={()=>nav(`/section/${s.id}/level/${l.id}/quiz`)}><SkipForward/> Skip to quiz</button><button className="primary tap" onClick={()=>i<l.materi.length-1?setI(i+1):nav(`/section/${s.id}/level/${l.id}/quiz`)}>{i<l.materi.length-1?'Next card':'Mulai quiz'} <ChevronRight/></button></div></main>;
+  return <main className="page materiPage"><div className="quizTop"><Link to={`/section/${s.id}/level/${l.id}`} className="back">× Tutup</Link><span>MATERI {i+1}/{l.materi.length}</span></div><div className="quizProgress"><i style={{width:`${(i+1)/l.materi.length*100}%`}}/></div><div className="materiCard"><Mascot variant="materi" size="sm"/><small>MINI LESSON</small>
+    <div className="materiHead"><h1>{card.titleJa}</h1><LangSwitch mode={mode} setMode={setMode}/></div>
+    <h2>{card.titleId}</h2>
+    <LangText as="p" ja={card.bodyJa} id={card.bodyId} mode={mode} className={mode==='id'?'translation':'japanese'}/>
+    {card.terms.length>0&&<div className="terms">{card.terms.map(t=><Link key={t} to={`/glossary?term=${encodeURIComponent(t)}`}>#{t}</Link>)}</div>}</div><div className="materiActions"><button className="secondary tap" onClick={()=>nav(`/section/${s.id}/level/${l.id}/quiz`)}><SkipForward/> Skip to quiz</button><button className="primary tap" onClick={()=>i<l.materi.length-1?setI(i+1):nav(`/section/${s.id}/level/${l.id}/quiz`)}>{i<l.materi.length-1?'Next card':'Mulai quiz'} <ChevronRight/></button></div></main>;
 }
 
 /* ---------- shared quiz pieces (dipakai Quiz level & Practice) ---------- */
 
 function QuestionFlipCard({q}){
-  const [flipped,setFlipped]=useState(false);
-  return <div className={`flipCard tap ${flipped?'flipped':''}`} onClick={()=>setFlipped(f=>!f)} key={q.id}>
-    <div className="flipCardInner">
-      <div className="flipFace front">
-        <p className="source">{q.sourceYear} · {q.difficulty}</p>
-        <h1>{q.questionJa}</h1>
-        <span className="flipHint"><Languages size={12}/> Tap buat translate</span>
-      </div>
-      <div className="flipFace back">
-        <small>INDONESIA</small>
-        <p>{q.questionId}</p>
-      </div>
+  const [mode,setMode]=useState('kanji');
+  return <div className="qCard" key={q.id}>
+    <div className="qCardHead">
+      <p className="source">{q.sourceYear} · {q.difficulty}</p>
+      <LangSwitch mode={mode} setMode={setMode}/>
     </div>
+    <LangText as="h1" ja={q.questionJa} id={q.questionId} mode={mode}/>
   </div>;
 }
 
 function ChoiceCard({choice,choiceId,index,selected,correctIndex,onAnswer}){
-  const [flipped,setFlipped]=useState(false);
+  const [mode,setMode]=useState('kanji');
   const answered = selected!==null;
   const isCorrect = answered && index===correctIndex;
   const isWrong = answered && index===selected && index!==correctIndex;
-  return <div className={`choiceFlip ${flipped?'flipped':''} ${answered?'answered':''} ${isCorrect?'isCorrect':''} ${isWrong?'isWrong':''}`}>
-    <div className="choiceFlipInner">
-      <div className="choiceFace front tap" onClick={()=>onAnswer(index)}>
-        <div className="choiceRow">
-          <span>{choice}</span>
-          {!answered && <button className="choiceMini" onClick={e=>{e.stopPropagation();setFlipped(true);}} aria-label="Lihat terjemahan"><Languages size={13}/></button>}
-          {isCorrect && <Check className="checkIcon" size={18}/>}
-          {isWrong && <X className="xIcon" size={18}/>}
-        </div>
-      </div>
-      <div className="choiceFace back tap" onClick={()=>setFlipped(false)}>
-        <div className="choiceRow"><span>{choiceId}</span><button className="choiceMini" onClick={e=>{e.stopPropagation();setFlipped(false);}} aria-label="Kembali"><Languages size={13}/></button></div>
-      </div>
+  return <div className={`choiceCard tap ${answered?'answered':''} ${isCorrect?'isCorrect':''} ${isWrong?'isWrong':''}`} onClick={()=>onAnswer(index)}>
+    <div className="choiceRow">
+      <LangText as="span" ja={choice} id={choiceId} mode={mode} className="choiceText"/>
+      <LangSwitch mode={mode} setMode={setMode} className="mini"/>
+      {isCorrect && <Check className="checkIcon" size={18}/>}
+      {isWrong && <X className="xIcon" size={18}/>}
     </div>
   </div>;
 }
 
 function ExplanationBox({q}){
-  const [lang,setLang]=useState('both');
+  const [mode,setMode]=useState('kanji');
   return <div className="explainBox">
-    <div className="explainHead"><Info size={16}/> Kenapa jawaban ini benar?</div>
-    <div className="explainLangToggle">
-      <button className={lang==='both'?'active':''} onClick={()=>setLang('both')}>両方 Keduanya</button>
-      <button className={lang==='ja'?'active':''} onClick={()=>setLang('ja')}>日本語</button>
-      <button className={lang==='id'?'active':''} onClick={()=>setLang('id')}>Indonesia</button>
-    </div>
-    {(lang==='both'||lang==='ja') && <p className="ja">{q.explanationJa}</p>}
-    {(lang==='both'||lang==='id') && <p>{q.explanationId}</p>}
+    <div className="explainHead"><Info size={16}/> <span>Kenapa jawaban ini benar?</span><LangSwitch mode={mode} setMode={setMode} className="mini"/></div>
+    <LangText as="p" ja={q.explanationJa} id={q.explanationId} mode={mode} className={mode==='kanji'?'ja':''}/>
   </div>;
 }
 

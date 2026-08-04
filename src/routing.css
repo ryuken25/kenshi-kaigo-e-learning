@@ -52,9 +52,12 @@
   animation:popIn .3s ease;
 }
 .materiCard small{color:var(--pink);font-weight:700;letter-spacing:1.2px;font-size:10px}
-.materiCard h1{font:600 22px Fredoka;margin:10px 0 2px}
-.materiCard h2{font:500 14px Fredoka;color:var(--muted);margin:0 0 16px}
+.materiHead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-top:8px;text-align:left}
+.materiCard h1{font:600 22px Fredoka;margin:0}
+.materiCard h1 rt{font-size:8px;color:var(--pink-deep)}
+.materiCard h2{font:500 14px Fredoka;color:var(--muted);margin:2px 0 16px;text-align:center}
 .materiCard .japanese{font-size:15px;line-height:1.7;margin:0 0 4px}
+.materiCard .japanese rt{font-size:9px;color:var(--pink-deep);font-weight:600}
 .terms{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;justify-content:center}
 .terms a{background:var(--pink-pale);color:var(--pink-deep);font-size:11px;font-weight:700;padding:6px 12px;border-radius:999px;text-decoration:none}
 .materiActions{display:flex;gap:10px;margin-top:20px}
@@ -76,60 +79,48 @@
 .quizPage{padding-top:14px}
 .quizModeBadge{display:inline-flex;align-items:center;gap:6px;background:var(--lavender);color:#8354c9;font-weight:700;font-size:10.5px;padding:5px 11px;border-radius:999px;margin-bottom:10px}
 
-/* card flip 3D — question + choices */
-.flipCard{perspective:1200px;cursor:pointer;margin-bottom:14px}
-.flipCardInner{
-  position:relative;width:100%;min-height:150px;transition:transform .55s cubic-bezier(.34,1.35,.6,1);
-  transform-style:preserve-3d;
-}
-.flipCard.flipped .flipCardInner{transform:rotateY(180deg)}
-.flipFace{
-  position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;
-  border-radius:var(--radius-lg);padding:22px 20px 18px;display:flex;flex-direction:column;
-  background:#fff;border:1px solid var(--line);box-shadow:0 12px 30px -10px rgba(255,150,190,.4);
-}
-.flipFace.front{position:relative}
-.flipFace.back{transform:rotateY(180deg);background:linear-gradient(160deg,#fff,var(--pink-paler))}
-.flipHint{position:absolute;top:14px;right:16px;display:flex;align-items:center;gap:5px;font-size:10px;font-weight:700;color:var(--pink);background:var(--pink-pale);padding:5px 9px;border-radius:999px}
-.flipCard h1{font:600 25px/1.25 Fredoka;margin:8px 0 0}
-.flipFace.back p{font-size:15px;line-height:1.6;margin:8px 0 0;color:#8c6a80}
-.flipFace.back small{color:var(--pink);font-weight:700;letter-spacing:1px;font-size:10px}
+/* question card + 3-mode language switch (漢字/ふり/ID) */
+.qCard{margin-bottom:14px;border-radius:var(--radius-lg);padding:20px 20px 18px;background:#fff;border:1px solid var(--line);box-shadow:0 12px 30px -10px rgba(255,150,190,.4);animation:popIn .3s ease}
+.qCardHead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:6px}
+.qCard h1{font:600 24px/1.35 Fredoka;margin:6px 0 0}
+.qCard h1 rt{font-size:9px;color:var(--pink-deep);font-weight:700}
 
-/* choice flip cards */
+.langSwitch{display:flex;gap:3px;flex:none;background:var(--pink-pale);border-radius:999px;padding:3px}
+.langSwitch button{font-size:10px;font-weight:700;padding:5px 9px;border-radius:999px;color:#b98aa3;background:transparent;line-height:1}
+.langSwitch button.active{background:#fff;color:var(--pink-deep);box-shadow:0 3px 8px -3px rgba(255,120,170,.5)}
+.langSwitch.mini{padding:2px;transform:scale(.86);transform-origin:right center}
+.langSwitch.mini button{padding:4px 7px}
+
+/* choice cards */
 .choices{display:grid;gap:11px;margin:6px 0 18px}
-.choiceFlip{perspective:900px}
-.choiceFlipInner{position:relative;min-height:56px;transition:transform .5s cubic-bezier(.34,1.35,.6,1);transform-style:preserve-3d}
-.choiceFlip.flipped .choiceFlipInner{transform:rotateY(180deg)}
-.choiceFace{
-  position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;
-  border-radius:16px;border:1.5px solid #efdfe5;background:#fff;padding:14px 14px;
-  display:flex;align-items:center;gap:10px;font-size:13.5px;text-align:left;
+.choiceCard{
+  border-radius:16px;border:1.5px solid #efdfe5;background:#fff;padding:13px 14px;
+  cursor:pointer;box-shadow:0 4px 14px -8px rgba(255,150,190,.3);
 }
-.choiceFace.back{transform:rotateY(180deg);background:#fff7fb;color:#9c6e7f;font-size:12.5px}
+.choiceCard.answered{cursor:default}
 .choiceRow{display:flex;align-items:center;gap:8px;width:100%}
-.choiceMini{
-  margin-left:auto;flex:none;width:26px;height:26px;border-radius:9px;background:var(--pink-pale);
-  display:grid;place-items:center;color:var(--pink-deep);
-}
-.choiceFlip.answered .choiceFace.front{border-color:#efdfe5}
-.choiceFlip.answered.isCorrect .choiceFace.front{border:2px solid #63c89a;background:#effcf5}
-.choiceFlip.answered.isWrong .choiceFace.front{border:2px solid #f4849b;background:#fff1f3}
-.choiceFlip .checkIcon{margin-left:auto;color:#4cba89}
-.choiceFlip .xIcon{margin-left:auto;color:#e0577c}
+.choiceText{flex:1;font-size:13.5px;line-height:1.5;text-align:left}
+.choiceText rt{font-size:8px;color:var(--pink-deep)}
+.choiceCard.answered.isCorrect{border:2px solid #63c89a;background:#effcf5}
+.choiceCard.answered.isWrong{border:2px solid #f4849b;background:#fff1f3}
+.choiceCard .checkIcon{margin-left:6px;flex:none;color:#4cba89}
+.choiceCard .xIcon{margin-left:6px;flex:none;color:#e0577c}
 
 .listen{display:flex;align-items:center;gap:7px;border:1px solid #f5dbe4;color:#ff7393;background:#fff7fa;padding:9px 12px;border-radius:12px;font-size:12px;margin-top:4px}
 
-/* explanation box (both languages) */
+/* explanation box */
 .explainBox{
   background:linear-gradient(135deg,#fff9e8,#fff3d3);border:1px solid #f6dfa3;border-radius:var(--radius-lg);
   padding:16px 18px;margin:6px 0 16px;animation:popIn .3s ease;
 }
-.explainBox .explainHead{display:flex;align-items:center;gap:8px;font:700 13px Fredoka;color:#9a6b1f;margin-bottom:8px}
-.explainLangToggle{display:flex;gap:6px;margin-bottom:10px}
-.explainLangToggle button{font-size:10.5px;font-weight:700;padding:5px 10px;border-radius:999px;border:1px solid #f0d9a0;background:#fff}
-.explainLangToggle button.active{background:#ffdd8f;border-color:#e8b94d}
-.explainBox p{margin:0 0 6px;font-size:13px;line-height:1.55;color:#8a6a3a}
-.explainBox .ja{font-weight:600}
+.explainBox .explainHead{display:flex;align-items:center;gap:8px;font:700 13px Fredoka;color:#9a6b1f;margin-bottom:10px}
+.explainBox .explainHead span{flex:1}
+.explainBox .explainHead .langSwitch{background:#fff3d3}
+.explainBox .explainHead .langSwitch button{color:#b8934a}
+.explainBox .explainHead .langSwitch button.active{background:#ffdd8f;color:#7a5310}
+.explainBox p{margin:0;font-size:13px;line-height:1.6;color:#8a6a3a}
+.explainBox p.ja{font-weight:600}
+.explainBox p rt{font-size:8px;color:#b8934a}
 
 .quizFooter{display:flex;flex-direction:column;gap:10px}
 

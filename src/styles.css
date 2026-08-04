@@ -42,20 +42,54 @@ button:active,.tap:active{transform:scale(.94)}
 header{
   height:76px;display:flex;align-items:center;justify-content:space-between;
   padding:0 20px;border-bottom:1px solid var(--line);position:sticky;top:0;
-  background:#fffbfdd9;backdrop-filter:blur(18px);z-index:20;
+  background:#fffbfdd9;backdrop-filter:blur(18px);z-index:40;gap:10px;
 }
-.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit}
-.brand b{display:block;font:700 20px Fredoka;color:var(--pink-deep);letter-spacing:-.4px}
-.brand small{font-size:9px;color:#c2a7bb;letter-spacing:1.4px;text-transform:uppercase}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit;flex:1;min-width:0;overflow:hidden}
+.brand b{display:block;font:700 20px Fredoka;color:var(--pink-deep);letter-spacing:-.4px;white-space:nowrap}
+.brand small{font-size:9px;color:#c2a7bb;letter-spacing:1.4px;text-transform:uppercase;white-space:nowrap}
 .kitty{
   width:42px;height:42px;border-radius:15px;background:linear-gradient(145deg,#ffe6f1,#ffd3e7);
   display:grid;place-items:center;box-shadow:0 4px 14px -3px rgba(255,120,170,.5);
-  transform:rotate(-4deg);overflow:hidden;
+  transform:rotate(-4deg);overflow:hidden;flex:none;
 }
 .kitty img{width:100%;height:100%;object-fit:contain;padding:4px}
-.topStats{display:flex;align-items:center;gap:12px;color:var(--pink-deep);font-weight:700;font-size:13px}
-.topStats span{display:flex;align-items:center;gap:4px;background:var(--pink-pale);padding:6px 10px;border-radius:999px}
-.topStats a{background:#fff;border:1px solid var(--line);width:37px;height:37px;border-radius:13px;display:grid;place-items:center;color:var(--pink-deep);text-decoration:none;box-shadow:0 3px 10px -4px rgba(255,120,170,.4)}
+.topStats{display:flex;align-items:center;gap:8px;color:var(--pink-deep);font-weight:700;font-size:12.5px;flex:none}
+.topStats span{display:flex;align-items:center;gap:4px;background:var(--pink-pale);padding:6px 9px;border-radius:999px;white-space:nowrap}
+.topStats .xpStat{display:none}
+@media (min-width:420px){.topStats .xpStat{display:flex}}
+
+/* hamburger button — mobile nav trigger, tetap kasih ruang buat logo (flex:1 di .brand) */
+.hamburgerBtn{
+  width:38px;height:38px;border-radius:13px;background:#fff;border:1px solid var(--line);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;flex:none;
+  box-shadow:0 3px 10px -4px rgba(255,120,170,.4);
+}
+.hamburgerBtn span{width:16px;height:2px;background:var(--pink-deep);border-radius:2px;transition:transform .2s ease,opacity .2s ease}
+.hamburgerBtn[aria-expanded="true"] span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+.hamburgerBtn[aria-expanded="true"] span:nth-child(2){opacity:0}
+.hamburgerBtn[aria-expanded="true"] span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+
+/* nav drawer — hamburger menu panel, muncul dari kanan, nampung lebih banyak menu items */
+.navOverlay{position:fixed;inset:0;background:rgba(60,20,45,.35);z-index:45;animation:popIn .2s ease}
+.navDrawer{
+  position:fixed;top:0;right:0;height:100%;width:min(300px,82vw);background:#fff;z-index:50;
+  box-shadow:-14px 0 40px -10px rgba(255,110,160,.35);transform:translateX(100%);
+  transition:transform .3s cubic-bezier(.34,1.2,.6,1);display:flex;flex-direction:column;gap:4px;padding:18px 14px;overflow-y:auto;
+}
+.navDrawer.open{transform:translateX(0)}
+.navDrawerHead{display:flex;align-items:center;gap:10px;padding:4px 6px 14px;border-bottom:1px solid var(--line);margin-bottom:8px}
+.navDrawerHead .mascotImg{filter:none;animation:none}
+.navDrawerHead .mascotImg img{--mw:44px}
+.navDrawerHead b{font:700 16px Fredoka;color:var(--pink-deep);flex:1}
+.navDrawerClose{width:30px;height:30px;border-radius:10px;background:var(--pink-pale);color:var(--pink-deep);font-size:18px;display:grid;place-items:center;flex:none}
+.navDrawerItem{
+  display:flex;align-items:center;gap:12px;padding:13px 12px;border-radius:14px;color:var(--ink);
+  text-decoration:none;font-weight:600;font-size:14px;
+}
+.navDrawerItem svg{color:#c2a7bb;flex:none}
+.navDrawerItem.active{background:var(--pink-pale);color:var(--pink-deep)}
+.navDrawerItem.active svg{color:var(--pink-deep)}
+.navDrawerItem>svg:last-child{margin-left:auto;opacity:.5}
 
 /* ---------- mascot (real Hello Kitty images) ---------- */
 .mascotImg{position:relative;display:inline-flex;align-self:center;filter:drop-shadow(0 14px 18px rgba(255,150,190,.45));animation:float 3.2s ease-in-out infinite}
@@ -154,13 +188,20 @@ header{
 .primary,.secondary{
   display:inline-flex;align-items:center;justify-content:center;gap:8px;
   padding:14px 20px;border-radius:16px;font:700 14px 'DM Sans';text-decoration:none;
+  transition:transform .15s cubic-bezier(.34,1.56,.64,1), box-shadow .2s ease, filter .2s ease;
 }
 .primary{background:linear-gradient(135deg,var(--pink),var(--pink-deep));color:#fff;box-shadow:0 10px 24px -8px rgba(255,90,150,.6)}
-.primary:hover{filter:brightness(1.05)}
-.primary:disabled{opacity:.55;box-shadow:none;cursor:not-allowed}
+.primary:hover{filter:brightness(1.06);box-shadow:0 12px 28px -6px rgba(255,90,150,.7);transform:translateY(-1px)}
+.primary:active{transform:scale(.96) translateY(0);filter:brightness(.98)}
+.primary:disabled{opacity:.55;box-shadow:none;cursor:not-allowed;transform:none}
 .secondary{background:#fff;color:var(--pink-deep);border:1.5px solid var(--pink-pale);box-shadow:0 4px 14px -6px rgba(255,120,170,.3)}
+.secondary:hover{background:var(--pink-paler);border-color:var(--pink);transform:translateY(-1px)}
+.secondary:active{transform:scale(.96) translateY(0)}
 .big{width:100%;padding:16px}
 .flowButtons{display:flex;flex-direction:column;gap:10px;padding:0 20px 20px}
+.round{transition:transform .15s cubic-bezier(.34,1.56,.64,1), box-shadow .2s ease}
+.round:hover{box-shadow:0 6px 18px -4px rgba(255,120,170,.55);transform:translateY(-1px)}
+.round:active{transform:scale(.9)}
 
 /* ---------- loading skeletons (kawaii) ---------- */
 .kawaiiLoader{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:60px 20px;text-align:center}
