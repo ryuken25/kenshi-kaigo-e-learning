@@ -46,9 +46,9 @@ const MASCOT_MAP = {
   practice:ASSET('hk-cute-emoji.png'),
 };
 
-function Mascot({variant='home',size='md',className=''}){
+function Mascot({variant='home',size='md',className='',style}){
   const src = MASCOT_MAP[variant]||MASCOT_MAP.home;
-  return <div className={`mascotImg size-${size} ${className}`} aria-label="Hello Kitty mascot">
+  return <div className={`mascotImg size-${size} ${className}`} style={style} aria-label="Hello Kitty mascot">
     <img src={src} alt="Hello Kitty" loading="lazy"/>
     <span className="sparkle s1">✨</span>
     <span className="sparkle s2">🎀</span>
@@ -68,17 +68,11 @@ function Shell({children}){
   const loc=useLocation();
   const {isAuthenticated, loading, streakCurrent, totalXp} = useProgress();
   const {status} = useAuth();
-  const [menuOpen,setMenuOpen]=useState(false);
-  useEffect(()=>{ setMenuOpen(false); },[loc.pathname]);
-  useEffect(()=>{
-    document.body.style.overflow = menuOpen ? 'hidden' : '';
-    return ()=>{ document.body.style.overflow=''; };
-  },[menuOpen]);
   const navItems = [
-    {to:'/', icon:<HomeIcon/>, label:'Home', match:p=>p==='/'},
-    {to:'/practice', icon:<Shuffle/>, label:'Latihan', match:p=>p==='/practice'},
-    {to:'/glossary', icon:<BookOpen/>, label:'Lesson', match:p=>p.startsWith('/glossary')},
-    {to:isAuthenticated?'/profile':'/login', icon:<UserRound/>, label:isAuthenticated?'Profile':'Login', match:p=>p==='/profile'||p==='/login'},
+    {to:'/', icon:'🎀', label:'Home', match:p=>p==='/'},
+    {to:'/practice', icon:'🌸', label:'Latihan', match:p=>p==='/practice'},
+    {to:'/glossary', icon:'📖', label:'Lesson', match:p=>p.startsWith('/glossary')},
+    {to:isAuthenticated?'/profile':'/login', icon:'💗', label:isAuthenticated?'Profile':'Login', match:p=>p==='/profile'||p==='/login'},
   ];
   return <div className="app">
     <header>
@@ -86,19 +80,11 @@ function Shell({children}){
       <div className="topStats">
         <span><Flame size={16} fill="#ff718f"/> {loading && status==='authenticated' ? '…' : streakCurrent}</span>
         <span className="xpStat"><Heart size={16} fill="#ff718f"/> {loading && status==='authenticated' ? '…' : totalXp} XP</span>
-        <button className="hamburgerBtn tap" onClick={()=>setMenuOpen(v=>!v)} aria-label="Menu" aria-expanded={menuOpen}>
-          <span/><span/><span/>
-        </button>
       </div>
     </header>
-    {menuOpen && <div className="navOverlay" onClick={()=>setMenuOpen(false)}/>}
-    <div className={`navDrawer ${menuOpen?'open':''}`}>
-      <div className="navDrawerHead"><Mascot variant="welcome" size="sm"/><b>Menu</b><button className="navDrawerClose tap" onClick={()=>setMenuOpen(false)} aria-label="Tutup">×</button></div>
-      {navItems.map(n=><Link key={n.label} className={`navDrawerItem tap ${n.match(loc.pathname)?'active':''}`} to={n.to}>{n.icon}<span>{n.label}</span><ChevronRight size={16}/></Link>)}
-    </div>
     {children}
     <nav>
-      {navItems.map(n=><Link key={n.label} className={`tap ${n.match(loc.pathname)?'active':''}`} to={n.to}>{n.icon}<span>{n.label}</span></Link>)}
+      {navItems.map(n=><Link key={n.label} className={`tap ${n.match(loc.pathname)?'active':''}`} to={n.to}><span className="navEmoji">{n.icon}</span><span>{n.label}</span></Link>)}
     </nav>
   </div>;
 }
@@ -147,6 +133,8 @@ function SectionCard({section,official,completedLevels}){
   </Link>;
 }
 
+const ZIGZAG_OFFSETS = [0, 54, 84, 54, 0, -54, -84, -54];
+
 function SectionOverview(){
   const {sectionId}=useParams();const s=getSection(sectionId);
   const {isAuthenticated, guestProgress} = useProgress();
@@ -156,30 +144,45 @@ function SectionOverview(){
   const serverLevels = sectionInfo?.levels;
   const sectionOfficial = sectionInfo?.official ?? (s.id===1);
   const done = guestProgress.done || {};
-  return <main className="page"><Link to="/" className="back"><ArrowLeft size={16}/> Learning path</Link>
+
+  const levelStates = s.levels.map((l,i)=>{
+    let levelUnlocked, completed;
+    if(isAuthenticated && serverLevels){
+      const lv = serverLevels.find(x=>x.levelId===l.id);
+      levelUnlocked = lv?.levelUnlocked ?? (l.id===1);
+      completed = lv?.status==='completed';
+    } else {
+      const prevDone = i===0 || Boolean(done[`${s.id}-${i}`]);
+      levelUnlocked = sectionOfficial && prevDone;
+      completed = Boolean(done[`${s.id}-${l.id}`]);
+    }
+    return {l, i, levelUnlocked, completed, previewOnly: !levelUnlocked && !completed};
+  });
+  const currentIdx = levelStates.findIndex(x=>!x.completed);
+
+  return <main className="page skillPage"><Link to="/" className="back"><ArrowLeft size={16}/> Learning path</Link>
     <div className="sectionHero"><span>{s.icon}</span><div><small>SECTION {s.id}</small><h1>{s.titleJa}</h1><p>{s.titleId}</p></div></div>
     <p className="muted">{s.description}</p>
     {!sectionOfficial && <div className="previewBanner"><Lock size={16}/><span>Section ini belum resmi terbuka — kamu tetap bisa preview materi & coba quiz, tapi progress tidak dihitung completed sampai section sebelumnya selesai.</span></div>}
+    <div className="skillPath">
+      {levelStates.map(({l,i,levelUnlocked,completed,previewOnly})=>{
+        const isMilestone = Boolean(l.isReview);
+        const isCurrent = i===currentIdx && !previewOnly;
+        const offset = ZIGZAG_OFFSETS[i % ZIGZAG_OFFSETS.length];
+        return <div className="skillNodeRow" key={l.id}>
+          {i>0 && i%4===0 && <Mascot variant="materi" size="sm" className="pathMascot" style={{['--nodeOffset']:`${offset}px`}}/>}
+          <div className="skillNodeWrap" style={{marginLeft:offset}}>
+            <Link to={`/section/${s.id}/level/${l.id}`}
+              className={`skillNode tap ${isMilestone?'milestone':''} ${completed?'completed':''} ${previewOnly?'locked':''} ${isCurrent?'current':''}`}>
+              {completed ? <Check size={isMilestone?26:20}/> : previewOnly ? <Lock size={isMilestone?22:16}/> : isMilestone ? <Star size={24} fill="#fff"/> : l.id}
+              {isCurrent && <span className="currentPing"/>}
+            </Link>
+            <span className="skillNodeLabel">{isMilestone ? '🎀 Recap' : l.titleJa}</span>
+          </div>
+        </div>;
+      })}
+    </div>
     <div className="recapLink"><Link to={`/section/${s.id}/recap`}><Star fill="#ffb73b"/> Section recap <span>{s.levelCount} level review</span><ChevronRight/></Link></div>
-    <div className="levelList">{s.levels.map((l,i)=>{
-      let levelUnlocked, completed;
-      if(isAuthenticated && serverLevels){
-        const lv = serverLevels.find(x=>x.levelId===l.id);
-        levelUnlocked = lv?.levelUnlocked ?? (l.id===1);
-        completed = lv?.status==='completed';
-      } else {
-        const prevDone = i===0 || Boolean(done[`${s.id}-${i}`]);
-        levelUnlocked = sectionOfficial && prevDone;
-        completed = Boolean(done[`${s.id}-${l.id}`]);
-      }
-      const previewOnly = !levelUnlocked && !completed;
-      return <Link key={l.id} className={`levelRow tap ${previewOnly?'preview-only':''} ${completed?'completed':''}`} to={`/section/${s.id}/level/${l.id}`}>
-        {previewOnly && <span className="lockBadge"><Lock size={13}/></span>}
-        <div className="levelNum">{completed?<Check/>:l.id}</div>
-        <div><small>LEVEL {l.id}</small><b>{l.titleJa}</b><span>{l.titleId}</span></div>
-        <ChevronRight/>
-      </Link>;
-    })}</div>
   </main>;
 }
 
@@ -248,6 +251,24 @@ function ExplanationBox({q}){
   </div>;
 }
 
+const CORRECT_LINES = ['Yeayy! ✨','Perfect! 🎀','完璧！','Sugoi! 💗','Betul banget! 🌸'];
+const WRONG_LINES = ['Zannen... 😣','Hampir! 🩹','Coba lagi ya~','惜しい！','Yuk cek lagi 🎗️'];
+
+function AnswerPopup({correct,onClose}){
+  const line = useMemo(()=> correct
+    ? CORRECT_LINES[Math.floor(Math.random()*CORRECT_LINES.length)]
+    : WRONG_LINES[Math.floor(Math.random()*WRONG_LINES.length)]
+  ,[correct]);
+  useEffect(()=>{
+    const t = setTimeout(onClose, 1150);
+    return ()=>clearTimeout(t);
+  },[onClose]);
+  return <div className={`answerPopup ${correct?'good':'bad'}`} role="status">
+    <span className="answerPopupIcon">{correct?'🎉':'😣'}</span>
+    <span className="answerPopupText">{line}</span>
+  </div>;
+}
+
 /* ---------- Quiz (level mode, dengan retry round + preview handling) ---------- */
 
 function Quiz(){
@@ -260,6 +281,7 @@ function Quiz(){
   const [wrongThisRound,setWrongThisRound]=useState([]);
   const [retryRound,setRetryRound]=useState(0);
   const [saving,setSaving]=useState(false);
+  const [popup,setPopup]=useState(null);
   const nav=useNavigate();
   const {submitAttempt} = useProgress();
   const [startedAt] = useState(()=>Date.now());
@@ -273,6 +295,7 @@ function Quiz(){
     if(selected!==null) return;
     setSelected(i);
     const isCorrect = i===q.correctIndex;
+    setPopup(isCorrect);
     if(phase==='main' && isCorrect) setCorrectFirstTry(prev=>new Set(prev).add(q.id));
     if(!isCorrect) setWrongThisRound(prev=>[...prev, q]);
   };
@@ -307,6 +330,7 @@ function Quiz(){
   const nextLabel = saving ? 'Menyimpan…' : !isLastInRound ? 'Lanjut' : (wrongThisRound.length>0 ? 'Ulangi soal yang salah ↻' : 'Selesai');
 
   return <main className="page quizPage">
+    {popup!==null && <AnswerPopup correct={popup} onClose={()=>setPopup(null)}/>}
     <div className="quizTop"><Link to={`/section/${s.id}/level/${l.id}`} className="back">‹ Exit</Link><span>{phase==='retry'?'RETRY · ':''}{qi+1} / {roundQuestions.length}</span></div>
     <div className="quizProgress"><i style={{width:`${(qi+1)/roundQuestions.length*100}%`}}/></div>
     {phase==='retry' && <div className="retryBanner"><RotateCcw/><div><b>Yuk ulangi soal yang belum tepat!</b><span>Ronde retry #{retryRound} · {roundQuestions.length} soal tersisa</span></div><div className="retryDots">{roundQuestions.map((rq,idx)=><i key={rq.id+idx} className={idx<qi?'done':''}/>)}</div></div>}
@@ -325,14 +349,18 @@ function Practice(){
   const [selected,setSelected]=useState(null);
   const [answered,setAnswered]=useState(0);
   const [correct,setCorrect]=useState(0);
+  const [popup,setPopup]=useState(null);
   const answer=(i)=>{
     if(selected!==null) return;
     setSelected(i);
     setAnswered(a=>a+1);
-    if(i===q.correctIndex) setCorrect(c=>c+1);
+    const isCorrect = i===q.correctIndex;
+    setPopup(isCorrect);
+    if(isCorrect) setCorrect(c=>c+1);
   };
   const nextQuestion=()=>{ setQ(randomQuestion(q.id)); setSelected(null); };
   return <main className="page quizPage">
+    {popup!==null && <AnswerPopup correct={popup} onClose={()=>setPopup(null)}/>}
     <div className="practiceHero">
       <Mascot variant="practice" size="sm"/>
       <span className="quizModeBadge"><Shuffle size={12}/> Practice · unlimited</span>

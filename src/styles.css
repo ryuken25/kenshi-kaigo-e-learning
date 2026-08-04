@@ -58,39 +58,6 @@ header{
 .topStats .xpStat{display:none}
 @media (min-width:420px){.topStats .xpStat{display:flex}}
 
-/* hamburger button — mobile nav trigger, tetap kasih ruang buat logo (flex:1 di .brand) */
-.hamburgerBtn{
-  width:38px;height:38px;border-radius:13px;background:#fff;border:1px solid var(--line);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;flex:none;
-  box-shadow:0 3px 10px -4px rgba(255,120,170,.4);
-}
-.hamburgerBtn span{width:16px;height:2px;background:var(--pink-deep);border-radius:2px;transition:transform .2s ease,opacity .2s ease}
-.hamburgerBtn[aria-expanded="true"] span:nth-child(1){transform:translateY(6px) rotate(45deg)}
-.hamburgerBtn[aria-expanded="true"] span:nth-child(2){opacity:0}
-.hamburgerBtn[aria-expanded="true"] span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
-
-/* nav drawer — hamburger menu panel, muncul dari kanan, nampung lebih banyak menu items */
-.navOverlay{position:fixed;inset:0;background:rgba(60,20,45,.35);z-index:45;animation:popIn .2s ease}
-.navDrawer{
-  position:fixed;top:0;right:0;height:100%;width:min(300px,82vw);background:#fff;z-index:50;
-  box-shadow:-14px 0 40px -10px rgba(255,110,160,.35);transform:translateX(100%);
-  transition:transform .3s cubic-bezier(.34,1.2,.6,1);display:flex;flex-direction:column;gap:4px;padding:18px 14px;overflow-y:auto;
-}
-.navDrawer.open{transform:translateX(0)}
-.navDrawerHead{display:flex;align-items:center;gap:10px;padding:4px 6px 14px;border-bottom:1px solid var(--line);margin-bottom:8px}
-.navDrawerHead .mascotImg{filter:none;animation:none}
-.navDrawerHead .mascotImg img{--mw:44px}
-.navDrawerHead b{font:700 16px Fredoka;color:var(--pink-deep);flex:1}
-.navDrawerClose{width:30px;height:30px;border-radius:10px;background:var(--pink-pale);color:var(--pink-deep);font-size:18px;display:grid;place-items:center;flex:none}
-.navDrawerItem{
-  display:flex;align-items:center;gap:12px;padding:13px 12px;border-radius:14px;color:var(--ink);
-  text-decoration:none;font-weight:600;font-size:14px;
-}
-.navDrawerItem svg{color:#c2a7bb;flex:none}
-.navDrawerItem.active{background:var(--pink-pale);color:var(--pink-deep)}
-.navDrawerItem.active svg{color:var(--pink-deep)}
-.navDrawerItem>svg:last-child{margin-left:auto;opacity:.5}
-
 /* ---------- mascot (real Hello Kitty images) ---------- */
 .mascotImg{position:relative;display:inline-flex;align-self:center;filter:drop-shadow(0 14px 18px rgba(255,150,190,.45));animation:float 3.2s ease-in-out infinite}
 .mascotImg img{display:block;object-fit:contain;width:var(--mw,140px);height:auto;user-select:none;pointer-events:none}
@@ -218,14 +185,14 @@ header{
 ::-webkit-scrollbar{width:8px}
 ::-webkit-scrollbar-thumb{background:var(--pink-pale);border-radius:8px}
 
-/* ---------- bottom nav ---------- */
+/* ---------- bottom nav (4 items, emoji bubble, kawaii) ---------- */
 nav{
   position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(720px,100%);
-  height:80px;background:#fffdfeee;backdrop-filter:blur(16px);border-top:1px solid var(--line);
-  display:flex;justify-content:space-around;z-index:30;padding-top:8px;box-shadow:0 -8px 24px -12px rgba(255,120,170,.25);
+  height:76px;background:#fffdfeee;backdrop-filter:blur(16px);border-top:1px solid var(--line);
+  display:flex;justify-content:space-around;z-index:30;padding-top:6px;box-shadow:0 -8px 24px -12px rgba(255,120,170,.25);
 }
-nav a{background:none;color:#c4aebb;display:flex;flex-direction:column;gap:4px;align-items:center;font-size:10px;text-decoration:none;font-weight:600;padding-top:4px}
-nav a svg{width:22px;transition:transform .2s ease}
-nav a:active svg{transform:scale(.85)}
-nav a.active{color:var(--pink-deep);font-weight:700}
-nav a.active svg{filter:drop-shadow(0 2px 6px rgba(255,120,170,.5))}
+nav a{background:none;color:#b79aa9;display:flex;flex-direction:column;gap:3px;align-items:center;font-size:10.5px;text-decoration:none;font-weight:700;padding-top:2px;flex:1}
+.navEmoji{width:34px;height:34px;display:grid;place-items:center;font-size:18px;border-radius:12px;background:transparent;transition:transform .2s cubic-bezier(.34,1.56,.64,1), background .2s ease}
+nav a:active .navEmoji{transform:scale(.82)}
+nav a.active .navEmoji{background:var(--pink-pale);transform:translateY(-2px);box-shadow:0 4px 10px -3px rgba(255,120,170,.5);animation:bounceIn .4s ease}
+nav a.active{color:var(--pink-deep)}
