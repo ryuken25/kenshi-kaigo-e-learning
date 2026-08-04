@@ -24,11 +24,28 @@ const qTemplates = [
  {q:'観察した変化をチームで共有する方法として、最も適切なものを1つ選びなさい。', choices:['事実を具体的に記録し、必要な相手に報告する','自分の推測だけを記録する','記録せず口頭だけで済ませる','家族にだけ伝える','都合の悪い変化は省略する'], answer:0, explanation:'記録・報告では、観察した事実と対応を具体的に残し、チームで共有します.', explanationId:'Jawaban benar adalah mencatat fakta secara konkret dan melaporkannya ke pihak yang perlu tahu, karena prinsip kiroku/houkoku (記録・報告/pencatatan & pelaporan) mengharuskan fakta objektif yang diamati (bukan dugaan pribadi) didokumentasikan dan dibagikan ke tim, sehingga perawatan tetap konsisten dan bisa dipertanggungjawabkan.'}
 ];
 
+function makeGeneratedJapaneseCard({sectionId,levelId,topic,cardIndex,type='explain'}){
+  const term=topic.replace(/^[^\u3040-\u30ff\u4e00-\u9fff]*/, '')||'介護';
+  const hooks=[
+    `${term}について考えてみましょう。利用者の生活と気持ちを中心に支援することが大切です。`,
+    `介護の現場では、決められた方法をそのまま行うだけでは十分ではありません。本人の状態と希望を確認します。`,
+    `この場面で最も大切なのは、利用者を一人の生活者として尊重することです。`
+  ];
+  const bodies=[
+    `${term}は、介護福祉士国家試験で重要な学習テーマです。支援を始める前に、利用者の意思、生活歴、身体状態、環境を確認します。\n\n安全や効率だけで判断せず、本人ができることを奪わないようにします。必要な部分だけを支援し、できる部分は本人が行えるように待つことが自立支援につながります。\n\n観察した事実は記録し、必要な相手に報告します。推測と事実を分け、チームで情報を共有しながら支援を見直しましょう。`,
+    `${term}を理解するときは、利用者の尊厳と自己決定を出発点にします。本人の希望を確認せず、職員や家族の都合だけで方法を決めてはいけません。\n\n本人が拒否した場合も、単なる問題行動と決めつけず、痛み、不安、疲労、環境、時間帯などの理由を観察します。理由を考え、方法や環境を調整することが大切です。`,
+    `試験では、最も個別的で、本人の意思と能力を尊重する選択肢を選びます。施設の効率だけを優先する選択肢や、説明なしに支援を始める選択肢には注意してください。`
+  ];
+  if(type==='hook')return {id:`generated-s${sectionId}l${levelId}m${cardIndex}`,type,body:{ja:hooks[cardIndex%hooks.length],id:`${topic}について、利用者の生活と気持ちを中心に学びます。`}};
+  if(type==='recap')return {id:`generated-s${sectionId}l${levelId}m${cardIndex}`,type,heading:{ja:`${term}のまとめ`,id:`Ringkasan ${topic}`},points:bodies.map((x,i)=>({ja:x.split('\n')[0],id:`Poin penting ${i+1} tentang ${topic}.`}))};
+  return {id:`generated-s${sectionId}l${levelId}m${cardIndex}`,type:'explain',heading:{ja:`${term}を学ぶ`,id:`Belajar ${topic}`},body:{ja:bodies[cardIndex%bodies.length],id:`${topic} adalah materi penting. Hubungkan teori dengan martabat, keamanan, pilihan, dan kehidupan pengguna.`}};
+}
+
 function makeLevel(sectionId, plan, levelId, topic){
  const isReview=topic==='セクション復習'; const base=qTemplates[(levelId+sectionId)%qTemplates.length];
  const question={id:`s${sectionId}-l${levelId}-q01`,difficulty:levelId>Math.ceil(plan[2]*.7)?'hard':levelId>Math.ceil(plan[2]*.35)?'medium':'easy',questionJa:`${topic}について、${base.q}`,questionId:`Topik ${topic}: manakah pernyataan yang paling tepat?`,choices:base.choices,choiceIds:['Mendukung sesuai kehendak dan riwayat hidup pengguna','Memprioritaskan kenyamanan caregiver','Membatasi semua pilihan pengguna demi keamanan','Menentukan hanya berdasarkan efisiensi','Memulai tanpa penjelasan'],correctIndex:base.answer,explanationJa:base.explanation,explanationId:base.explanationId,sourceYear:sectionId<=3?'official-style':'syllabus-based'};
  const extra=[1,2,3,4].map((n)=>({...question,id:`s${sectionId}-l${levelId}-q0${n+1}`,questionJa:n%2?`${topic}に関する次の記述のうち、正しいものを1つ選びなさい。`:`${topic}の学習で大切な視点はどれか。`,questionId:`Dalam materi ${topic}, pilihan manakah yang paling tepat?`}));
- return {id:levelId,titleJa:`${topic}`,titleId:topic==='セクション復習'?'Section recap':topic,objective:`${topic}の基本を理解し、事例に応用する`,objectiveId:`Memahami ${topic} dan menerapkannya pada kasus.`,isReview,materi:[{titleJa:`${topic}を学ぶ`,titleId:`Belajar ${topic}`,bodyJa:`${topic}は介護福祉士国家試験で重要な学習テーマです。利用者の尊厳、安全、意思決定、生活を中心に考えます。`,bodyId:`${topic} adalah tema penting. Selalu hubungkan teori dengan martabat, keamanan, pilihan, dan kehidupan pengguna.`,terms:glossary.slice((sectionId+levelId)%glossary.length,(sectionId+levelId)%glossary.length+2).map(x=>x.ja)}, {titleJa:'試験の視点',titleId:'Sudut pandang ujian',bodyJa:'問題文の事実を確認し、最も個別的で尊厳を守る支援を選びます。',bodyId:'Baca fakta kasus, lalu pilih dukungan yang paling individual dan menjaga martabat.',terms:[]}],questions:[question,...extra]};
+ return {id:levelId,titleJa:`${topic}`,titleId:topic==='セクション復習'?'Section recap':topic,objective:`${topic}の基本を理解し、事例に応用する`,objectiveId:`Memahami ${topic} dan menerapkannya pada kasus.`,isReview,materi:[makeGeneratedJapaneseCard({sectionId,levelId,topic,cardIndex:0,type:'hook'}),makeGeneratedJapaneseCard({sectionId,levelId,topic,cardIndex:1,type:'explain'}),makeGeneratedJapaneseCard({sectionId,levelId,topic,cardIndex:2,type:'explain'}),makeGeneratedJapaneseCard({sectionId,levelId,topic,cardIndex:3,type:'explain'}),makeGeneratedJapaneseCard({sectionId,levelId,topic,cardIndex:4,type:'recap'})],questions:[question,...extra]};
 }
 
 export const sections=plans.map(([titleJa,titleId,count,icon,topics],i)=>({id:i+1,titleJa,titleId,icon,levelCount:count,description:`${titleJa}を基礎から事例まで段階的に学びます。`,levels:topics.map((topic,j)=>makeLevel(i+1,[titleJa,titleId,count,icon,topics],j+1,topic))}));
