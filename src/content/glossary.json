@@ -1,0 +1,2098 @@
+{
+ "_comment": "SEED. status:'stub' = belum ada penjelasan panjang. Validator menolak rilis kalau masih ada stub di section yang sudah dirilis.",
+ "version": "2026.08.04",
+ "terms": [
+  {
+   "slug": "songen",
+   "kanji": "尊厳",
+   "reading": "そんげん",
+   "romaji": "songen",
+   "id": {
+    "short": "martabat manusia",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    1
+   ],
+   "tags": [
+    "fondasi",
+    "hak"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0,
+   "en": "dignity",
+   "synonyms": [
+    "harga diri",
+    "kehormatan",
+    "kemuliaan"
+   ]
+  },
+  {
+   "slug": "jinken",
+   "kanji": "人権",
+   "reading": "じんけん",
+   "romaji": "jinken",
+   "id": {
+    "short": "hak asasi manusia",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    1
+   ],
+   "tags": [
+    "fondasi",
+    "hak"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "jiritsu-shien",
+   "kanji": "自立支援",
+   "reading": "じりつしえん",
+   "romaji": "jiritsu shien",
+   "id": {
+    "short": "dukungan kemandirian",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    1
+   ],
+   "tags": [
+    "fondasi"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "jiko-kettei",
+   "kanji": "自己決定",
+   "reading": "じこけってい",
+   "romaji": "jiko kettei",
+   "id": {
+    "short": "penentuan diri",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    1
+   ],
+   "tags": [
+    "fondasi",
+    "hak"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "qol",
+   "kanji": "QOL",
+   "reading": "きゅーおーえる",
+   "romaji": "QOL",
+   "id": {
+    "short": "kualitas hidup",
+    "long": ""
+   },
+   "type": "abbrev",
+   "sections": [
+    1
+   ],
+   "tags": [
+    "fondasi"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "adl",
+   "kanji": "ADL",
+   "reading": "えーでぃーえる",
+   "romaji": "ADL",
+   "id": {
+    "short": "aktivitas dasar sehari-hari",
+    "long": ""
+   },
+   "type": "abbrev",
+   "sections": [
+    1
+   ],
+   "tags": [
+    "fondasi",
+    "kesehatan"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "iadl",
+   "kanji": "IADL",
+   "reading": "あいえーでぃーえる",
+   "romaji": "IADL",
+   "id": {
+    "short": "aktivitas instrumental sehari-hari",
+    "long": ""
+   },
+   "type": "abbrev",
+   "sections": [
+    1
+   ],
+   "tags": [
+    "fondasi"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "normalization",
+   "kanji": "ノーマライゼーション",
+   "reading": "のーまらいぜーしょん",
+   "romaji": "noomaraizeeshon",
+   "id": {
+    "short": "normalisasi hidup",
+    "long": ""
+   },
+   "type": "katakana",
+   "sections": [
+    1
+   ],
+   "tags": [
+    "fondasi"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "advocacy",
+   "kanji": "アドボカシー",
+   "reading": "あどぼかしー",
+   "romaji": "adobokashii",
+   "id": {
+    "short": "advokasi hak pengguna",
+    "long": ""
+   },
+   "type": "katakana",
+   "sections": [
+    1
+   ],
+   "tags": [
+    "hak"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "kenri-yougo",
+   "kanji": "権利擁護",
+   "reading": "けんりようご",
+   "romaji": "kenri yougo",
+   "id": {
+    "short": "perlindungan hak",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    1
+   ],
+   "tags": [
+    "hak"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "empowerment",
+   "kanji": "エンパワメント",
+   "reading": "えんぱわめんと",
+   "romaji": "enpawamento",
+   "id": {
+    "short": "pemberdayaan",
+    "long": ""
+   },
+   "type": "katakana",
+   "sections": [
+    1
+   ],
+   "tags": [
+    "fondasi"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "kojin-no-sonchou",
+   "kanji": "個人の尊重",
+   "reading": "こじんのそんちょう",
+   "romaji": "kojin no sonchou",
+   "id": {
+    "short": "penghormatan individu",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    1
+   ],
+   "tags": [
+    "fondasi",
+    "hak"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "keichou",
+   "kanji": "傾聴",
+   "reading": "けいちょう",
+   "romaji": "keichou",
+   "id": {
+    "short": "mendengar aktif",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    2
+   ],
+   "tags": [
+    "komunikasi"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "kyoukan",
+   "kanji": "共感",
+   "reading": "きょうかん",
+   "romaji": "kyoukan",
+   "id": {
+    "short": "empati",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    2
+   ],
+   "tags": [
+    "komunikasi"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "juyou",
+   "kanji": "受容",
+   "reading": "じゅよう",
+   "romaji": "juyou",
+   "id": {
+    "short": "penerimaan tanpa menghakimi",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    2
+   ],
+   "tags": [
+    "komunikasi"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "jiko-kakuchi",
+   "kanji": "自己覚知",
+   "reading": "じこかくち",
+   "romaji": "jiko kakuchi",
+   "id": {
+    "short": "kesadaran diri perawat",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    2
+   ],
+   "tags": [
+    "komunikasi"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "rapport",
+   "kanji": "ラポール",
+   "reading": "らぽーる",
+   "romaji": "rapooru",
+   "id": {
+    "short": "hubungan saling percaya",
+    "long": ""
+   },
+   "type": "katakana",
+   "sections": [
+    2
+   ],
+   "tags": [
+    "komunikasi"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "higengo",
+   "kanji": "非言語コミュニケーション",
+   "reading": "ひげんごこみゅにけーしょん",
+   "romaji": "higengo komyunikeeshon",
+   "id": {
+    "short": "komunikasi nonverbal",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    2
+   ],
+   "tags": [
+    "komunikasi"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "hirakareta-shitsumon",
+   "kanji": "開かれた質問",
+   "reading": "ひらかれたしつもん",
+   "romaji": "hirakareta shitsumon",
+   "id": {
+    "short": "pertanyaan terbuka",
+    "long": ""
+   },
+   "type": "wago",
+   "sections": [
+    2
+   ],
+   "tags": [
+    "komunikasi"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "biestek",
+   "kanji": "バイステックの7原則",
+   "reading": "ばいすてっくのななげんそく",
+   "romaji": "Baisutekku no nana gensoku",
+   "id": {
+    "short": "7 prinsip Biestek",
+    "long": ""
+   },
+   "type": "katakana",
+   "sections": [
+    2
+   ],
+   "tags": [
+    "komunikasi"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "kaigo-hoken",
+   "kanji": "介護保険",
+   "reading": "かいごほけん",
+   "romaji": "kaigo hoken",
+   "id": {
+    "short": "asuransi perawatan lansia",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    3
+   ],
+   "tags": [
+    "sistem"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "chiiki-houkatsu",
+   "kanji": "地域包括ケアシステム",
+   "reading": "ちいきほうかつけあしすてむ",
+   "romaji": "chiiki houkatsu kea shisutemu",
+   "id": {
+    "short": "sistem perawatan berbasis komunitas",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    3
+   ],
+   "tags": [
+    "sistem"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "youkaigo-nintei",
+   "kanji": "要介護認定",
+   "reading": "ようかいごにんてい",
+   "romaji": "youkaigo nintei",
+   "id": {
+    "short": "penetapan tingkat kebutuhan perawatan",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    3
+   ],
+   "tags": [
+    "sistem"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "care-manager",
+   "kanji": "介護支援専門員",
+   "reading": "かいごしえんせんもんいん",
+   "romaji": "kaigo shien senmon'in",
+   "id": {
+    "short": "care manager",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    3
+   ],
+   "tags": [
+    "sistem",
+    "profesi"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "seinen-kouken",
+   "kanji": "成年後見制度",
+   "reading": "せいねんこうけんせいど",
+   "romaji": "seinen kouken seido",
+   "id": {
+    "short": "sistem wali dewasa",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    3
+   ],
+   "tags": [
+    "sistem",
+    "hak"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "seikatsu-hogo",
+   "kanji": "生活保護",
+   "reading": "せいかつほご",
+   "romaji": "seikatsu hogo",
+   "id": {
+    "short": "bantuan sosial hidup",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    3
+   ],
+   "tags": [
+    "sistem"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "shougaisha-sougou",
+   "kanji": "障害者総合支援法",
+   "reading": "しょうがいしゃそうごうしえんほう",
+   "romaji": "shougaisha sougou shien hou",
+   "id": {
+    "short": "UU dukungan menyeluruh disabilitas",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    3
+   ],
+   "tags": [
+    "sistem",
+    "hukum"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "chiiki-houkatsu-center",
+   "kanji": "地域包括支援センター",
+   "reading": "ちいきほうかつしえんせんたー",
+   "romaji": "chiiki houkatsu shien sentaa",
+   "id": {
+    "short": "pusat dukungan komunitas",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    3
+   ],
+   "tags": [
+    "sistem"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "kaigo-fukushishi",
+   "kanji": "介護福祉士",
+   "reading": "かいごふくしし",
+   "romaji": "kaigo fukushishi",
+   "id": {
+    "short": "perawat lansia bersertifikat",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    4
+   ],
+   "tags": [
+    "profesi"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "icf",
+   "kanji": "ICF",
+   "reading": "あいしーえふ",
+   "romaji": "ICF",
+   "id": {
+    "short": "klasifikasi fungsi internasional",
+    "long": ""
+   },
+   "type": "abbrev",
+   "sections": [
+    4
+   ],
+   "tags": [
+    "fondasi"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "risk-management",
+   "kanji": "リスクマネジメント",
+   "reading": "りすくまねじめんと",
+   "romaji": "risuku manejimento",
+   "id": {
+    "short": "manajemen risiko",
+    "long": ""
+   },
+   "type": "katakana",
+   "sections": [
+    4
+   ],
+   "tags": [
+    "keselamatan"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "hiyari-hatto",
+   "kanji": "ヒヤリハット",
+   "reading": "ひやりはっと",
+   "romaji": "hiyari hatto",
+   "id": {
+    "short": "nyaris celaka",
+    "long": ""
+   },
+   "type": "katakana",
+   "sections": [
+    4
+   ],
+   "tags": [
+    "keselamatan"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "kansen-taisaku",
+   "kanji": "感染対策",
+   "reading": "かんせんたいさく",
+   "romaji": "kansen taisaku",
+   "id": {
+    "short": "pengendalian infeksi",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    4
+   ],
+   "tags": [
+    "keselamatan"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "hyoujun-yobousaku",
+   "kanji": "標準予防策",
+   "reading": "ひょうじゅんよぼうさく",
+   "romaji": "hyoujun yobousaku",
+   "id": {
+    "short": "kewaspadaan standar",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    4
+   ],
+   "tags": [
+    "keselamatan"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "shintai-kousoku",
+   "kanji": "身体拘束",
+   "reading": "しんたいこうそく",
+   "romaji": "shintai kousoku",
+   "id": {
+    "short": "pengekangan fisik",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    4
+   ],
+   "tags": [
+    "hak",
+    "keselamatan"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "koureisha-gyakutai",
+   "kanji": "高齢者虐待",
+   "reading": "こうれいしゃぎゃくたい",
+   "romaji": "koureisha gyakutai",
+   "id": {
+    "short": "kekerasan terhadap lansia",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    4
+   ],
+   "tags": [
+    "hak",
+    "hukum"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "tashokushu-renkei",
+   "kanji": "多職種連携",
+   "reading": "たしょくしゅれんけい",
+   "romaji": "tashokushu renkei",
+   "id": {
+    "short": "kolaborasi antarprofesi",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    4
+   ],
+   "tags": [
+    "profesi"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "privacy-hogo",
+   "kanji": "プライバシー保護",
+   "reading": "ぷらいばしーほご",
+   "romaji": "puraibashii hogo",
+   "id": {
+    "short": "perlindungan privasi",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    4
+   ],
+   "tags": [
+    "hak"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "burnout",
+   "kanji": "燃え尽き症候群",
+   "reading": "もえつきしょうこうぐん",
+   "romaji": "moetsuki shoukougun",
+   "id": {
+    "short": "sindrom kelelahan kerja",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    4
+   ],
+   "tags": [
+    "profesi"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "body-mechanics",
+   "kanji": "ボディメカニクス",
+   "reading": "ぼでぃめかにくす",
+   "romaji": "bodi mekanikusu",
+   "id": {
+    "short": "mekanika tubuh",
+    "long": ""
+   },
+   "type": "katakana",
+   "sections": [
+    5
+   ],
+   "tags": [
+    "teknik"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "ijou",
+   "kanji": "移乗",
+   "reading": "いじょう",
+   "romaji": "ijou",
+   "id": {
+    "short": "perpindahan posisi/transfer",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    5
+   ],
+   "tags": [
+    "teknik"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "taii-henkan",
+   "kanji": "体位変換",
+   "reading": "たいいへんかん",
+   "romaji": "taii henkan",
+   "id": {
+    "short": "perubahan posisi tubuh",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    5
+   ],
+   "tags": [
+    "teknik"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "jokusou",
+   "kanji": "褥瘡",
+   "reading": "じょくそう",
+   "romaji": "jokusou",
+   "id": {
+    "short": "luka tekan (dekubitus)",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    5
+   ],
+   "tags": [
+    "teknik",
+    "kesehatan"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "seishiki",
+   "kanji": "清拭",
+   "reading": "せいしき",
+   "romaji": "seishiki",
+   "id": {
+    "short": "seka badan",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    5
+   ],
+   "tags": [
+    "teknik"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "nyuuyoku-kaijo",
+   "kanji": "入浴介助",
+   "reading": "にゅうよくかいじょ",
+   "romaji": "nyuuyoku kaijo",
+   "id": {
+    "short": "bantuan mandi",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    5
+   ],
+   "tags": [
+    "teknik"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "haisetsu-kaijo",
+   "kanji": "排泄介助",
+   "reading": "はいせつかいじょ",
+   "romaji": "haisetsu kaijo",
+   "id": {
+    "short": "bantuan buang air",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    5
+   ],
+   "tags": [
+    "teknik"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "goen",
+   "kanji": "誤嚥",
+   "reading": "ごえん",
+   "romaji": "goen",
+   "id": {
+    "short": "aspirasi ke saluran napas",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    5
+   ],
+   "tags": [
+    "teknik",
+    "kesehatan"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0,
+   "en": "aspiration",
+   "synonyms": [
+    "tersedak",
+    "salah masuk saluran napas"
+   ]
+  },
+  {
+   "slug": "enge",
+   "kanji": "嚥下",
+   "reading": "えんげ",
+   "romaji": "enge",
+   "id": {
+    "short": "menelan",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    5
+   ],
+   "tags": [
+    "kesehatan"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "koukuu-care",
+   "kanji": "口腔ケア",
+   "reading": "こうくうけあ",
+   "romaji": "koukuu kea",
+   "id": {
+    "short": "perawatan mulut",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    5
+   ],
+   "tags": [
+    "teknik"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "fukushi-yougu",
+   "kanji": "福祉用具",
+   "reading": "ふくしようぐ",
+   "romaji": "fukushi yougu",
+   "id": {
+    "short": "alat bantu kesejahteraan",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    5
+   ],
+   "tags": [
+    "teknik"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "zanzon-kinou",
+   "kanji": "残存機能",
+   "reading": "ざんぞんきのう",
+   "romaji": "zanzon kinou",
+   "id": {
+    "short": "fungsi yang masih tersisa",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    5
+   ],
+   "tags": [
+    "teknik",
+    "fondasi"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "koujousei",
+   "kanji": "恒常性",
+   "reading": "こうじょうせい",
+   "romaji": "koujousei",
+   "id": {
+    "short": "homeostasis",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    6
+   ],
+   "tags": [
+    "kesehatan"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "haiyou-shoukougun",
+   "kanji": "廃用症候群",
+   "reading": "はいようしょうこうぐん",
+   "romaji": "haiyou shoukougun",
+   "id": {
+    "short": "sindrom disuse",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    6
+   ],
+   "tags": [
+    "kesehatan"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "dassui",
+   "kanji": "脱水",
+   "reading": "だっすい",
+   "romaji": "dassui",
+   "id": {
+    "short": "dehidrasi",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    6
+   ],
+   "tags": [
+    "kesehatan"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "tei-eiyou",
+   "kanji": "低栄養",
+   "reading": "ていえいよう",
+   "romaji": "tei eiyou",
+   "id": {
+    "short": "malnutrisi",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    6
+   ],
+   "tags": [
+    "kesehatan"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "vital-sign",
+   "kanji": "バイタルサイン",
+   "reading": "ばいたるさいん",
+   "romaji": "baitaru sain",
+   "id": {
+    "short": "tanda vital",
+    "long": ""
+   },
+   "type": "katakana",
+   "sections": [
+    6
+   ],
+   "tags": [
+    "kesehatan"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "maslow",
+   "kanji": "マズローの欲求階層",
+   "reading": "まずろーのよっきゅうかいそう",
+   "romaji": "Mazuroo no yokkyuu kaisou",
+   "id": {
+    "short": "hierarki kebutuhan Maslow",
+    "long": ""
+   },
+   "type": "katakana",
+   "sections": [
+    6
+   ],
+   "tags": [
+    "fondasi"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "rounenki",
+   "kanji": "老年期",
+   "reading": "ろうねんき",
+   "romaji": "rounenki",
+   "id": {
+    "short": "masa lanjut usia",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    7
+   ],
+   "tags": [
+    "lansia"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "sarcopenia",
+   "kanji": "サルコペニア",
+   "reading": "さるこぺにあ",
+   "romaji": "sarukopenia",
+   "id": {
+    "short": "sarkopenia (susut otot)",
+    "long": ""
+   },
+   "type": "katakana",
+   "sections": [
+    7
+   ],
+   "tags": [
+    "lansia",
+    "kesehatan"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "frail",
+   "kanji": "フレイル",
+   "reading": "ふれいる",
+   "romaji": "fureiru",
+   "id": {
+    "short": "kerentanan (frailty)",
+    "long": ""
+   },
+   "type": "katakana",
+   "sections": [
+    7
+   ],
+   "tags": [
+    "lansia",
+    "kesehatan"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "hakunaishou",
+   "kanji": "白内障",
+   "reading": "はくないしょう",
+   "romaji": "hakunaishou",
+   "id": {
+    "short": "katarak",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    7
+   ],
+   "tags": [
+    "lansia",
+    "kesehatan"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "nanchou",
+   "kanji": "難聴",
+   "reading": "なんちょう",
+   "romaji": "nanchou",
+   "id": {
+    "short": "gangguan pendengaran",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    7
+   ],
+   "tags": [
+    "lansia",
+    "kesehatan"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "kotsusoshoushou",
+   "kanji": "骨粗鬆症",
+   "reading": "こつそしょうしょう",
+   "romaji": "kotsusoshoushou",
+   "id": {
+    "short": "osteoporosis",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    7
+   ],
+   "tags": [
+    "lansia",
+    "kesehatan"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "ninchishou",
+   "kanji": "認知症",
+   "reading": "にんちしょう",
+   "romaji": "ninchishou",
+   "id": {
+    "short": "demensia",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    8
+   ],
+   "tags": [
+    "demensia"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "bpsd",
+   "kanji": "BPSD",
+   "reading": "びーぴーえすでぃー",
+   "romaji": "BPSD",
+   "id": {
+    "short": "gejala perilaku & psikologis demensia",
+    "long": ""
+   },
+   "type": "abbrev",
+   "sections": [
+    8
+   ],
+   "tags": [
+    "demensia"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "chuukaku-shoujou",
+   "kanji": "中核症状",
+   "reading": "ちゅうかくしょうじょう",
+   "romaji": "chuukaku shoujou",
+   "id": {
+    "short": "gejala inti demensia",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    8
+   ],
+   "tags": [
+    "demensia"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "alzheimer",
+   "kanji": "アルツハイマー型認知症",
+   "reading": "あるつはいまーがたにんちしょう",
+   "romaji": "Arutsuhaimaa gata ninchishou",
+   "id": {
+    "short": "demensia Alzheimer",
+    "long": ""
+   },
+   "type": "katakana",
+   "sections": [
+    8
+   ],
+   "tags": [
+    "demensia"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "kekkansei-ninchishou",
+   "kanji": "血管性認知症",
+   "reading": "けっかんせいにんちしょう",
+   "romaji": "kekkansei ninchishou",
+   "id": {
+    "short": "demensia vaskular",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    8
+   ],
+   "tags": [
+    "demensia"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "lewy",
+   "kanji": "レビー小体型認知症",
+   "reading": "れびーしょうたいがたにんちしょう",
+   "romaji": "Rebii shoutai gata ninchishou",
+   "id": {
+    "short": "demensia Lewy body",
+    "long": ""
+   },
+   "type": "katakana",
+   "sections": [
+    8
+   ],
+   "tags": [
+    "demensia"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "zentou-sokutou",
+   "kanji": "前頭側頭型認知症",
+   "reading": "ぜんとうそくとうがたにんちしょう",
+   "romaji": "zentou sokutou gata ninchishou",
+   "id": {
+    "short": "demensia frontotemporal",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    8
+   ],
+   "tags": [
+    "demensia"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "senmou",
+   "kanji": "せん妄",
+   "reading": "せんもう",
+   "romaji": "senmou",
+   "id": {
+    "short": "delirium",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    8
+   ],
+   "tags": [
+    "demensia",
+    "kesehatan"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "kentoushiki-shougai",
+   "kanji": "見当識障害",
+   "reading": "けんとうしきしょうがい",
+   "romaji": "kentoushiki shougai",
+   "id": {
+    "short": "disorientasi",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    8
+   ],
+   "tags": [
+    "demensia"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "kaisouhou",
+   "kanji": "回想法",
+   "reading": "かいそうほう",
+   "romaji": "kaisouhou",
+   "id": {
+    "short": "terapi reminisensi",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    8
+   ],
+   "tags": [
+    "demensia"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "validation",
+   "kanji": "バリデーション",
+   "reading": "ばりでーしょん",
+   "romaji": "barideeshon",
+   "id": {
+    "short": "terapi validasi",
+    "long": ""
+   },
+   "type": "katakana",
+   "sections": [
+    8
+   ],
+   "tags": [
+    "demensia"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "person-centred",
+   "kanji": "パーソン・センタード・ケア",
+   "reading": "ぱーそんせんたーどけあ",
+   "romaji": "paason sentaado kea",
+   "id": {
+    "short": "perawatan berpusat pada orang",
+    "long": ""
+   },
+   "type": "katakana",
+   "sections": [
+    8
+   ],
+   "tags": [
+    "demensia",
+    "fondasi"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "jakunensei-ninchishou",
+   "kanji": "若年性認知症",
+   "reading": "じゃくねんせいにんちしょう",
+   "romaji": "jakunensei ninchishou",
+   "id": {
+    "short": "demensia usia muda",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    8
+   ],
+   "tags": [
+    "demensia"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "shougai-juyou",
+   "kanji": "障害受容",
+   "reading": "しょうがいじゅよう",
+   "romaji": "shougai juyou",
+   "id": {
+    "short": "penerimaan disabilitas",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    9
+   ],
+   "tags": [
+    "disabilitas"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "naibu-shougai",
+   "kanji": "内部障害",
+   "reading": "ないぶしょうがい",
+   "romaji": "naibu shougai",
+   "id": {
+    "short": "disabilitas organ dalam",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    9
+   ],
+   "tags": [
+    "disabilitas"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "hattatsu-shougai",
+   "kanji": "発達障害",
+   "reading": "はったつしょうがい",
+   "romaji": "hattatsu shougai",
+   "id": {
+    "short": "gangguan perkembangan",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    9
+   ],
+   "tags": [
+    "disabilitas"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "chiteki-shougai",
+   "kanji": "知的障害",
+   "reading": "ちてきしょうがい",
+   "romaji": "chiteki shougai",
+   "id": {
+    "short": "disabilitas intelektual",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    9
+   ],
+   "tags": [
+    "disabilitas"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "seishin-shougai",
+   "kanji": "精神障害",
+   "reading": "せいしんしょうがい",
+   "romaji": "seishin shougai",
+   "id": {
+    "short": "disabilitas psikis",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    9
+   ],
+   "tags": [
+    "disabilitas"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "tougou-shicchoushou",
+   "kanji": "統合失調症",
+   "reading": "とうごうしっちょうしょう",
+   "romaji": "tougou shicchoushou",
+   "id": {
+    "short": "skizofrenia",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    9
+   ],
+   "tags": [
+    "disabilitas",
+    "kesehatan"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "gouriteki-hairyo",
+   "kanji": "合理的配慮",
+   "reading": "ごうりてきはいりょ",
+   "romaji": "gouriteki hairyo",
+   "id": {
+    "short": "akomodasi yang wajar",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    9
+   ],
+   "tags": [
+    "disabilitas",
+    "hak"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "peer-support",
+   "kanji": "ピアサポート",
+   "reading": "ぴあさぽーと",
+   "romaji": "pia sapooto",
+   "id": {
+    "short": "dukungan sesama",
+    "long": ""
+   },
+   "type": "katakana",
+   "sections": [
+    9
+   ],
+   "tags": [
+    "disabilitas"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "kakutan-kyuuin",
+   "kanji": "喀痰吸引",
+   "reading": "かくたんきゅういん",
+   "romaji": "kakutan kyuuin",
+   "id": {
+    "short": "penyedotan dahak",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    10
+   ],
+   "tags": [
+    "medis"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "keikan-eiyou",
+   "kanji": "経管栄養",
+   "reading": "けいかんえいよう",
+   "romaji": "keikan eiyou",
+   "id": {
+    "short": "nutrisi lewat selang",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    10
+   ],
+   "tags": [
+    "medis"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "irou",
+   "kanji": "胃ろう",
+   "reading": "いろう",
+   "romaji": "irou",
+   "id": {
+    "short": "gastrostomi (PEG)",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    10
+   ],
+   "tags": [
+    "medis"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "keibi-keikan",
+   "kanji": "経鼻経管栄養",
+   "reading": "けいびけいかんえいよう",
+   "romaji": "keibi keikan eiyou",
+   "id": {
+    "short": "selang nutrisi lewat hidung",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    10
+   ],
+   "tags": [
+    "medis"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "pulse-oximeter",
+   "kanji": "パルスオキシメーター",
+   "reading": "ぱるすおきしめーたー",
+   "romaji": "parusu okishimeetaa",
+   "id": {
+    "short": "oksimeter denyut",
+    "long": ""
+   },
+   "type": "katakana",
+   "sections": [
+    10
+   ],
+   "tags": [
+    "medis"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "kyuuhenji-taiou",
+   "kanji": "急変時対応",
+   "reading": "きゅうへんじたいおう",
+   "romaji": "kyuuhenji taiou",
+   "id": {
+    "short": "penanganan kondisi mendadak",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    10
+   ],
+   "tags": [
+    "medis",
+    "keselamatan"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "kaigo-katei",
+   "kanji": "介護過程",
+   "reading": "かいごかてい",
+   "romaji": "kaigo katei",
+   "id": {
+    "short": "proses kaigo",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    11
+   ],
+   "tags": [
+    "proses"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "assessment",
+   "kanji": "アセスメント",
+   "reading": "あせすめんと",
+   "romaji": "asesumento",
+   "id": {
+    "short": "asesmen",
+    "long": ""
+   },
+   "type": "katakana",
+   "sections": [
+    11
+   ],
+   "tags": [
+    "proses"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "kaigo-keikaku",
+   "kanji": "介護計画",
+   "reading": "かいごけいかく",
+   "romaji": "kaigo keikaku",
+   "id": {
+    "short": "rencana perawatan",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    11
+   ],
+   "tags": [
+    "proses"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "monitoring",
+   "kanji": "モニタリング",
+   "reading": "もにたりんぐ",
+   "romaji": "monitaringu",
+   "id": {
+    "short": "pemantauan",
+    "long": ""
+   },
+   "type": "katakana",
+   "sections": [
+    11
+   ],
+   "tags": [
+    "proses"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "shukanteki-jouhou",
+   "kanji": "主観的情報",
+   "reading": "しゅかんてきじょうほう",
+   "romaji": "shukanteki jouhou",
+   "id": {
+    "short": "informasi subjektif",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    11
+   ],
+   "tags": [
+    "proses"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "kyakkanteki-jouhou",
+   "kanji": "客観的情報",
+   "reading": "きゃっかんてきじょうほう",
+   "romaji": "kyakkanteki jouhou",
+   "id": {
+    "short": "informasi objektif",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    11
+   ],
+   "tags": [
+    "proses"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "kiroku",
+   "kanji": "記録",
+   "reading": "きろく",
+   "romaji": "kiroku",
+   "id": {
+    "short": "pencatatan",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    11
+   ],
+   "tags": [
+    "proses"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  },
+  {
+   "slug": "houkoku",
+   "kanji": "報告",
+   "reading": "ほうこく",
+   "romaji": "houkoku",
+   "id": {
+    "short": "pelaporan",
+    "long": ""
+   },
+   "type": "kango",
+   "sections": [
+    11
+   ],
+   "tags": [
+    "proses"
+   ],
+   "examples": [],
+   "related": [],
+   "status": "stub",
+   "occurrences": 0
+  }
+ ]
+}

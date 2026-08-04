@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "node scripts/build-glossary-index.mjs && vite build",
+    "validate:glossary": "node scripts/validate-glossary.mjs",
     "preview": "vite preview"
   },
   "dependencies": {

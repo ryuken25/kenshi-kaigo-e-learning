@@ -5,6 +5,7 @@ import {Heart,Lock,ChevronRight,BookOpen,Flame,UserRound,Star,Check,X,Volume2,In
 import {sections,getSection,getLevel,glossary,allQuestions,randomQuestion} from './data.js';
 import {furigana} from './furigana.generated.js';
 import s1l1Content from './content/s1l1.json';
+import {GlossaryPage,GlossaryDetail} from './GlossaryPage.jsx';
 import Login from './Login.jsx';
 import {AuthProvider, useAuth} from './context/AuthContext.jsx';
 import {ProgressProvider, useProgress, readGuestProgress} from './context/ProgressContext.jsx';
@@ -430,7 +431,7 @@ function Result(){
 
 function Recap(){const {sectionId}=useParams(),s=getSection(sectionId);if(!s)return <Navigate to="/"/>;return <main className="page result"><div className="sectionHero"><span>{s.icon}</span><div><small>RECAP</small><h1>{s.titleJa}</h1><p>Section review · {s.titleId}</p></div></div><Mascot variant="recap" size="md"/><h2>Ready for a little challenge?</h2><p className="muted">Uji pemahamanmu dengan soal campuran dari semua level.</p><Link className="primary big tap" to={`/section/${s.id}/level/1/quiz`}>Mulai recap <Star/></Link></main>;}
 
-function Glossary(){const [term,setTerm]=useState(new URLSearchParams(useLocation().search).get('term')||'');const list=useMemo(()=>glossary.filter(x=>(x.ja+x.reading+x.id).toLowerCase().includes(term.toLowerCase())),[term]);return <main className="page"><h1 className="pageTitle">Glossary <span>用語カード</span></h1><input className="search" value={term} onChange={e=>setTerm(e.target.value)} placeholder="Cari 尊厳 / dignity..."/>{list.map(x=><a className="glossaryRow" key={x.ja} href="https://ryuken25.github.io/kenshi-kanji-n4/" target="_blank" rel="noreferrer"><div><b>{x.ja}</b><small>{x.reading}</small></div><span>{x.id}</span><ChevronRight/></a>)}</main>;}
+function Glossary(){return <GlossaryPage/>;}
 
 function Profile(){
   const {user, isAuthenticated, logout} = useAuth();
@@ -464,6 +465,7 @@ function AppShell(){
     <Route path="/login" element={<Login/>}/>
     <Route path="/profile" element={<Profile/>}/>
     <Route path="/glossary" element={<Glossary/>}/>
+    <Route path="/glossary/:slug" element={<GlossaryDetail/>}/>
     <Route path="/practice" element={<Practice/>}/>
     <Route path="/section/:sectionId" element={<SectionOverview/>}/>
     <Route path="/section/:sectionId/recap" element={<Recap/>}/>
