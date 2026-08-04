@@ -1,0 +1,146 @@
+{
+  "_comment": "PATOKAN KEPADATAN. Level lain harus setara ini, bukan lebih tipis. 10 kartu, ~620 kata Indonesia, 5 istilah.",
+  "sectionId": 1,
+  "levelId": 1,
+  "title": {
+    "ja": "尊厳[そんげん]と人権[じんけん]",
+    "id": "Martabat dan Hak Asasi"
+  },
+  "goal": {
+    "id": "Paham kenapa 尊厳 jadi dasar semua tindakan kaigo, dan bisa mengenali tindakan yang melanggarnya."
+  },
+  "estimatedMinutes": 9,
+  "materi": [
+    {
+      "id": "s1l1m1",
+      "type": "hook",
+      "mascot": "idle",
+      "body": {
+        "id": "Pagi itu Ibu Sato menolak dimandikan. Jadwal panti bilang jam 9, dan kalau lewat, giliran orang lain jadi mundur. Kamu bisa saja membujuk sampai dia menyerah — dan secara teknis pekerjaannya selesai.\n\nTapi ada sesuatu yang hilang di situ. Seluruh Level 1 ini soal apa yang hilang itu."
+      }
+    },
+    {
+      "id": "s1l1m2",
+      "type": "term",
+      "term": {
+        "kanji": "尊厳",
+        "reading": "そんげん",
+        "romaji": "songen",
+        "meaning": "martabat, harga diri sebagai manusia",
+        "example": {
+          "ja": "利用者[りようしゃ]の尊厳[そんげん]を守[まも]ることが介護[かいご]の出発点[しゅっぱつてん]です。",
+          "id": "Menjaga martabat penerima layanan adalah titik awal dari kaigo."
+        }
+      }
+    },
+    {
+      "id": "s1l1m3",
+      "type": "explain",
+      "heading": { "ja": "尊厳[そんげん]は「diberikan」, bukan「didapat」", "id": "Martabat itu melekat, bukan dihadiahkan" },
+      "body": {
+        "id": "尊厳 (songen) adalah nilai yang melekat pada setiap manusia sejak lahir. Bukan sesuatu yang harus dibuktikan lewat kemampuan, dan bukan sesuatu yang berkurang karena seseorang jadi tua, sakit, atau punya disabilitas.\n\nIni terdengar seperti kalimat indah di poster, tapi konsekuensinya sangat praktis. Kalau martabat itu melekat, maka orang yang tidak bisa jalan, tidak bisa bicara, atau tidak ingat namamu tetap punya martabat yang sama persis dengan orang yang sehat. Artinya tugasmu bukan memberi mereka martabat — martabat itu sudah ada. Tugasmu adalah tidak merampasnya.\n\nDi Jepang, dasar hukumnya ada di Konstitusi Pasal 13 (個人の尊重, penghormatan terhadap individu) dan Pasal 25 (生存権, hak untuk hidup layak). Di dunia kaigo, prinsip ini masuk secara eksplisit ke 介護保険法 Pasal 1 sejak revisi tahun 2005: perawatan harus dilakukan「尊厳を保持し」— dengan mempertahankan martabat."
+      }
+    },
+    {
+      "id": "s1l1m4",
+      "type": "term",
+      "term": {
+        "kanji": "人権",
+        "reading": "じんけん",
+        "romaji": "jinken",
+        "meaning": "hak asasi manusia",
+        "example": {
+          "ja": "高齢[こうれい]でも人権[じんけん]は変[か]わりません。",
+          "id": "Meskipun lanjut usia, hak asasinya tidak berubah."
+        }
+      }
+    },
+    {
+      "id": "s1l1m5",
+      "type": "explain",
+      "heading": { "ja": "ノーマライゼーション", "id": "Normalisasi: hidup biasa, bukan hidup 'khusus'" },
+      "body": {
+        "id": "ノーマライゼーション (normalisasi) lahir di Denmark pada 1950-an, dari gerakan orang tua anak dengan disabilitas intelektual yang menolak anak mereka dipisahkan ke institusi. Tokohnya Bank-Mikkelsen.\n\nIntinya satu kalimat: orang dengan disabilitas atau lansia berhak menjalani ritme hidup yang normal — bangun dan tidur di jam yang wajar, punya privasi, memilih apa yang dipakai dan dimakan, bertemu orang, dan mengambil risiko kecil seperti orang lain.\n\nDi lapangan, ini yang membedakan panti yang bagus dari panti yang sekadar aman. Panti yang cuma mengejar keamanan akan melarang lansia berjalan sendiri supaya tidak jatuh. Panti yang paham normalisasi akan mencari cara supaya dia tetap bisa berjalan, dengan risiko yang dikelola. Hidup tanpa risiko sama sekali bukan hidup yang normal."
+      }
+    },
+    {
+      "id": "s1l1m6",
+      "type": "compare",
+      "heading": { "id": "Tiga istilah yang sering ketuker" },
+      "rows": [
+        {
+          "term": { "kanji": "尊厳", "reading": "そんげん", "romaji": "songen" },
+          "meaning": "Nilai yang melekat pada manusia",
+          "when": "Jadi alasan di balik setiap tindakan"
+        },
+        {
+          "term": { "kanji": "自立", "reading": "じりつ", "romaji": "jiritsu" },
+          "meaning": "Kemandirian — memutuskan dan melakukan sendiri sejauh mampu",
+          "when": "Jadi tujuan dari dukungan yang diberikan"
+        },
+        {
+          "term": { "kanji": "権利擁護", "reading": "けんりようご", "romaji": "kenri yougo" },
+          "meaning": "Advokasi — membela hak orang yang sulit menyuarakan sendiri",
+          "when": "Saat hak seseorang sedang terancam"
+        }
+      ],
+      "note": {
+        "id": "Hubungannya: 尊厳 itu alasannya, 自立 itu tujuannya, 権利擁護 itu tindakannya saat ada yang salah."
+      }
+    },
+    {
+      "id": "s1l1m7",
+      "type": "checkpoint",
+      "question": {
+        "prompt": {
+          "ja": "尊厳[そんげん]について、正[ただ]しいものを1[ひと]つ選[えら]びなさい。",
+          "id": "Pilih satu pernyataan yang benar tentang 尊厳 (songen)."
+        },
+        "options": [
+          { "key": "a", "text": { "ja": "能力[のうりょく]が高[たか]い人[ひと]ほど尊厳[そんげん]も大[おお]きい", "id": "Makin tinggi kemampuan seseorang, makin besar martabatnya" } },
+          { "key": "b", "text": { "ja": "尊厳[そんげん]は生[う]まれながらに全[すべ]ての人[ひと]にある", "id": "Martabat melekat pada semua orang sejak lahir" } },
+          { "key": "c", "text": { "ja": "介護[かいご]を受[う]けると尊厳[そんげん]は減[へ]る", "id": "Martabat berkurang ketika seseorang menerima perawatan" } },
+          { "key": "d", "text": { "ja": "尊厳[そんげん]は施設[しせつ]が与[あた]えるものである", "id": "Martabat adalah sesuatu yang diberikan oleh panti" } }
+        ],
+        "answer": "b",
+        "explanation": {
+          "id": "Martabat melekat sejak lahir dan tidak bergantung pada kemampuan, kondisi kesehatan, atau status seseorang. Pilihan a dan c keliru karena mengaitkan martabat dengan kemampuan. Pilihan d keliru karena martabat bukan pemberian institusi — institusi hanya bisa menghormati atau melanggarnya."
+        }
+      }
+    },
+    {
+      "id": "s1l1m8",
+      "type": "case",
+      "heading": { "id": "Kembali ke Ibu Sato" },
+      "scenario": {
+        "id": "Ibu Sato (84) menolak dimandikan pagi ini. Ini hari ketiga. Rekanmu bilang, \"Sudah, bujuk saja, nanti juga mau. Kalau tidak, jadwal kita kacau.\"\n\nKamu perhatikan Ibu Sato selalu menolak saat perawat laki-laki yang bertugas, dan tidak pernah menolak di sore hari."
+      },
+      "prompt": { "id": "Coba pikirkan dulu: apa yang sebenarnya sedang dia sampaikan?" },
+      "reveal": {
+        "id": "Penolakan itu bentuk komunikasi, bukan gangguan.\n\nDari pola yang kamu amati, kemungkinan besar ini soal rasa malu terhadap perawat lawan jenis — bukan soal tidak mau bersih. Yang perlu diubah bukan Ibu Sato, tapi jadwal dan penugasannya.\n\nMembujuk sampai dia menyerah memang menyelesaikan tugas, tapi caranya mengabaikan alasan di balik penolakannya. Itu yang disebut melanggar 尊厳 — bukan karena kasar, tapi karena keinginannya dianggap tidak penting.\n\nLangkah yang benar: catat polanya (記録), sampaikan ke tim (報告), lalu usulkan penyesuaian jadwal atau petugas."
+      }
+    },
+    {
+      "id": "s1l1m9",
+      "type": "exam-tip",
+      "heading": { "ja": "試験[しけん]の視点[してん]", "id": "Sudut pandang ujian" },
+      "body": {
+        "id": "Soal tentang 尊厳 punya pola yang cukup konsisten:\n\n• Kalau ada opsi yang beralasan \"demi efisiensi\", \"karena aturan panti\", atau \"supaya cepat selesai\" — hampir selalu itu bukan jawabannya.\n\n• Jawaban yang benar biasanya yang paling menghormati keinginan individu, walaupun kelihatan lebih repot.\n\n• Hati-hati opsi yang terdengar baik tapi memutuskan untuk orang lain, misalnya \"keluarga yang menentukan supaya beliau tidak bingung\". Memutuskan atas nama seseorang tanpa upaya menanyakan dulu tetap pelanggaran.\n\n• Istilah yang sering muncul bareng: 自己決定 (jiko kettei, penentuan diri), 権利擁護 (kenri yougo, advokasi), 身体拘束 (shintai kousoku, pengekangan fisik — dilarang kecuali memenuhi tiga syarat: 切迫性, 非代替性, 一時性)."
+      }
+    },
+    {
+      "id": "s1l1m10",
+      "type": "recap",
+      "heading": { "id": "Ringkasan Level 1" },
+      "points": [
+        { "id": "尊厳 (songen) melekat sejak lahir dan tidak berkurang karena usia, penyakit, atau disabilitas." },
+        { "id": "Tugas perawat bukan memberi martabat, tapi tidak merampasnya." },
+        { "id": "介護保険法 Pasal 1 secara eksplisit menyebut 「尊厳を保持し」sejak revisi 2005." },
+        { "id": "ノーマライゼーション: berhak menjalani ritme hidup yang normal, termasuk mengambil risiko yang wajar." },
+        { "id": "Penolakan dari penerima layanan adalah komunikasi, bukan gangguan yang harus diatasi." },
+        { "id": "Di ujian, opsi yang beralasan efisiensi atau aturan institusi hampir selalu salah." }
+      ]
+    }
+  ],
+  "newTerms": ["尊厳", "人権", "自立", "権利擁護", "自己決定", "身体拘束"]
+}

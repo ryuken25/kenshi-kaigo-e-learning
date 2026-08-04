@@ -4,6 +4,7 @@ import {BrowserRouter,Routes,Route,Link,useNavigate,useParams,useLocation,Naviga
 import {Heart,Lock,ChevronRight,BookOpen,Flame,UserRound,Star,Check,X,Volume2,Info,Menu,Home as HomeIcon,Languages,ArrowLeft,SkipForward,RotateCcw,Shuffle,Sparkles} from 'lucide-react';
 import {sections,getSection,getLevel,glossary,allQuestions,randomQuestion} from './data.js';
 import {furigana} from './furigana.generated.js';
+import s1l1Content from './content/s1l1.json';
 import Login from './Login.jsx';
 import {AuthProvider, useAuth} from './context/AuthContext.jsx';
 import {ProgressProvider, useProgress, readGuestProgress} from './context/ProgressContext.jsx';
@@ -30,6 +31,18 @@ function LangText({ja,id,mode,as='p',className=''}){
   if(mode==='id') return <Tag className={className}>{id}</Tag>;
   if(mode==='furigana') return <Tag className={className} dangerouslySetInnerHTML={{__html:furigana(ja)}}/>;
   return <Tag className={className}>{ja}</Tag>;
+}
+
+const RUBY_ANNOTATION = /([\u4E00-\u9FFF\u3005\u3006\u30F6]+)\[([\u3041-\u309F\u30A1-\u30FCー]+)\]/g;
+function AnnotatedText({field,mode='kanji',as='p',className=''}){
+  const Tag=as;
+  if(field==null) return null;
+  const raw=typeof field==='string'?field:(field.ja||field.id||'');
+  if(mode==='id' && typeof field==='object' && field.id) return <Tag className={className}>{field.id}</Tag>;
+  const html=mode==='furigana'
+    ? raw.replace(RUBY_ANNOTATION,'<ruby>$1<rt>$2</rt></ruby>')
+    : raw.replace(RUBY_ANNOTATION,'$1');
+  return <Tag className={`annotatedText ${mode==='furigana'?'showFuri':''} ${className}`} dangerouslySetInnerHTML={{__html:html}}/>;
 }
 
 const ASSET = p=>`/assets/hellokitty/${p}`;
@@ -204,15 +217,35 @@ function LevelHub(){
 }
 
 function Materi(){
-  const {sectionId,levelId}=useParams();const s=getSection(sectionId),l=getLevel(sectionId,levelId);const [i,setI]=useState(0);const nav=useNavigate();const card=l?.materi[i];
+  const {sectionId,levelId}=useParams();const s=getSection(sectionId),l=getLevel(sectionId,levelId);const nav=useNavigate();
+  const rich = Number(sectionId)===1 && Number(levelId)===1 ? s1l1Content : null;
+  const cards = rich?.materi || l?.materi || [];
+  const storeKey=`kk_materi_pos_${sectionId}_${levelId}`;
+  const [i,setI]=useState(()=>{try{const n=Number(sessionStorage.getItem(storeKey));return Number.isInteger(n)&&n>=0&&n<cards.length?n:0}catch{return 0}});
   const [mode,setMode]=useState('kanji');
-  useEffect(()=>{ setMode('kanji'); },[i]);
-  if(!s||!l)return <Navigate to="/"/>;
-  return <main className="page materiPage"><div className="quizTop"><Link to={`/section/${s.id}/level/${l.id}`} className="back">× Tutup</Link><span>MATERI {i+1}/{l.materi.length}</span></div><div className="quizProgress"><i style={{width:`${(i+1)/l.materi.length*100}%`}}/></div><div className="materiCard"><Mascot variant="materi" size="sm"/><small>MINI LESSON</small>
-    <div className="materiHead"><h1>{card.titleJa}</h1><LangSwitch mode={mode} setMode={setMode}/></div>
-    <h2>{card.titleId}</h2>
-    <LangText as="p" ja={card.bodyJa} id={card.bodyId} mode={mode} className={mode==='id'?'translation':'japanese'}/>
-    {card.terms.length>0&&<div className="terms">{card.terms.map(t=><Link key={t} to={`/glossary?term=${encodeURIComponent(t)}`}>#{t}</Link>)}</div>}</div><div className="materiActions"><button className="secondary tap" onClick={()=>nav(`/section/${s.id}/level/${l.id}/quiz`)}><SkipForward/> Skip to quiz</button><button className="primary tap" onClick={()=>i<l.materi.length-1?setI(i+1):nav(`/section/${s.id}/level/${l.id}/quiz`)}>{i<l.materi.length-1?'Next card':'Mulai quiz'} <ChevronRight/></button></div></main>;
+  useEffect(()=>{try{sessionStorage.setItem(storeKey,String(i))}catch{}},[i,storeKey]);
+  useEffect(()=>{setMode('kanji')},[i]);
+  useEffect(()=>{const onKey=e=>{if(e.key==='ArrowRight'||e.key==='Enter'){e.preventDefault();i<cards.length-1?setI(i+1):nav(`/section/${s.id}/level/${l.id}/quiz`)}if(e.key==='ArrowLeft'){e.preventDefault();setI(v=>Math.max(0,v-1))}if(e.key==='Escape')nav(`/section/${s.id}/level/${l.id}`)};window.addEventListener('keydown',onKey);return()=>window.removeEventListener('keydown',onKey)},[i,cards.length,nav,s?.id,l?.id]);
+  if(!s||!l||!cards.length)return <Navigate to="/"/>;
+  const card=cards[i];
+  return <main className="page materiPage richMateriPage">
+    <div className="materiTop"><Link to={`/section/${s.id}/level/${l.id}`} className="back">× Tutup</Link><div className="materiDots" aria-label={`Kartu ${i+1} dari ${cards.length}`}>{cards.map((c,n)=><button type="button" key={c.id||n} className={`${n===i?'active':''} ${n<i?'done':''}`} disabled={n>i} aria-label={`Kartu ${n+1}`} onClick={()=>setI(n)}/>)}</div><LangSwitch mode={mode} setMode={setMode}/></div>
+    <article className={`richMateriCard rich-${card.type||'lesson'}`} key={card.id||i}><RichCardBody card={card} mode={mode}/></article>
+    <div className="richMateriNav">{i>0&&<button type="button" className="secondary tap" onClick={()=>setI(v=>v-1)}>Kembali</button>}<button type="button" className="primary tap" onClick={()=>i<cards.length-1?setI(i+1):nav(`/section/${s.id}/level/${l.id}/quiz`)}>{i<cards.length-1?'Lanjut':'Mulai quiz'} <ChevronRight/></button></div>
+    <button type="button" className="materiSkip" onClick={()=>nav(`/section/${s.id}/level/${l.id}/quiz`)}>Lewati ke quiz</button>
+  </main>;
+}
+
+function RichCardBody({card,mode}){
+  const F=({field,as='p',className=''})=><AnnotatedText field={field} mode={mode} as={as} className={className}/>;
+  if(card.type==='hook') return <><Mascot variant="materi" size="sm"/><F field={card.body} className="richBody"/></>;
+  if(card.type==='term'){const t=card.term;return <div className="richTerm"><div className="termReading">{t.reading}</div><div className="termKanji">{t.kanji}</div><div className="termRoman">{t.romaji} · {t.meaning}</div>{t.example&&<div className="termExample"><F field={t.example}/>{mode!=='id'&&<p>{t.example.id}</p>}</div>}</div>}
+  if(card.type==='compare') return <><F field={card.heading} as="h2"/><div className="compareGrid">{card.rows.map(r=><div className="compareRow" key={r.term.kanji}><b>{r.term.reading}<br/><span>{r.term.kanji}</span></b><span>{r.meaning}</span><small>{r.when}</small></div>)}</div>{card.note&&<F field={card.note} className="richNote"/>}</>;
+  if(card.type==='checkpoint') return <><span className="richTag">Cek cepat · tidak dinilai</span><F field={card.question?.prompt} className="richQuestion"/><div className="checkpointOpts">{card.question.options.map(o=><div key={o.key} className="checkpointOption"><F field={o.text}/></div>)}</div><p className="richNote">Jawabannya akan dibahas setelah kamu lanjut membaca materi.</p></>;
+  if(card.type==='case') return <><span className="richTag">Kasus lapangan</span><F field={card.heading} as="h2"/><F field={card.scenario} className="richBody"/><F field={card.prompt} className="richPrompt"/><F field={card.reveal} className="richReveal"/></>;
+  if(card.type==='exam-tip') return <><span className="richTag">Sudut pandang ujian</span><F field={card.heading} as="h2"/><F field={card.body} className="richBody"/></>;
+  if(card.type==='recap') return <><F field={card.heading} as="h2"/><ul className="richRecap">{card.points.map((p,n)=><li key={n}>{typeof p==='string'?p:p.id}</li>)}</ul></>;
+  return <><F field={card.heading} as="h2"/><F field={card.body} className="richBody"/></>;
 }
 
 /* ---------- shared quiz pieces (dipakai Quiz level & Practice) ---------- */
