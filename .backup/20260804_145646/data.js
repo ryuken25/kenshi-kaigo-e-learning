@@ -34,11 +34,3 @@ function makeLevel(sectionId, plan, levelId, topic){
 export const sections=plans.map(([titleJa,titleId,count,icon,topics],i)=>({id:i+1,titleJa,titleId,icon,levelCount:count,description:`${titleJa}を基礎から事例まで段階的に学びます。`,levels:topics.map((topic,j)=>makeLevel(i+1,[titleJa,titleId,count,icon,topics],j+1,topic))}));
 export const getSection=(id)=>sections.find(s=>String(s.id)===String(id));
 export const getLevel=(sid,lid)=>getSection(sid)?.levels.find(l=>String(l.id)===String(lid));
-
-// Semua soal dari semua section/level digabung — dipakai untuk mode Practice/Latihan unlimited.
-export const allQuestions = sections.flatMap(s=>s.levels.flatMap(l=>l.questions.map(q=>({...q, sectionId:s.id, levelId:l.id, sectionTitleId:s.titleId, levelTitleId:l.titleId}))));
-export const randomQuestion = (excludeId)=>{
-  if(allQuestions.length<=1) return allQuestions[0];
-  let q; do { q = allQuestions[Math.floor(Math.random()*allQuestions.length)]; } while(q.id===excludeId);
-  return q;
-};

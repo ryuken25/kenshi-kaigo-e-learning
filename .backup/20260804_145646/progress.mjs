@@ -1,5 +1,5 @@
 import { db } from './_db.mjs';
-import { requireUser, computeXpCandidate, computeStars, SECTIONS, LEVELS_PER_SECTION, PREVIEW_XP_FLAT } from './_auth.mjs';
+import { requireUser, computeXpCandidate, computeStars, SECTIONS, LEVELS_PER_SECTION } from './_auth.mjs';
 
 function todayInTz(tz) {
   try {
@@ -57,8 +57,6 @@ async function buildSectionsMap(sql, userId) {
       const rec = byKey.get(`${s}-${l}`);
       const status = rec?.status || (l === 1 ? 'available' : 'locked');
       if (rec?.status === 'completed') completedLevels++;
-      // levelUnlocked = prasyarat resmi terpenuhi (level sebelumnya completed, atau ini level 1)
-      const levelUnlocked = l === 1 || Boolean(byKey.get(`${s}-${l - 1}`)?.status === 'completed');
       levels.push({
         levelId: l,
         status,
@@ -66,32 +64,28 @@ async function buildSectionsMap(sql, userId) {
         stars: rec?.stars || 0,
         attempts: rec?.attempts || 0,
         xpEarned: rec?.xp_earned || 0,
-        // unlocked sekarang SELALU true (bisa dibuka/dilihat/dicoba) — preview kalau prasyarat belum lengkap.
-        unlocked: true,
-        levelUnlocked, // prasyarat resmi — dipakai FE utk tampilkan gembok "preview-only"
+        unlocked: l === 1 || Boolean(byKey.get(`${s}-${l - 1}`)?.status === 'completed'),
         firstCompletedAt: rec?.first_completed_at || null,
       });
     }
     const prevSectionUnlocked = s === 1;
     sections.push({
       sectionId: s,
-      unlocked: true, // selalu bisa dibuka/dilihat
-      sectionUnlockedOfficially: prevSectionUnlocked || null, // patched below
+      unlocked: prevSectionUnlocked || null, // patched below
       completedLevels,
       totalLevels: LEVELS_PER_SECTION,
       percent: Math.round((completedLevels / LEVELS_PER_SECTION) * 100),
       levels,
     });
   }
-  // second pass: prasyarat resmi section berdasar section sebelumnya >=80% completion.
-  // Section tetap bisa dibuka & dicoba (preview) walau prasyarat belum lengkap.
+  // second pass: unlock sections based on prior section >=80% completion
   for (let i = 0; i < sections.length; i++) {
-    if (i === 0) { sections[i].sectionUnlockedOfficially = true; continue; }
+    if (i === 0) { sections[i].unlocked = true; continue; }
     const prev = sections[i - 1];
-    sections[i].sectionUnlockedOfficially = prev.percent >= 80;
-    if (!sections[i].sectionUnlockedOfficially) {
-      // section belum resmi terbuka -> semua levelnya jadi preview-only (levelUnlocked=false)
-      sections[i].levels = sections[i].levels.map(lv => ({ ...lv, levelUnlocked: false }));
+    sections[i].unlocked = prev.percent >= 80;
+    if (!sections[i].unlocked) {
+      // if section is locked, all its levels are locked regardless of level 1
+      sections[i].levels = sections[i].levels.map(lv => ({ ...lv, unlocked: false }));
     }
   }
   return sections;
@@ -153,80 +147,24 @@ export default async function handler(req, res) {
         return res.status(200).json(existingAttempt[0].response);
       }
 
-      // check unlocked — sekarang cuma dipakai utk tentukan status resmi vs preview, BUKAN untuk blokir.
+      // check unlocked
       const prevLevel = levelId > 1
         ? await sql`SELECT status FROM level_progress WHERE user_id=${user.id} AND section_id=${sectionId} AND level_id=${levelId - 1}`
         : [];
-      const levelPrereqMet = levelId === 1 || prevLevel[0]?.status === 'completed';
-      // section prereq: section sebelumnya >=80% completed (level 1 selalu boleh resmi)
-      let sectionPrereqMet = sectionId === 1;
-      if (!sectionPrereqMet) {
-        const prevSectionRows = await sql`SELECT status FROM level_progress WHERE user_id=${user.id} AND section_id=${sectionId - 1} AND status='completed'`;
-        sectionPrereqMet = (prevSectionRows.length / LEVELS_PER_SECTION) >= 0.8;
-      }
-      const levelUnlockedOfficially = levelPrereqMet && sectionPrereqMet;
+      const levelUnlocked = levelId === 1 || prevLevel[0]?.status === 'completed';
+      if (!levelUnlocked) return res.status(403).json({ error: 'forbidden', message: 'Level not unlocked' });
 
       const existing = await sql`SELECT * FROM level_progress WHERE user_id=${user.id} AND section_id=${sectionId} AND level_id=${levelId}`;
       const prevXp = existing[0]?.xp_earned || 0;
       const prevBest = existing[0]?.best_score || 0;
       const prevAttempts = existing[0]?.attempts || 0;
-      const wasAlreadyCompleted = existing[0]?.status === 'completed';
-      const passedThisAttempt = score >= 60;
+      const isCompleted = score >= 60;
 
-      if (!levelUnlockedOfficially) {
-        // ===== PREVIEW ATTEMPT: prasyarat belum lengkap. Diterima, dikasih feedback, TAPI
-        // tidak menghitung sebagai completed resmi & tidak memengaruhi unlock berikutnya. =====
-        const prevPreviewXp = existing[0]?.preview_xp_earned || 0;
-        const prevPreviewBest = existing[0]?.preview_best_score || 0;
-        const prevPreviewAttempts = existing[0]?.preview_attempts || 0;
-        const previewXpCandidate = passedThisAttempt ? PREVIEW_XP_FLAT : 0;
-        const previewXpNew = Math.max(prevPreviewXp, previewXpCandidate);
-        const previewBestNew = Math.max(prevPreviewBest, score);
-
-        // upsert row tapi JANGAN sentuh status resmi kalau sudah pernah completed sebelumnya (harusnya
-        // tidak mungkin karena kalau completed berarti prereq level ini sendiri terpenuhi, tapi jaga2).
-        const previewUpsert = await sql`
-          INSERT INTO level_progress(user_id, section_id, level_id, status, best_score, last_score, stars, attempts,
-            xp_earned, preview_best_score, preview_attempts, preview_xp_earned, last_attempt_at)
-          VALUES (${user.id}, ${sectionId}, ${levelId}, 'preview_attempt', 0, ${score}, 0, 0,
-            0, ${previewBestNew}, 1, ${previewXpNew}, now())
-          ON CONFLICT (user_id, section_id, level_id) DO UPDATE SET
-            last_score = EXCLUDED.last_score,
-            preview_best_score = GREATEST(level_progress.preview_best_score, EXCLUDED.preview_best_score),
-            preview_attempts = level_progress.preview_attempts + 1,
-            preview_xp_earned = GREATEST(level_progress.preview_xp_earned, EXCLUDED.preview_xp_earned),
-            last_attempt_at = now()
-          RETURNING *
-        `;
-        const prow = previewUpsert[0];
-        const previewXpDelta = prow.preview_xp_earned - prevPreviewXp;
-        const totalXp = await recomputeTotalXp(sql, user.id);
-
-        const responseBody = {
-          level: {
-            sectionId, levelId, status: 'preview_attempt', bestScore: prow.preview_best_score,
-            stars: 0, attempts: prow.preview_attempts, xpEarned: prow.preview_xp_earned,
-          },
-          xpDelta: Math.max(0, previewXpDelta),
-          totalXp,
-          streak: { current: user.streak_current, longest: user.streak_longest, increased: false },
-          unlocked: { nextLevel: null, nextSection: null },
-          isNewCompletion: false,
-          isPreview: true,
-          message: 'Level/section ini belum resmi terbuka — attempt kamu dicatat sebagai latihan preview, bukan completion resmi.',
-        };
-        await sql`INSERT INTO level_attempts(attempt_id, user_id, section_id, level_id, response, is_preview) VALUES (${attemptId}, ${user.id}, ${sectionId}, ${levelId}, ${JSON.stringify(responseBody)}, true)`;
-        return res.status(200).json(responseBody);
-      }
-
-      // ===== RESMI: prasyarat terpenuhi. Completion pertama = XP penuh, replay = XP kecil (20%, min 2). =====
-      const isCompleted = passedThisAttempt;
-      const isRepeat = wasAlreadyCompleted; // sudah pernah completed sebelumnya -> ini replay/grinding
-
-      const xpCandidate = isCompleted ? computeXpCandidate({ score, attempts: prevAttempts, isRepeat }) : 0;
+      const xpCandidate = isCompleted ? computeXpCandidate({ score, attempts: prevAttempts }) : 0;
       const xpEarnedNew = Math.max(prevXp, xpCandidate);
       const bestScoreNew = Math.max(prevBest, score);
       const stars = computeStars(bestScoreNew);
+      const wasAlreadyCompleted = existing[0]?.status === 'completed';
 
       const upserted = await sql`
         INSERT INTO level_progress(user_id, section_id, level_id, status, best_score, last_score, stars, attempts, xp_earned, first_completed_at, last_attempt_at)

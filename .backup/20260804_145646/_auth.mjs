@@ -36,21 +36,12 @@ export async function requireUser(sql, req) {
 export const SECTIONS = 13;
 export const LEVELS_PER_SECTION = 17;
 
-// isRepeat: true kalau level ini SUDAH pernah berstatus 'completed' sebelumnya (grinding ulang).
-// Completion pertama kali dapat XP penuh; replay cuma dapat 20% (minimum 2 XP).
-export function computeXpCandidate({ score, attempts, isRepeat = false }) {
+export function computeXpCandidate({ score, attempts }) {
   const base = 10;
   const bonusAkurasi = score >= 100 ? 10 : score >= 80 ? 5 : 0;
   const bonusFirstTry = attempts === 0 && score >= 80 ? 5 : 0;
-  const full = base + bonusAkurasi + bonusFirstTry;
-  if (!isRepeat) return full;
-  return Math.max(2, Math.round(full * 0.2));
+  return base + bonusAkurasi + bonusFirstTry;
 }
-
-// XP kecil untuk preview attempt (level/section yang belum resmi terbuka) — insentif eksplorasi.
-export const PREVIEW_XP_FLAT = 3;
-// XP flat untuk practice/unlimited mode — tidak memengaruhi unlock/progress resmi.
-export const PRACTICE_XP_FLAT = 1;
 
 export function computeStars(score) {
   if (score >= 95) return 3;
