@@ -1,23 +1,39 @@
-import crypto from 'node:crypto';
-import { db, ensureSchema } from '../../api/_db.mjs';
+import { db } from '../_db.mjs';
+import { hash, cookieHeader, clearCookieHeader, getSessionToken, requireUser } from '../_auth.mjs';
 
-const hash=(v)=>crypto.createHash('sha256').update(v).digest('hex');
-const cookie=(name,value,maxAge)=>`${name}=${value}; Path=/; Max-Age=${maxAge}; HttpOnly; Secure; SameSite=Lax`;
-const json=(body,status=200,headers={})=>({status,headers:{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store',...headers},body:JSON.stringify(body)});
+export default async function handler(req, res) {
+  try {
+    const sql = db();
 
-export default async function handler(req,res){
- try{
-  await ensureSchema(); const sql=db();
-  if(req.method==='GET'){
-   const raw=(req.headers.cookie||'').match(/kaigo_session=([^;]+)/)?.[1];
-   if(!raw) return res.status(200).json({user:null});
-   const rows=await sql`SELECT u.id,u.email,u.name,u.avatar_url,u.total_xp,u.streak FROM app_sessions s JOIN app_users u ON u.id=s.user_id WHERE s.token_hash=${hash(raw)} AND s.expires_at>now()`;
-   return res.status(200).json({user:rows[0]||null});
+    if (req.method === 'GET') {
+      res.setHeader('Cache-Control', 'no-store');
+      const user = await requireUser(sql, req);
+      if (!user) return res.status(200).json({ user: null });
+      return res.status(200).json({
+        user: {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          avatarSeed: user.avatar_seed,
+          timezone: user.timezone,
+          totalXp: user.total_xp,
+          streak: { current: user.streak_current, longest: user.streak_longest },
+          lastActiveDate: user.last_active_date,
+        },
+      });
+    }
+
+    if (req.method === 'DELETE') {
+      const raw = getSessionToken(req);
+      if (raw) await sql`UPDATE app_sessions SET revoked_at = now() WHERE token_hash = ${hash(raw)}`;
+      res.setHeader('Set-Cookie', clearCookieHeader('kaigo_session'));
+      return res.status(200).json({ ok: true });
+    }
+
+    res.setHeader('Allow', 'GET, DELETE');
+    return res.status(405).json({ error: 'Method not allowed' });
+  } catch (e) {
+    console.error(e);
+    return res.status(500).json({ error: 'Auth service unavailable' });
   }
-  if(req.method==='DELETE'){
-   const raw=(req.headers.cookie||'').match(/kaigo_session=([^;]+)/)?.[1]; if(raw) await sql`DELETE FROM app_sessions WHERE token_hash=${hash(raw)}`;
-   res.setHeader('Set-Cookie',cookie('kaigo_session','',0)); return res.status(200).json({ok:true});
-  }
-  return res.status(405).json({error:'Method not allowed'});
- }catch(e){console.error(e);return res.status(500).json({error:'Auth service unavailable'});}
 }
