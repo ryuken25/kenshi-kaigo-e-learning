@@ -199,9 +199,9 @@ nav a.active{color:var(--pink-deep)}
 
 /* Desktop shell: sidebar kiri seperti learning apps desktop; mobile tetap bottom nav 4 item */
 @media (min-width: 960px){
-  .app{max-width:none;margin:0 0 0 228px;padding-bottom:30px;min-height:100vh}
-  header{position:sticky;top:0;padding:0 34px;z-index:40}
-  header,.app>main{max-width:980px}
+  .app{max-width:none;width:calc(100% - 228px);margin:0 0 0 228px;padding-bottom:30px;min-height:100vh}
+  header{position:sticky;top:0;padding:0 34px;z-index:40;width:min(100%,1100px);margin:0 auto}
+  .app>main{width:min(100%,980px);margin-left:auto;margin-right:auto}
   nav{
     left:0;top:0;bottom:0;transform:none;width:228px;height:100vh;
     flex-direction:column;justify-content:flex-start;align-items:stretch;gap:8px;
