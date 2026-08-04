@@ -77,9 +77,9 @@
 .materiHead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-top:8px;text-align:left}
 .materiCard h1{font:600 22px Fredoka;margin:0}
 .materiCard h1 rt{font-size:8px;color:var(--pink-deep)}
-.materiCard h2{font:500 14px Fredoka;color:var(--muted);margin:2px 0 16px;text-align:center}
-.materiCard .japanese{font-size:15px;line-height:1.7;margin:0 0 4px}
-.materiCard .japanese rt{font-size:9px;color:var(--pink-deep);font-weight:600}
+.materiCard h1 rt{font-size:11px;color:var(--pink-deep)}
+.materiCard .japanese{font-size:16px;line-height:1.8;margin:0 0 4px}
+.materiCard .japanese rt{font-size:11px;color:var(--pink-deep);font-weight:700}
 .terms{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;justify-content:center}
 .terms a{background:var(--pink-pale);color:var(--pink-deep);font-size:11px;font-weight:700;padding:6px 12px;border-radius:999px;text-decoration:none}
 .materiActions{display:flex;gap:10px;margin-top:20px}
@@ -104,25 +104,25 @@
 /* question card + 3-mode language switch (漢字/ふり/ID) */
 .qCard{margin-bottom:14px;border-radius:var(--radius-lg);padding:20px 20px 18px;background:#fff;border:1px solid var(--line);box-shadow:0 12px 30px -10px rgba(255,150,190,.4);animation:popIn .3s ease}
 .qCardHead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:6px}
-.qCard h1{font:600 24px/1.35 Fredoka;margin:6px 0 0}
-.qCard h1 rt{font-size:9px;color:var(--pink-deep);font-weight:700}
+.qCard h1{font:600 26px/1.45 Fredoka;margin:7px 0 0}
+.qCard h1 rt{font-size:12px;color:var(--pink-deep);font-weight:700}
 
 .langSwitch{display:flex;gap:3px;flex:none;background:var(--pink-pale);border-radius:999px;padding:3px}
-.langSwitch button{font-size:10px;font-weight:700;padding:5px 9px;border-radius:999px;color:#b98aa3;background:transparent;line-height:1}
+.langSwitch button{font-size:11px;font-weight:700;padding:6px 10px;border-radius:999px;color:#b98aa3;background:transparent;line-height:1}
 .langSwitch button.active{background:#fff;color:var(--pink-deep);box-shadow:0 3px 8px -3px rgba(255,120,170,.5)}
-.langSwitch.mini{padding:2px;transform:scale(.86);transform-origin:right center}
-.langSwitch.mini button{padding:4px 7px}
+.langSwitch.mini{padding:2px;transform:scale(.9);transform-origin:right center}
+.langSwitch.mini button{padding:5px 8px}
 
 /* choice cards */
-.choices{display:grid;gap:11px;margin:6px 0 18px}
+.choices{display:grid;gap:12px;margin:7px 0 20px}
 .choiceCard{
-  border-radius:16px;border:1.5px solid #efdfe5;background:#fff;padding:13px 14px;
-  cursor:pointer;box-shadow:0 4px 14px -8px rgba(255,150,190,.3);
+  border-radius:18px;border:1.5px solid #efdfe5;background:#fff;padding:16px 16px;
+  cursor:pointer;box-shadow:0 4px 14px -8px rgba(255,150,190,.3);min-height:66px;
 }
 .choiceCard.answered{cursor:default}
 .choiceRow{display:flex;align-items:center;gap:8px;width:100%}
-.choiceText{flex:1;font-size:13.5px;line-height:1.5;text-align:left}
-.choiceText rt{font-size:8px;color:var(--pink-deep)}
+.choiceText{flex:1;font-size:15px;line-height:1.7;text-align:left}
+.choiceText rt{font-size:10px;color:var(--pink-deep);font-weight:700}
 .choiceCard.answered.isCorrect{border:2px solid #63c89a;background:#effcf5}
 .choiceCard.answered.isWrong{border:2px solid #f4849b;background:#fff1f3}
 .choiceCard .checkIcon{margin-left:6px;flex:none;color:#4cba89}
@@ -142,7 +142,7 @@
 .explainBox .explainHead .langSwitch button.active{background:#ffdd8f;color:#7a5310}
 .explainBox p{margin:0;font-size:13px;line-height:1.6;color:#8a6a3a}
 .explainBox p.ja{font-weight:600}
-.explainBox p rt{font-size:8px;color:#b8934a}
+.explainBox p rt{font-size:11px;color:#b8934a;font-weight:700}
 
 .quizFooter{display:flex;flex-direction:column;gap:10px}
 
