@@ -207,7 +207,13 @@ function buildTestHtml() {
     + '\n' + REAL_CONTEXTS.map(t => `<div class="termSheetBackdrop"><section class="termSheet"><h2 class="fg fg--xl kkProbe" lang="ja" data-mode="furigana" data-variant="real:termSheet-h2">${ruby(t)}</h2></section></div>`).join('\n')
     + '\n<main class="page richMateriPage"><div class="richMateriCard">'
     + REAL_CONTEXTS.map(t => `<span class="fg fg--xl japaneseTerm kkProbe" lang="ja" data-mode="furigana" data-variant="real:japaneseTerm">${ruby(t)}</span>`).join('\n')
-    + '</div></main>';
+    + '</div></main>'
+    // .detailHero h1 (halaman detail glossary, GlossaryPage.jsx). Kontainer ini DULU tidak diukur,
+    // dan itu sebabnya trap `font:` shorthand di sini lolos padahal pola yang sama sudah difix di
+    // .termSheet h2 — luber ~136px di 320px tanpa ada satu gate pun yang gagal.
+    + '\n<main class="page glossaryDetail"><section class="detailHero">'
+    + REAL_CONTEXTS.map(t => `<h1 class="fg fg--xl kkProbe" lang="ja" data-mode="furigana" data-variant="real:detailHero-h1">${ruby(t)}</h1>`).join('\n')
+    + '</section></main>';
   // Blok mode kanji dipakai membandingkan tinggi baris (harus sama — visibility, bukan display:none).
   //
   // <meta name="viewport"> WAJIB ada dan harus sama dengan index.html. Tanpa itu, Chrome
@@ -368,14 +374,20 @@ const staticFailCount = fails.length;
 console.log(`Lapis 1 — CSS statis : ${staticFailCount === 0 ? 'LULUS' : 'GAGAL (' + staticFailCount + ')'}`);
 notes.forEach(n => console.log('  ' + n));
 
-let measured = false, measureUnavailable = null;
+let measured = false, measureUnavailable = null, measuredWidths = [];
 if (wantMeasure) {
-  const widths = [360, 768, 1280]; // mobile-first, tablet, desktop
+  // 320px ikut diukur: itu lebar terkecil yang realistis (iPhone SE lama), dan beberapa bug
+  // luber HANYA muncul di sana — di 360px kebetulan pas. Tanpa 320px, gate-nya bilang hijau
+  // padahal glyph-nya kepotong senyap oleh .app{overflow-x:hidden}.
+  // 402px = iPhone 17 (1206px fisik / DPR 3). 444px = Poco F6 (1220px / DPR 2.75).
+  // 1920px = desktop 1080p. Lebar CSS, bukan piksel fisik — itu yang dipakai clamp() berbasis vw.
+  const widths = [320, 360, 402, 444, 768, 1280, 1920]; // terkecil, mobile-first, iPhone 17, Poco F6, tablet, desktop, 1080p
   let m;
   try { m = await measure(widths); } catch (e) { m = { skipped: e.message }; }
   if (m.skipped) { measureUnavailable = m.skipped; }
   else {
     measured = true;
+    measuredWidths = widths;
     for (const w of widths) {
       const r = m.results[w];
       if (!r) { fail('measure', `lebar ${w}px: tidak ada hasil`); continue; }
@@ -409,4 +421,4 @@ if (measureUnavailable) {
   process.exit(fails.length ? 1 : 2);
 }
 if (fails.length) process.exit(1);
-console.log(`\nLULUS — CSS statis bersih${measured ? ' + posisi glyph terukur di 360/768/1280px' : ' (posisi glyph belum diukur; pakai --measure)'}`);
+console.log(`\nLULUS — CSS statis bersih${measured ? ` + posisi glyph terukur di ${measuredWidths.join('/')}px` : ' (posisi glyph belum diukur; pakai --measure)'}`);

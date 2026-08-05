@@ -2,7 +2,7 @@
 
 :root{
   --ink:#5b3f52;
-  --muted:#a98da2;
+  --muted:#7a5f6c;
   --pink:#ff7bab;
   --pink-deep:#ff5c9a;
   --pink-pale:#ffe3ef;
@@ -52,7 +52,7 @@ header{
 }
 .brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit;flex:1;min-width:0;overflow:hidden}
 .brand b{display:block;font:700 20px Fredoka;color:var(--pink-deep);letter-spacing:-.4px;white-space:nowrap}
-.brand small{font-size:9px;color:#c2a7bb;letter-spacing:1.4px;text-transform:uppercase;white-space:nowrap}
+.brand small{font-size:9px;color:#7a5f6c;letter-spacing:1.4px;text-transform:uppercase;white-space:nowrap}
 .kitty{
   width:42px;height:42px;border-radius:15px;background:linear-gradient(145deg,#ffe6f1,#ffd3e7);
   display:grid;place-items:center;box-shadow:0 4px 14px -3px rgba(255,120,170,.5);
@@ -96,10 +96,11 @@ header{
   margin:0 20px 26px;padding:18px 20px;border:1px solid var(--line);
   background:linear-gradient(135deg,#fff,#fff7fb);border-radius:var(--radius-lg);
   display:flex;justify-content:space-between;align-items:center;box-shadow:var(--shadow-pink);
+  gap:10px;flex-wrap:wrap;
 }
 .daily b{font:600 15px Fredoka;color:var(--ink)}
 .daily p{margin:4px 0 10px;font-size:12px;color:var(--muted)}
-.progress{height:10px;width:190px;background:var(--pink-pale);border-radius:999px;overflow:hidden;position:relative}
+.progress{height:10px;width:190px;max-width:100%;background:var(--pink-pale);border-radius:999px;overflow:hidden;position:relative}
 .progress i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--pink) 0%,var(--pink-deep) 55%,var(--gold) 100%);transition:width .5s cubic-bezier(.34,1.4,.6,1);position:relative}
 .progress i::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.6),transparent);animation:shimmer 2.2s linear infinite;background-size:200% 100%}
 .badge{background:linear-gradient(135deg,var(--gold),var(--gold-deep));color:#7a4a15;font:700 12px Fredoka;padding:8px 14px;border-radius:999px;box-shadow:0 6px 16px -4px rgba(255,180,80,.6);white-space:nowrap}
@@ -116,7 +117,7 @@ header{
 .round{background:#fff;border:1px solid var(--line);width:38px;height:38px;border-radius:13px;display:grid;place-items:center;color:var(--pink-deep);box-shadow:0 4px 12px -4px rgba(255,120,170,.4)}
 
 /* ---------- section grid / cards ---------- */
-.sectionGrid{padding:2px 20px 30px;display:grid;gap:13px}
+.sectionGrid{padding:2px 20px 30px;display:grid;gap:13px;grid-template-columns:minmax(0,1fr)}
 .sectionCard{
   display:flex;align-items:center;gap:13px;padding:16px;border:1px solid var(--line);
   background:#fff;border-radius:var(--radius-lg);box-shadow:var(--shadow-pink);
@@ -131,7 +132,7 @@ header{
 .sectionCopy small{display:block;color:#c2a7bb;font-size:9px;letter-spacing:1.2px;font-weight:700}
 .sectionCopy b,.sectionCopy span,.sectionCopy em{display:block}
 .sectionCopy b{font:600 17px Fredoka;margin:2px 0}
-.sectionCopy span{font-size:11.5px;color:#a58d9b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sectionCopy span{font-size:11.5px;color:#7a5f6c;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .sectionCopy em{font-size:10px;color:#c39cac;font-style:normal;margin-top:5px}
 .miniProgress{height:6px;background:var(--pink-pale);border-radius:6px;margin-top:8px;overflow:hidden}
 .miniProgress i{display:block;height:100%;background:linear-gradient(90deg,var(--pink),var(--gold));border-radius:6px}
@@ -197,7 +198,7 @@ nav{
   height:76px;background:#fffdfeee;backdrop-filter:blur(16px);border-top:1px solid var(--line);
   display:flex;justify-content:space-around;z-index:30;padding-top:6px;box-shadow:0 -8px 24px -12px rgba(255,120,170,.25);
 }
-nav a{background:none;color:#b79aa9;display:flex;flex-direction:column;gap:3px;align-items:center;font-size:10.5px;text-decoration:none;font-weight:700;padding-top:2px;flex:1}
+nav a{background:none;color:#7a5f6c;display:flex;flex-direction:column;gap:3px;align-items:center;font-size:10.5px;text-decoration:none;font-weight:700;padding-top:2px;flex:1}
 .navEmoji{width:34px;height:34px;display:grid;place-items:center;font-size:18px;border-radius:12px;background:transparent;transition:transform .2s cubic-bezier(.34,1.56,.64,1), background .2s ease}
 nav a:active .navEmoji{transform:scale(.82)}
 nav a.active .navEmoji{background:var(--pink-pale);transform:translateY(-2px);box-shadow:0 4px 10px -3px rgba(255,120,170,.5);animation:bounceIn .4s ease}
@@ -211,7 +212,7 @@ nav a.active{color:var(--pink-deep)}
   /* min 34->26px & 10vw->7.4vw: kartu di 360px cuma 248px, dan istilah 8 kanji = 8.8em,
      jadi butuh <=28px supaya muat (nowrap, tidak bisa pecah baris). Istilah pendek tetap
      besar karena clamp naik sampai 50px begitu layarnya sanggup. */
-  .richMateriCard .japaneseTerm{font-size:clamp(26px,7.4vw,50px)}
+  .richMateriCard .japaneseTerm{font-size:clamp(23px,7.4vw,50px)}
   .richMateriCard .compareTerm{font-size:clamp(20px,6vw,26px)}
 }
 
