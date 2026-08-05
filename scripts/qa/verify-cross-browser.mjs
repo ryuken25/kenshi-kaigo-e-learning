@@ -113,19 +113,34 @@ const PROBE = `(()=>{
     const p=el.parentElement; if(p){const pr=p.getBoundingClientRect();
       if(pr.width>0&&r.right>pr.right+1){const k='pa:'+name(el); if(!seen.has(k)){seen.add(k);out.push({kind:'lewat-induk',sel:name(el),right:+r.right.toFixed(1),lim:+pr.right.toFixed(1),over:+(r.right-pr.right).toFixed(1)})}}}
   });
+  // Halaman default-nya mode 漢字, di mana bacaan display:none — geometri ruby tidak bisa
+  // diuji di situ. Jadi paksa satu paragraf ke mode ふり dulu supaya bacaannya benar-benar
+  // dirender, ukur, lalu kembalikan. Tanpa ini cek ruby cuma jalan di halaman yang kebetulan
+  // sedang ふり, alias hampir tidak pernah.
+  const dipaksa=[...document.querySelectorAll('.fg[data-mode="kanji"]')].slice(0,6);
+  const asal=dipaksa.map(e=>e.getAttribute('data-mode'));
+  dipaksa.forEach(e=>e.setAttribute('data-mode','furigana'));
+  void document.body.offsetHeight; // paksa reflow
+
   const ruby=[];
   document.querySelectorAll('ruby.fg-ruby').forEach(el=>{
     const rb=el.querySelector('.fg-rb'), rt=el.querySelector('.fg-rt'); if(!rb||!rt)return;
+    // Di mode 漢字 bacaan pakai display:none, jadi kotaknya 0x0 dan pusatnya 0 — membandingkan
+    // pusat ke kotak kosong itu tidak ada artinya dan bikin false positive di SEMUA token.
+    if(getComputedStyle(rt).display==='none')return;
     const a=rb.getBoundingClientRect(), b=rt.getBoundingClientRect();
+    if(b.width===0||a.width===0)return;
     if(b.bottom>a.top+1)ruby.push({why:'bacaan tidak di atas base',t:rb.textContent});
     if(Math.abs((a.left+a.right)/2-(b.left+b.right)/2)>2)ruby.push({why:'pusat tidak sejajar',t:rb.textContent});
   });
+  const rubyDiuji=document.querySelectorAll('.fg[data-mode="furigana"] ruby.fg-ruby').length;
+  dipaksa.forEach((e,i)=>e.setAttribute('data-mode',asal[i]));
   const leak=(document.body.innerText.match(/[\\u4e00-\\u9fff]\\[[\\u3040-\\u309f]+\\]/g)||[]).slice(0,3);
   const rawRuby=document.body.innerText.includes('<ruby')||document.body.innerText.includes('<rt>');
   const nav=document.querySelector('nav');
   const cs=nav?getComputedStyle(nav):null;
   const html=document.documentElement;
-  return JSON.stringify({vw,overflow:out.slice(0,8),ruby:ruby.slice(0,5),rubyCount:document.querySelectorAll('ruby.fg-ruby').length,
+  return JSON.stringify({vw,overflow:out.slice(0,8),ruby:ruby.slice(0,5),rubyCount:document.querySelectorAll('ruby.fg-ruby').length,rubyDiuji,
     leak,rawRuby,
     scrollbarHorizontal:html.scrollWidth>html.clientWidth+1,
     scrollW:html.scrollWidth,clientW:html.clientWidth,
@@ -146,13 +161,13 @@ for (const [engName, engine] of engines) {
   for (const vp of VIEWPORTS) {
     const ctx = await browser.newContext({ viewport: { width: vp.w, height: vp.h }, isMobile: false, deviceScaleFactor: 1 });
     const page = await ctx.newPage();
-    let bad = 0, blank = 0, rubyTotal = 0, detail = [];
+    let bad = 0, blank = 0, rubyTotal = 0, rubyUji = 0, detail = [];
     for (const route of ROUTES) {
       try {
         await page.goto(URL_BASE + route, { waitUntil: 'networkidle', timeout: 45000 });
         await page.waitForTimeout(350);
         const d = JSON.parse(await page.evaluate(PROBE));
-        rubyTotal += d.rubyCount;
+        rubyTotal += d.rubyCount; rubyUji += (d.rubyDiuji||0);
         if (d.bodyText < 40) { blank++; detail.push(`${route}: HALAMAN KOSONG (${d.bodyText} char)`) }
         if (d.rawRuby) { bad++; detail.push(`${route}: tag <ruby> mentah kelihatan sebagai teks`) }
         if (d.leak.length) { bad++; detail.push(`${route}: bracket bocor -> ${d.leak.join(' ')}`) }
@@ -164,7 +179,7 @@ for (const [engName, engine] of engines) {
     }
     totalFail += bad; totalBlank += blank;
     const st = (bad || blank) ? 'GAGAL' : 'LULUS';
-    console.log(`  ${String(vp.w).padStart(5)}px ${vp.label.padEnd(14)} masalah=${String(bad).padStart(3)} kosong=${blank} ruby=${String(rubyTotal).padStart(4)} ${st}`);
+    console.log(`  ${String(vp.w).padStart(5)}px ${vp.label.padEnd(14)} masalah=${String(bad).padStart(3)} kosong=${blank} ruby=${String(rubyTotal).padStart(4)} ujiRuby=${String(rubyUji).padStart(4)} ${st}`);
     detail.slice(0, 6).forEach(d => console.log(`         ${d}`));
     await ctx.close();
   }
