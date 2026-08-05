@@ -13,16 +13,29 @@
    Karena mode 漢字 menyembunyikan bacaan pakai visibility (bukan display:none), ruang ini
    tetap ada di kedua mode, jadi toggle 漢字⇄ふり tidak bikin teks melompat. */
 .fg[lang="ja"]{font-family:var(--font-jp);line-height:2.35;word-break:normal;overflow-wrap:normal;line-break:strict}
-/* align-items:center bikin item TIDAK ikut baseline-align, jadi baseline kontainer
-   disintesis dari tepi bawah box -> kanji mendarat pas di baseline teks sekitarnya. */
-.fg-ruby{display:inline-flex;flex-direction:column-reverse;align-items:center;vertical-align:baseline;margin-inline:.1em;line-height:1.2;text-align:center;white-space:nowrap}
+/* vertical-align:text-bottom — JANGAN diganti ke baseline.
+   .fg-ruby itu flex arah COLUMN (column-reverse), dan di arah column baseline kontainer
+   diambil dari item flex PERTAMA — yaitu .fg-rt (bacaan), yang visualnya di atas. Akibatnya
+   yang disejajarkan ke baseline kalimat adalah BACAAN-nya, dan kanji-nya menggantung ke bawah:
+   terukur kanji turun 18.3px dari kana di sekitarnya (Chromium & Firefox), yang bikin kalimat
+   kelihatan pecah dua baris — kana di atas, kanji melorot di bawah. Kejadian di mode 漢字 juga.
+   `align-items:center` TIDAK mencegah ini: itu cross-axis, dan untuk column cross-axis-nya
+   horizontal, jadi tidak ada hubungannya dengan baseline.
+   text-bottom menyejajarkan tepi BAWAH kotak dengan tepi bawah baris -> selisih 0px di
+   WebKit, Firefox, dan Chromium (ketiganya diukur). */
+.fg-ruby{display:inline-flex;flex-direction:column-reverse;align-items:center;vertical-align:text-bottom;margin-inline:.1em;line-height:1.2;text-align:center;white-space:nowrap}
 .fg-rb{display:block;line-height:1.1;white-space:nowrap}
 /* letter-spacing SENGAJA tetap 0: itu properti horizontal, dan menaikkannya melebarkan
    token bacaan sampai luber di 320px (kebukti: gate measure gagal 4 token). Ruang ekstra
    yang diminta murni vertikal — line-height & margin-bottom. */
 .fg-rt{display:block;font-size:max(11px,.55em);font-weight:500;line-height:1.28;margin-bottom:.16em;letter-spacing:0;white-space:nowrap;text-align:center;color:var(--kk-furi);user-select:none;-webkit-user-select:none}
-/* mode 漢字: bacaan disembunyikan TAPI tetap makan tempat, biar 漢字⇄ふり tidak menggeser baris */
-.fg[data-mode="kanji"] .fg-rt{visibility:hidden}
+/* mode 漢字: bacaan BENAR-BENAR dibuang dari layout (display:none), bukan cuma disembunyikan.
+   Pilihan sadar dari user: mode 漢字 harus rapat, tanpa ruang nganggur di atas tiap baris —
+   79px vs 87.8px. Konsekuensinya yang diterima: toggle 漢字⇄ふり MENGGESER teks ~9px per baris
+   waktu bacaannya muncul. Dulu di sini pakai visibility:hidden justru supaya tidak menggeser;
+   kalau nanti ada yang mengeluh teks melompat saat toggle, ini penyebabnya — dan mengembalikan
+   ke visibility:hidden akan mengembalikan ruang kosong itu. Jangan diubah tanpa nanya user. */
+.fg[data-mode="kanji"] .fg-rt{display:none}
 /* kill-switch: kalau ada ruby mentah nyelip lagi, jangan sampai balik ke absolute */
 .fg rt:not(.fg-rt){position:static!important}
 .fg ruby:not(.fg-ruby){display:inline-flex!important}

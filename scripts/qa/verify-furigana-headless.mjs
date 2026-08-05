@@ -10,8 +10,8 @@
  * DUA LAPIS:
  *   LAPIS 1 (statis, tanpa browser) — parse src/routing.css + src/styles.css pakai postcss,
  *     assert kontrak layout yang bikin furigana rusak 3x: rt tidak absolute, tidak ada
- *     ruby-position, .fg-ruby column-reverse, mode kanji sembunyikan bacaan pakai
- *     visibility (bukan display:none, yang bikin tinggi baris goyang).
+ *     ruby-position, .fg-ruby column-reverse, mode kanji menyembunyikan bacaan (display:none
+ *     ATAU visibility:hidden — user memilih display:none supaya mode 漢字 rapat).
  *   LAPIS 2 (--measure) — render markup furigana di Chrome headless yang SUDAH ada di mesin
  *     ini via CDP (Node 24 punya WebSocket bawaan, jadi nol dependensi baru; puppeteer /
  *     playwright TIDAK dipasang karena butuh download browser ratusan MB = keputusan user).
@@ -74,14 +74,19 @@ if (!dispDecl.some(x => x.value.includes('flex'))) fail('css', `.fg-ruby tidak d
 if (!dirDecl.some(x => x.value.includes('column-reverse'))) fail('css', `.fg-ruby bukan column-reverse (dapat: ${dirDecl.map(x => x.value).join('/') || 'tidak ada'}) — bacaan akan tampil DI BAWAH kanji`);
 if (!rubyRule.some(x => x.prop === 'align-items' && x.value.includes('center'))) fail('css', '.fg-ruby tanpa align-items:center — pusat rt/rb tidak akan sejajar');
 
-// (d) mode kanji sembunyikan bacaan pakai visibility:hidden, BUKAN display:none —
-//     display:none mengubah tinggi baris tiap ganti mode (teks "melompat").
+// (d) mode kanji WAJIB menyembunyikan bacaan. Cara menyembunyikannya adalah keputusan produk:
+//     - display:none  -> mode 漢字 rapat (79px), TAPI toggle 漢字⇄ふり menggeser teks ~9px/baris.
+//     - visibility:hidden -> tinggi kedua mode sama (87.8px), toggle tidak menggeser, tapi
+//       mode 漢字 menyisakan ruang kosong di atas tiap baris.
+//     User memilih display:none (mode 漢字 rapat) — jadi gate ini TIDAK LAGI menolaknya.
+//     Yang tetap dijaga: harus ada aturan yang menyembunyikan, dan cuma boleh salah satu dari
+//     dua cara itu (bukan opacity:0 / font-size:0 / color:transparent yang menyisakan artefak).
 const kanjiHide = where(x => x.sel.includes('[data-mode="kanji"]') && targetsReading(x.sel));
 if (!kanjiHide.length) fail('css', 'tidak ada aturan menyembunyikan .fg-rt di [data-mode="kanji"]');
-for (const d of kanjiHide.filter(x => x.prop === 'display' && x.value === 'none'))
-  fail('css', `${d.file}:${d.line} — '${d.sel}' pakai display:none (harus visibility:hidden biar tinggi baris stabil)`);
-if (kanjiHide.length && !kanjiHide.some(x => x.prop === 'visibility' && x.value === 'hidden'))
-  fail('css', 'mode kanji tidak pakai visibility:hidden pada bacaan');
+const caraSah = kanjiHide.some(x => (x.prop === 'display' && x.value === 'none')
+                                 || (x.prop === 'visibility' && x.value === 'hidden'));
+if (kanjiHide.length && !caraSah)
+  fail('css', 'mode kanji menyembunyikan bacaan dengan cara tak sah (harus display:none atau visibility:hidden)');
 
 // (e) order:1/2 dilarang — urutan visual harus dari column-reverse, bukan tambal per-anak.
 for (const d of where(x => (x.sel.includes('.fg-rt') || x.sel.includes('.fg-rb')) && x.prop === 'order'))
@@ -401,9 +406,12 @@ if (wantMeasure) {
         for (const msg of r[k].slice(0, 6)) fail(`measure ${w}px/${k}`, msg);
         if (r[k].length > 6) fail(`measure ${w}px/${k}`, `... dan ${r[k].length - 6} pelanggaran ${k} lain di lebar ini (total ${r[k].length})`);
       }
-      // tinggi baris harus stabil antar mode (bukti visibility:hidden dipakai, bukan display:none)
+      // Selisih tinggi antar mode: DILAPORKAN, bukan digagalkan. Dulu ini fail karena mode 漢字
+      // memakai visibility:hidden sehingga tinggi kedua mode identik. User memilih display:none
+      // (mode 漢字 rapat) dan menerima konsekuensinya: teks bergeser saat toggle. Angkanya tetap
+      // dicetak supaya kalau suatu saat geserannya jadi ekstrem, ketahuan dari output.
       const dh = Math.abs(r.heights.furi - r.heights.kanji);
-      if (dh > 1) fail(`measure ${w}px/height`, `tinggi mode furigana ${r.heights.furi.toFixed(1)}px vs kanji ${r.heights.kanji.toFixed(1)}px — beda ${dh.toFixed(1)}px, teks akan melompat saat ganti mode`);
+      if (dh > 1) console.log(`  [info ${w}px] tinggi ふり ${r.heights.furi.toFixed(1)}px vs 漢字 ${r.heights.kanji.toFixed(1)}px — geser ${dh.toFixed(1)}px saat toggle (konsekuensi display:none yang dipilih)`);
     }
   }
 } else {
