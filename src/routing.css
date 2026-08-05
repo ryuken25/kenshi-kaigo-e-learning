@@ -1,11 +1,51 @@
 /* extra routed e-learning surfaces — kawaii pink pastel */
 .brand,.sectionCard,.levelRow,.glossaryRow{ text-decoration:none;color:inherit}
-.fg{font-family:var(--font-jp);font-size:clamp(16px,.45vw + 14px,22px);font-weight:700;line-height:1.95;letter-spacing:.01em;padding-top:.25em}.fg-ruby{display:inline-flex;flex-direction:column;align-items:center;vertical-align:bottom;line-height:1.15;margin-inline:.09em;white-space:nowrap}.fg-rb{display:block;order:2;line-height:1.3;white-space:nowrap}.fg-rt{display:block;order:1;font-size:max(13px,.56em);font-weight:500;line-height:1.2;margin-bottom:.1em;white-space:nowrap;color:#8a6e7c;letter-spacing:0;user-select:none}.fg[data-mode="kanji"] .fg-rt{visibility:hidden}.fg--id{font-family:var(--font-latin);font-weight:600;font-size:clamp(16px,.3vw + 14.5px,19px);line-height:1.65;letter-spacing:0;padding-top:0}.termHit .fg-rb,.termHit{border-bottom:2px dotted #ff78a3;cursor:pointer}.fg.showFuri{line-height:2.05}.fg--lg{font-size:clamp(30px,2vw + 20px,46px)}.fg__p{margin:0 0 1em}.fg__p:last-child{margin-bottom:0}
-@media(max-width:767px){.fg{line-height:2.05}.fg-ruby{margin-inline:.11em}.fg-rt{font-size:max(12px,.55em)}}
+/* ---------- furigana — SATU-SATUNYA layout ruby (lihat src/Furigana.jsx) ----------
+   Urutan DOM: .fg-rb (kanji) DULU, .fg-rt (bacaan) SETELAHNYA — biar urutan baca
+   screen-reader & hasil copy-paste tetap benar. Yang mengangkat bacaan ke atas
+   cuma `flex-direction:column-reverse`, jadi bacaan ikut kotak baris (tidak bisa
+   tumpang tindih) & identik di Safari maupun Chrome.
+   DILARANG di sini: order:1/2, position:absolute, ruby-position / -webkit-ruby-position. */
+.fg{font-family:var(--font-latin);font-size:clamp(16px,.45vw + 14px,22px);font-weight:700;line-height:1.7;letter-spacing:.01em;margin:0;white-space:pre-line}
+.fg[lang="ja"]{font-family:var(--font-jp);line-height:2.05;word-break:normal;overflow-wrap:normal;line-break:strict}
+/* align-items:center bikin item TIDAK ikut baseline-align, jadi baseline kontainer
+   disintesis dari tepi bawah box -> kanji mendarat pas di baseline teks sekitarnya. */
+.fg-ruby{display:inline-flex;flex-direction:column-reverse;align-items:center;vertical-align:baseline;margin-inline:.1em;line-height:1.2;text-align:center;white-space:nowrap}
+.fg-rb{display:block;line-height:1.1;white-space:nowrap}
+.fg-rt{display:block;font-size:max(11px,.55em);font-weight:500;line-height:1.12;margin-bottom:.04em;letter-spacing:0;white-space:nowrap;text-align:center;color:var(--kk-furi);user-select:none;-webkit-user-select:none}
+/* mode 漢字: bacaan disembunyikan TAPI tetap makan tempat, biar 漢字⇄ふり tidak menggeser baris */
+.fg[data-mode="kanji"] .fg-rt{visibility:hidden}
+/* kill-switch: kalau ada ruby mentah nyelip lagi, jangan sampai balik ke absolute */
+.fg rt:not(.fg-rt){position:static!important}
+.fg ruby:not(.fg-ruby){display:inline-flex!important}
+/* istilah glossary yang bisa diketuk — pakai text-decoration, bukan border, biar tinggi baris tetap */
+.fg-ruby.is-term{cursor:pointer;border-radius:5px}
+.fg-ruby.is-term .fg-rb{text-decoration:underline dotted var(--kk-pink-300);text-decoration-thickness:2px;text-underline-offset:3px}
+.fg-ruby.is-term:hover{background:var(--kk-pink-50)}
+.fg-ruby.is-term:focus-visible{outline:2px solid var(--pink-deep);outline-offset:2px}
+/* desktop sedikit lebih rapat — HARUS di atas rule varian, spesifisitasnya sama */
+@media(min-width:768px){.fg[lang="ja"]{line-height:1.95}.fg-ruby{margin-inline:.085em}.fg-rt{font-size:max(12px,.55em)}}
+/* mode ID — latin, tidak pernah punya ruby */
+.fg--id{font-family:var(--font-latin);font-weight:600;font-size:clamp(16px,.3vw + 14.5px,19px);line-height:1.65;letter-spacing:0}
+/* varian ukuran kontainer (setelah media query & .fg--id supaya menang) */
+.fg--opt{font-size:clamp(15px,.25vw + 14px,17px);font-weight:600}
+.fg--lg{font-size:clamp(26px,4vw + 14px,38px)}
+/* min diturunkan 38->30px: lebar token ruby = max(base 1em/kanji, bacaan .55em/kana), jadi
+   istilah 8 kanji + 16 kana = 8.8em dan pada 38px itu 334px — tidak muat di layar 360px
+   sementara .fg-rt & .fg-ruby dua-duanya nowrap (tidak ada titik pecah baris di 1 token).
+   Hanya berpengaruh di viewport <633px; di atas itu 6vw sudah >=38px, jadi tablet/desktop
+   tidak berubah sama sekali. Batas nyata: `npm run validate:furigana:measure`. */
+.fg--xl{font-size:clamp(30px,6vw,56px)}
+.fg--tight[lang="ja"]{line-height:1.8}
+.fg--lg[lang="ja"],.fg--xl[lang="ja"]{line-height:1.85}
+.fg__p{display:block;margin:0 0 1em}.fg__p:last-child{margin-bottom:0}
+.fg__note{color:var(--muted);font-weight:500;font-size:.82em;font-style:italic}
+/* kartu compare (CompareTerm) */
+.compare-term{display:block}.compare-term__romaji{display:block;margin-top:2px;font:700 12px 'DM Sans';letter-spacing:.04em;color:var(--muted)}
 
 .unlimitedBanner{display:flex;flex-direction:column;gap:4px;margin:0 0 18px;padding:16px 18px;border:1px solid #ffc8dc;border-radius:18px;background:linear-gradient(135deg,#fff0f7,#ffe3ef);color:inherit;text-decoration:none}.unlimitedBanner b{font:700 18px Fredoka;color:var(--pink-deep)}.unlimitedBanner span{font-size:12px;color:var(--muted)}.unlimitedHero{margin:18px 0}.finalModeSwitch{display:flex;gap:4px;width:max-content;padding:4px;background:var(--pink-pale);border-radius:999px;margin-bottom:14px}.finalModeSwitch button{border:0;border-radius:999px;background:transparent;padding:8px 14px;color:var(--pink-deep);font-weight:700}.finalModeSwitch button.active{background:#fff;box-shadow:0 3px 8px -4px rgba(255,100,160,.5)}.finalQuestion h2{font:700 22px/1.7 Fredoka}.finalOptions button span{line-height:1.6}.navSvg{stroke-width:1.8}
 .glossaryHeroEmoji{font-size:58px}.glossarySearchWrap{position:relative}.glossarySearch{padding-right:48px!important;font-size:16px!important}.glossaryClear{position:absolute;right:10px;top:50%;transform:translateY(-50%);border:0;background:#fff0f6;color:var(--pink-deep);border-radius:50%;width:30px;height:30px;font-size:20px}.glossaryHint{font-size:12px;color:var(--muted);margin:-7px 0 18px}.glossaryTop{padding:18px;background:linear-gradient(135deg,#fff,#fff5fa);border:1px solid var(--line);border-radius:var(--radius-lg);margin-bottom:16px}.glossaryTop h2{font:600 20px Fredoka;margin:0 0 3px}.glossaryChips{display:flex;gap:8px;overflow:auto;padding:8px 2px 3px}.glossaryChip{display:flex;align-items:center;gap:7px;white-space:nowrap;background:#fff;border:1px solid #ffd4e4;border-radius:999px;padding:8px 11px;text-decoration:none;color:inherit}.glossaryChip b{background:var(--pink);color:#fff;border-radius:50%;width:20px;height:20px;text-align:center;font-size:12px;padding-top:2px}.glossaryChip strong{font:600 16px Fredoka}.glossaryChip small{color:var(--muted)}.glossaryFilters{display:flex;gap:7px;overflow:auto;margin:14px 0}.glossaryFilters button{flex:none;border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 13px;color:var(--muted);font-weight:700}.glossaryFilters button.active{background:var(--pink-pale);border-color:var(--pink);color:var(--pink-deep)}.glossaryCount{font-size:12px}.glossaryGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.glossaryCard{position:relative;display:block;padding:16px;border:1px solid var(--line);border-radius:var(--radius-md);background:#fff;text-decoration:none;color:inherit;box-shadow:var(--shadow-pink);transition:transform .15s}.glossaryCard:active{transform:scale(.98)}.glossaryCard small{display:block;color:#9f8191;font-size:12px;letter-spacing:.12em}.glossaryCard b{display:block;font:600 25px Fredoka;margin:3px 0}.glossaryCard>span{display:block;color:var(--muted);font-size:12px}.glossaryCard p{margin:6px 0 0;font-weight:600}.glossaryCard em{position:absolute;right:12px;top:12px;color:var(--pink-deep);font-size:11px;font-style:normal}.glossaryCard mark{background:#ffe29b;border-radius:3px}.glossaryMore{width:100%;margin-top:18px}.glossaryDone{text-align:center;color:var(--muted);margin:22px}.glossaryEmpty{text-align:center;padding:30px}.glossaryDetail{max-width:720px}.detailHero{text-align:center;padding:25px 0 18px}.detailHero small{color:#9f8191;letter-spacing:.15em}.detailHero h1{font:600 62px Fredoka;margin:6px 0}.detailHero p{color:var(--muted);margin:0 0 12px}.detailHero strong{font-size:18px}.detailSection{margin-top:22px}.detailSection h2{font:600 18px Fredoka;color:var(--pink-deep)}.detailSection p{line-height:1.75}.kanjiBreakdown{display:flex;align-items:baseline;gap:12px;padding:12px 14px;background:#fff8fb;border-radius:12px;margin:7px 0}.kanjiBreakdown b{font:28px Fredoka}.kanjiBreakdown span{color:var(--muted)}.kanjiBreakdown small{margin-left:auto}.exampleBox{padding:14px;background:#fff9e8;border-radius:14px;margin:8px 0}.exampleBox p{margin:7px 0 0;color:var(--muted)}.detailTags{display:flex;flex-wrap:wrap;gap:8px}.detailTags a{padding:8px 12px;border-radius:999px;background:var(--pink-pale);color:var(--pink-deep);text-decoration:none;font-weight:700}.materiTerms{margin:18px 0 4px}.materiTerms h3{font:600 15px Fredoka;color:var(--pink-deep);margin:0 0 10px}.materiTermButtons{display:flex;gap:8px;overflow-x:auto;padding:2px 1px 8px}.materiTermButton{flex:0 0 auto;min-width:108px;display:flex;flex-direction:column;gap:2px;padding:10px 12px;border-radius:14px;background:#fff;border:1px solid #ffd4e4;text-decoration:none;color:inherit;box-shadow:0 4px 12px -8px rgba(255,100,160,.45)}.materiTermButton small{color:#9f8191}.materiTermButton b{font:700 21px Fredoka;color:var(--ink)}.materiTermButton span{font-size:11px;color:var(--muted);max-width:140px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.termHit{cursor:pointer}
-.termSheet{position:relative;width:min(640px,100%);max-height:min(78vh,620px);overflow:auto;background:#fff;border-radius:24px 24px 16px 16px;padding:28px 22px 24px;box-shadow:0 -12px 40px -16px rgba(68,30,52,.5)}.termSheetClose{position:absolute;right:14px;top:12px;border:0;background:var(--pink-pale);color:var(--pink-deep);border-radius:50%;width:32px;height:32px;font-size:22px}.termSheet small{color:#9f8191;letter-spacing:.14em}.termSheet h2{font:700 48px Fredoka;margin:5px 0}.termSheetShort{font-weight:700;color:var(--pink-deep)}.termSheet p{line-height:1.7}.termHit{cursor:pointer;text-decoration:underline;text-decoration-style:dotted;text-decoration-color:#ff78a3;text-underline-offset:4px}.navSvg{width:22px;height:22px}.navEmoji{display:grid;place-items:center}
+.termSheet{position:relative;width:min(640px,100%);max-height:min(78vh,620px);overflow:auto;background:#fff;border-radius:24px 24px 16px 16px;padding:28px 22px 24px;box-shadow:0 -12px 40px -16px rgba(68,30,52,.5)}.termSheetClose{position:absolute;right:14px;top:12px;border:0;background:var(--pink-pale);color:var(--pink-deep);border-radius:50%;width:32px;height:32px;font-size:22px}.termSheet small{color:#9f8191;letter-spacing:.14em}.termSheet h2{font:700 48px Fredoka;font-size:clamp(30px,7.2vw,48px);margin:5px 0}.termSheetShort{font-weight:700;color:var(--pink-deep)}.termSheet p{line-height:1.7}.termHit{cursor:pointer;text-decoration:underline;text-decoration-style:dotted;text-decoration-color:#ff78a3;text-underline-offset:4px}.navSvg{width:22px;height:22px}.navEmoji{display:grid;place-items:center}
 
 @media(max-width:600px){.glossaryGrid{grid-template-columns:1fr}.glossaryHeroEmoji{font-size:46px}.detailHero h1{font-size:52px}.kanjiBreakdown{flex-wrap:wrap}.kanjiBreakdown small{margin-left:0;width:100%}}
 .page{padding:22px 20px 40px;max-width:720px;margin:auto;animation:popIn .35s ease}
@@ -80,11 +120,14 @@
 .materiDots button.done{background:#ffabc5}.materiDots button.active{background:var(--pink-deep)}
 .richMateriCard{padding:28px 32px;background:#fff;border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:var(--shadow-pink);text-align:left;animation:popIn .3s ease;min-height:280px}
 .richMateriCard h2{font:600 24px/1.35 Fredoka;margin:0 0 16px;text-align:left;color:var(--ink)}
-.annotatedText{max-width:34em;white-space:pre-line;margin:0;color:var(--ink);font-size:17px;line-height:1.75}
-.annotatedText.showFuri{line-height:2.35;padding-top:.55em;word-break:normal;overflow-wrap:normal;line-break:strict}.annotatedText.showFuri ruby{position:relative;display:inline-block;ruby-position:over;-webkit-ruby-position:before;margin:0 .045em;padding:0 .015em}.annotatedText.showFuri rt{position:absolute;left:50%;bottom:calc(100% + .12em);transform:translateX(-50%);display:block;white-space:nowrap;font-size:max(14px,.6em);line-height:1.05;letter-spacing:.01em;color:#8a6e7c;font-weight:600;pointer-events:none;user-select:none}.annotatedText.showFuri ruby+ ruby{margin-left:.06em}
+/* h2 materi dirender Furigana (punya .fg), jadi butuh spesifisitas ekstra biar ukuran
+   heading tidak ketimpa `.richMateriCard .fg` di media query styles.css.
+   line-height sengaja tidak di-set: biar .fg[lang="ja"] yang kasih ruang buat bacaan. */
+.richMateriCard h2.fg{font-size:24px}
+.richMateriCard .fg{max-width:34em}
 .richBody{max-width:34em}.richTag{display:inline-block;margin-bottom:14px;padding:5px 12px;border-radius:99px;background:var(--pink-pale);color:var(--pink-deep);font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase}
-.richMateriCard .mascotImg{margin-bottom:14px}.richTerm{text-align:center}.termReading{font-size:16px;color:#8a6e7c;letter-spacing:.12em}.termKanji{font-size:58px;font-weight:800;line-height:1.2;color:var(--ink);margin:5px 0}.termRoman{font-weight:700;color:var(--muted);margin-bottom:22px}.japaneseTerm{display:block;font-size:clamp(42px,6vw,58px);font-family:var(--font-jp);font-weight:800;line-height:1.7;color:var(--ink);margin:4px 0 10px}.japaneseTerm.showFuri{font-size:clamp(36px,5vw,52px);line-height:2.05;padding-top:.55em}.japaneseTerm ruby{margin:0 .04em}.compareTerm{display:block;font-family:var(--font-jp);font-weight:800;font-size:22px;line-height:2.1;padding-top:.45em}.compareTerm.showFuri ruby{margin:0 .04em}.termRoman{font-weight:700;color:var(--muted);margin-bottom:22px}.richNote,.richPrompt,.richReveal{display:block;margin-top:16px;padding:14px 16px;background:#fff9e8;border-radius:14px;color:#8a6a3a;white-space:pre-line}.richQuestion{font-weight:700}.checkpointOpts{display:grid;gap:9px;margin-top:14px}.checkpointOption{padding:12px 14px;border:1px solid var(--line);border-radius:13px;background:#fffafd}.richRecap{list-style:none;padding:0;margin:0;display:grid;gap:12px}.richRecap li{padding-left:28px;line-height:1.6;position:relative}.richRecap li:before{content:'🌸';position:absolute;left:0}.richMateriNav{display:flex;gap:10px;margin-top:18px}.richMateriNav .primary{flex:1}.materiSkip{display:block;margin:14px auto 0;background:none;border:0;color:var(--muted);font-weight:700;text-decoration:underline}
-@media(max-width:600px){.richMateriCard{padding:23px 19px}.materiTop{gap:7px}.materiTop .langSwitch button{padding:5px 7px}.richMateriCard h2{font-size:22px}.annotatedText{font-size:16px}.annotatedText rt{font-size:max(12px,.62em)}.annotatedText.showFuri{line-height:2.45;padding-top:.72em}.annotatedText.showFuri ruby{margin:0 .06em;padding:0 .02em}.annotatedText.showFuri rt{bottom:calc(100% + .16em)}.compareRow{grid-template-columns:1fr;gap:5px}.termKanji{font-size:50px}}
+.richMateriCard .mascotImg{margin-bottom:14px}.richTerm{text-align:center}.termReading{font-size:16px;color:var(--kk-furi);letter-spacing:.12em}.termKanji{font-size:58px;font-weight:800;line-height:1.2;color:var(--ink);margin:5px 0}.termRoman{font-weight:700;color:var(--muted);margin-bottom:22px}.japaneseTerm{display:block;font-weight:800;color:var(--ink);margin:4px 0 10px}.compareTerm{display:block;font-weight:800;font-size:clamp(20px,5vw,24px)}.richNote,.richPrompt,.richReveal{display:block;margin-top:16px;padding:14px 16px;background:#fff9e8;border-radius:14px;color:#8a6a3a;white-space:pre-line}.richQuestion{font-weight:700}.checkpointOpts{display:grid;gap:9px;margin-top:14px}.checkpointOption{padding:12px 14px;border:1px solid var(--line);border-radius:13px;background:#fffafd}.richRecap{list-style:none;padding:0;margin:0;display:grid;gap:12px}.richRecap li{padding-left:28px;line-height:1.6;position:relative}.richRecap li:before{content:'🌸';position:absolute;left:0}.richMateriNav{display:flex;gap:10px;margin-top:18px}.richMateriNav .primary{flex:1}.materiSkip{display:block;margin:14px auto 0;background:none;border:0;color:var(--muted);font-weight:700;text-decoration:underline}
+@media(max-width:600px){.richMateriCard{padding:23px 19px}.materiTop{gap:7px}.materiTop .langSwitch button{padding:5px 7px}.richMateriCard h2{font-size:22px}.compareRow{grid-template-columns:1fr;gap:5px}.termKanji{font-size:50px}}
 
 .quizTop{display:flex;justify-content:space-between;align-items:center;margin:6px 0 12px;font-size:11px;font-weight:700;letter-spacing:.6px;color:var(--muted)}
 .quizProgress{height:9px;background:var(--pink-pale);border-radius:99px;overflow:hidden;margin-bottom:18px}
@@ -125,9 +168,8 @@
 /* question card + 3-mode language switch (漢字/ふり/ID) */
 .qCard{margin-bottom:14px;border-radius:var(--radius-lg);padding:20px 20px 18px;background:#fff;border:1px solid var(--line);box-shadow:0 12px 30px -10px rgba(255,150,190,.4);animation:popIn .3s ease}
 .qCardHead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:6px}
-.qCard h1{font:600 26px/2.35 Fredoka;margin:7px 0 0;padding-top:.55em}
-.qCard h1 rt,.choiceText rt,.explainBox p rt{position:absolute;left:50%;bottom:100%;transform:translateX(-50%);white-space:nowrap;line-height:1.05;pointer-events:none;user-select:none}
-.qCard h1 ruby,.choiceText ruby,.explainBox p ruby{position:relative;display:inline-block;ruby-position:over;-webkit-ruby-position:before}
+/* line-height ruby diurus .fg[lang="ja"] di atas — jangan set di sini lagi */
+.qCard h1{font-family:Fredoka;font-size:26px;font-weight:600;margin:7px 0 0}
 
 .langSwitch{display:flex;gap:3px;flex:none;background:var(--pink-pale);border-radius:999px;padding:3px}
 .langSwitch button{font-size:11px;font-weight:700;padding:6px 10px;border-radius:999px;color:#b98aa3;background:transparent;line-height:1}
@@ -143,8 +185,7 @@
 }
 .choiceCard.answered{cursor:default}
 .choiceRow{display:flex;align-items:center;gap:8px;width:100%}
-.choiceText{flex:1;font-size:15px;line-height:2.25;padding-top:.45em;text-align:left}
-.choiceText rt{font-size:max(12px,.62em);color:#8a6e7c;font-weight:600}
+.choiceText{flex:1;text-align:left;font-size:clamp(15px,.2vw + 14px,17px);font-weight:600}
 .choiceCard.answered.isCorrect{border:2px solid #63c89a;background:#effcf5}
 .choiceCard.answered.isWrong{border:2px solid #f4849b;background:#fff1f3}
 .choiceCard .checkIcon{margin-left:6px;flex:none;color:#4cba89}
@@ -162,9 +203,9 @@
 .explainBox .explainHead .langSwitch{background:#fff3d3}
 .explainBox .explainHead .langSwitch button{color:#b8934a}
 .explainBox .explainHead .langSwitch button.active{background:#ffdd8f;color:#7a5310}
-.explainBox p{margin:0;font-size:13px;line-height:2.25;padding-top:.4em;color:#8a6a3a}
+.explainBox p{margin:0;font-size:13px;color:#8a6a3a}
 .explainBox p.ja{font-weight:600}
-.explainBox p rt{font-size:11px;color:#b8934a;font-weight:700}
+.explainBox .fg-rt{color:#b8934a;font-weight:700}
 
 .quizFooter{display:flex;flex-direction:column;gap:10px}
 

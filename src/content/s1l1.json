@@ -94,7 +94,7 @@
       "type": "checkpoint",
       "question": {
         "prompt": {
-          "ja": "尊厳[そんげん]について、正[ただ]しいものを1[ひと]つ選[えら]びなさい。",
+          "ja": "尊厳[そんげん]について、正[ただ]しいものを一[ひと]つ選[えら]びなさい。",
           "id": "Pilih satu pernyataan yang benar tentang 尊厳 (songen)."
         },
         "options": [

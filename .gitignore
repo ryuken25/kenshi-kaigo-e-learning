@@ -1,7 +1,27 @@
 node_modules
 dist
 .vercel
+.DS_Store
+
+# Env files
 .env
 .env.*
-.DS_Store
 .env*
+
+# Secrets — creds.txt holds GitHub PAT, Vercel token, Neon API key,
+# Cloudflare/R2, Midtrans and Porkbun keys. Never commit.
+creds.txt
+creds*.txt
+*.creds
+secrets.txt
+
+# Local agent/tool config (contains API tokens)
+.claude/settings.json
+.claude/settings.local.json
+
+# Local file backups
+.backup/
+
+# DB dumps produced by scripts/backup-db.mjs
+*.dump.json
+backup-*.json

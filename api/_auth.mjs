@@ -33,8 +33,10 @@ export async function requireUser(sql, req) {
   return rows[0];
 }
 
-export const SECTIONS = 13;
-export const LEVELS_PER_SECTION = 17;
+// Jumlah section & level per section ada di ./_sections.mjs (SECTION_LEVELS).
+// LEVELS_PER_SECTION lama dihapus: nilainya hardcoded 17 padahal cuma section 11
+// yang punya 17 level, jadi 11 dari 13 section tidak pernah bisa lolos gate 80%.
+export { SECTION_COUNT as SECTIONS, levelsInSection, meetsSectionGate, sectionPercent } from './_sections.mjs';
 
 // isRepeat: true kalau level ini SUDAH pernah berstatus 'completed' sebelumnya (grinding ulang).
 // Completion pertama kali dapat XP penuh; replay cuma dapat 20% (minimum 2 XP).

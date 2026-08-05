@@ -1,5 +1,6 @@
 import { db } from './_db.mjs';
-import { requireUser, computeXpCandidate, computeStars, SECTIONS, LEVELS_PER_SECTION, PREVIEW_XP_FLAT } from './_auth.mjs';
+import { requireUser, computeXpCandidate, computeStars, PREVIEW_XP_FLAT } from './_auth.mjs';
+import { SECTION_COUNT, levelsInSection, meetsSectionGate, sectionPercent } from './_sections.mjs';
 
 function todayInTz(tz) {
   try {
@@ -50,10 +51,11 @@ async function buildSectionsMap(sql, userId) {
   const byKey = new Map(rows.map(r => [`${r.section_id}-${r.level_id}`, r]));
 
   const sections = [];
-  for (let s = 1; s <= SECTIONS; s++) {
+  for (let s = 1; s <= SECTION_COUNT; s++) {
+    const totalLevels = levelsInSection(s);
     const levels = [];
     let completedLevels = 0;
-    for (let l = 1; l <= LEVELS_PER_SECTION; l++) {
+    for (let l = 1; l <= totalLevels; l++) {
       const rec = byKey.get(`${s}-${l}`);
       const status = rec?.status || (l === 1 ? 'available' : 'locked');
       if (rec?.status === 'completed') completedLevels++;
@@ -78,8 +80,8 @@ async function buildSectionsMap(sql, userId) {
       unlocked: true, // selalu bisa dibuka/dilihat
       sectionUnlockedOfficially: prevSectionUnlocked || null, // patched below
       completedLevels,
-      totalLevels: LEVELS_PER_SECTION,
-      percent: Math.round((completedLevels / LEVELS_PER_SECTION) * 100),
+      totalLevels,
+      percent: sectionPercent(completedLevels, s),
       levels,
     });
   }
@@ -88,7 +90,9 @@ async function buildSectionsMap(sql, userId) {
   for (let i = 0; i < sections.length; i++) {
     if (i === 0) { sections[i].sectionUnlockedOfficially = true; continue; }
     const prev = sections[i - 1];
-    sections[i].sectionUnlockedOfficially = prev.percent >= 80;
+    // pakai meetsSectionGate (integer math), BUKAN prev.percent >= 80 — persen sudah
+    // dibulatkan jadi bisa beda tipis dari gate resmi di POST.
+    sections[i].sectionUnlockedOfficially = meetsSectionGate(prev.completedLevels, prev.sectionId);
     if (!sections[i].sectionUnlockedOfficially) {
       // section belum resmi terbuka -> semua levelnya jadi preview-only (levelUnlocked=false)
       sections[i].levels = sections[i].levels.map(lv => ({ ...lv, levelUnlocked: false }));
@@ -129,9 +133,9 @@ export default async function handler(req, res) {
       const totalCount = Number(body.totalCount);
       const attemptId = String(body.attemptId || '');
 
-      if (!Number.isInteger(sectionId) || sectionId < 1 || sectionId > SECTIONS)
+      if (!Number.isInteger(sectionId) || sectionId < 1 || sectionId > SECTION_COUNT)
         return res.status(400).json({ error: 'invalid_input', message: 'sectionId out of range' });
-      if (!Number.isInteger(levelId) || levelId < 1 || levelId > LEVELS_PER_SECTION)
+      if (!Number.isInteger(levelId) || levelId < 1 || levelId > levelsInSection(sectionId))
         return res.status(400).json({ error: 'invalid_input', message: 'levelId out of range' });
       if (!attemptId) return res.status(400).json({ error: 'invalid_input', message: 'attemptId required' });
 
@@ -161,8 +165,11 @@ export default async function handler(req, res) {
       // section prereq: section sebelumnya >=80% completed (level 1 selalu boleh resmi)
       let sectionPrereqMet = sectionId === 1;
       if (!sectionPrereqMet) {
-        const prevSectionRows = await sql`SELECT status FROM level_progress WHERE user_id=${user.id} AND section_id=${sectionId - 1} AND status='completed'`;
-        sectionPrereqMet = (prevSectionRows.length / LEVELS_PER_SECTION) >= 0.8;
+        // level_id dibatasi ke jumlah level nyata section itu: /api/progress/merge tidak
+        // memvalidasi range, jadi bisa ada row level_id di luar range yang kalau ikut dihitung
+        // bikin gate lolos palsu + beda dari completedLevels di buildSectionsMap.
+        const prevSectionRows = await sql`SELECT status FROM level_progress WHERE user_id=${user.id} AND section_id=${sectionId - 1} AND level_id <= ${levelsInSection(sectionId - 1)} AND status='completed'`;
+        sectionPrereqMet = meetsSectionGate(prevSectionRows.length, sectionId - 1);
       }
       const levelUnlockedOfficially = levelPrereqMet && sectionPrereqMet;
 
@@ -263,7 +270,7 @@ export default async function handler(req, res) {
         `;
       }
 
-      const nextLevelId = levelId < LEVELS_PER_SECTION ? levelId + 1 : null;
+      const nextLevelId = levelId < levelsInSection(sectionId) ? levelId + 1 : null;
       const responseBody = {
         level: {
           sectionId, levelId, status: row.status, bestScore: row.best_score,
@@ -274,7 +281,7 @@ export default async function handler(req, res) {
         streak: streakResult,
         unlocked: {
           nextLevel: nextLevelId ? { sectionId, levelId: nextLevelId } : null,
-          nextSection: nextLevelId ? null : (sectionId < SECTIONS ? { sectionId: sectionId + 1 } : null),
+          nextSection: nextLevelId ? null : (sectionId < SECTION_COUNT ? { sectionId: sectionId + 1 } : null),
         },
         isNewCompletion: isCompleted && !wasAlreadyCompleted,
       };

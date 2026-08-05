@@ -1,5 +1,6 @@
 import { db } from '../_db.mjs';
 import { requireUser, computeXpCandidate, computeStars } from '../_auth.mjs';
+import { isValidLevel } from '../_sections.mjs';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -25,7 +26,12 @@ export default async function handler(req, res) {
     let merged = 0, skipped = 0;
     for (const e of entries) {
       const sectionId = Number(e.sectionId), levelId = Number(e.levelId), bestScore = Number(e.bestScore), attempts = Number(e.attempts) || 1;
-      if (!Number.isInteger(sectionId) || !Number.isInteger(levelId) || !Number.isFinite(bestScore) || bestScore < 0 || bestScore > 100) {
+      // isValidLevel: section/level harus benar-benar ada (api/_sections.mjs). Tanpa ini
+      // localStorage guest yang diedit bisa menyuntik row di luar range, dan row itu ikut
+      // kehitung di gate 80% /api/progress.
+      // attempts di-clamp juga: nilainya dari client dan DIJUMLAHKAN ke kolom attempts (+= EXCLUDED),
+      // jadi angka absurd/negatif dari payload bikin statistik attempts permanen rusak.
+      if (!isValidLevel(sectionId, levelId) || !Number.isFinite(bestScore) || bestScore < 0 || bestScore > 100 || !Number.isInteger(attempts) || attempts < 1 || attempts > 999) {
         skipped++;
         continue;
       }

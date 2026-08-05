@@ -3,7 +3,7 @@ import {createRoot} from 'react-dom/client';
 import {BrowserRouter,Routes,Route,Link,useNavigate,useParams,useLocation,Navigate} from 'react-router-dom';
 import {Heart,Lock,ChevronRight,BookOpen,Flame,UserRound,Star,Check,X,Volume2,Info,Menu,Home as HomeIcon,Languages,ArrowLeft,SkipForward,RotateCcw,Shuffle,Sparkles} from 'lucide-react';
 import {sections,getSection,getLevel,glossary,allQuestions,randomQuestion} from './data.js';
-import {furigana} from './furigana.generated.js';
+import Furigana,{CompareTerm} from './Furigana.jsx';
 import s1l1Content from './content/s1l1.json';
 import s1l1Ja from './content/s1l1-ja.json';
 import glossaryData from './content/glossary.index.json';
@@ -30,24 +30,11 @@ function LangSwitch({mode,setMode,className=''}){
   </div>;
 }
 
-function LangText({ja,id,mode,as='p',className=''}){
-  return <AnnotatedText field={{ja,id}} mode={mode==='furigana'?'furigana':mode} as={as} className={className}/>;
-}
-
-const RUBY_ANNOTATION = /([\u4E00-\u9FFF\u3005\u3006\u30F6]+)\[([\u3041-\u309F\u30A1-\u30FCー]+)\]/g;
-function parseJapanese(source){
-  const out=[];let last=0,m;const re=/([\u4E00-\u9FFF\u3005\u3006\u30F6]+)\[([\u3041-\u309F\u30A1-\u30FCー]+)\]/g;
-  while((m=re.exec(source))){if(m.index>last)out.push({type:'text',value:source.slice(last,m.index)});out.push({type:'ruby',base:m[1],reading:m[2]});last=m.index+m[0].length}
-  if(last<source.length)out.push({type:'text',value:source.slice(last)});return out;
-}
-function AnnotatedText({field,mode='kanji',as='p',className='',glossary,onTerm}){
-  const Tag=as;if(field==null)return null;
-  if(mode==='id'&&typeof field==='object'&&field.id)return <Tag lang="id" className={`fg fg--id ${className}`}>{field.id}</Tag>;
-  const source=typeof field==='string'?field:(field.ja||field.id||'');
-  const generated=mode==='furigana'&&!/\[[\u3041-\u309F]/.test(source)?furigana(source):source;
-  const tokens=parseJapanese(generated);
-  const handle=e=>{const hit=e.target.closest?.('[data-term]');if(hit&&onTerm)onTerm(hit.dataset.term)};
-  return <Tag lang="ja" onClick={handle} className={`fg annotatedText ${mode==='furigana'?'showFuri':''} ${className}`}>{tokens.map((t,i)=>t.type==='text'?<span key={i}>{t.value}</span>:<span key={i} className={`fg-ruby${glossary?.has(t.base)&&onTerm?' is-term':''}`} data-term={glossary?.has(t.base)&&onTerm?t.base:undefined}><span className="fg-rt">{mode==='furigana'?t.reading:' '}</span><span className="fg-rb">{t.base}</span></span>)}</Tag>;
+/* Semua teks Jepang WAJIB lewat <Furigana> (src/Furigana.jsx) — satu-satunya jalur render
+   ruby di app ini. Jangan render <ruby>/<rt> mentah lagi di file ini: bug furigana berulang
+   tiga kali justru karena dulu ada beberapa jalur render yang berbeda. */
+function LangText({ja,id,mode,as='p',className='',variant}){
+  return <Furigana field={{ja,id}} mode={mode} as={as} className={className} variant={variant}/>;
 }
 
 const ASSET = p=>`/assets/hellokitty/${p}`;
@@ -134,8 +121,9 @@ function useSectionUnlockMap(){
     const map = {};
     sections.forEach((s,i)=>{
       const completedLevels = s.levels.filter(l=>done[`${s.id}-${l.id}`]).length;
-      const prevSectionSomeDone = i===0 || (sections[i-1] && sections[i-1].levels.some(l=>done[`${sections[i-1].id}-${l.id}`]));
-      map[s.id] = { official: i===0 || completedLevels>0 || prevSectionSomeDone, completedLevels, levels:null };
+      // gate 80% sama seperti server (api/_sections.mjs meetsSectionGate): integer math, bukan persen bulat
+      const prev = i>0 ? sections[i-1] : null;
+      map[s.id] = { official: i===0 || prev.levels.filter(l=>done[`${prev.id}-${l.id}`]).length*5 >= prev.levels.length*4, completedLevels, levels:null };
     });
     return map;
   },[isAuthenticated, serverProgress, guestProgress]);
@@ -238,9 +226,12 @@ function mergeJapaneseCard(card){
   const ja=s1l1Ja[card.id];
   if(!ja)return card;
   const merge=(base,override)=>override?{...base,...override}:base;
+  /* meaning & when di kartu compare ada di DUA bahasa: id dari s1l1.json, ja dari overlay.
+     Kalau ditimpa flat, salah satu bahasa hilang & mode ID ikut jadi Jepang. */
+  const pair=(id,jp)=>({ja:jp||id||'',id:id||jp||''});
   const out={...card};
   for(const key of ['body','heading','scenario','prompt','reveal','note']) out[key]=merge(card[key],ja[key]);
-  if(card.type==='compare'&&ja.rows)out.rows=card.rows.map((r,i)=>({...r,...ja.rows[i],term:{...r.term,...ja.rows[i]?.term}}));
+  if(card.type==='compare'&&ja.rows)out.rows=card.rows.map((r,i)=>({...r,...ja.rows[i],term:{...r.term,...ja.rows[i]?.term},meaning:pair(r.meaning,ja.rows[i]?.meaning),when:pair(r.when,ja.rows[i]?.when)}));
   if(card.type==='checkpoint'&&ja.question)out.question={...card.question,...ja.question,explanation:merge(card.question.explanation,ja.question.explanation)};
   if(card.type==='recap'&&ja.points)out.points=card.points.map((p,i)=>merge(p,ja.points[i]));
   return out;
@@ -250,6 +241,12 @@ function cardGlossaryTerms(card,terms){
   const text=JSON.stringify(card);
   return terms.filter(t=>text.includes(t.kanji)).slice(0,8);
 }
+
+/* Bacaan hanya boleh dipasang manual kalau base-nya kanji murni — RUBY_RE cuma match base
+   kanji, jadi istilah campur katakana (口腔ケア) atau alfabet (QOL) akan bocor "[かな]" ke
+   layar. Yang campuran diserahkan ke map furigana biar cuma bagian kanjinya yang beranotasi. */
+const PURE_KANJI=/^[一-鿿々〆ヶ]+$/;
+const termField=(t)=>PURE_KANJI.test(t.kanji)?{ja:`${t.kanji}[${t.reading}]`,id:t.kanji}:{ja:t.kanji,id:t.kanji};
 
 function Materi(){
   const {sectionId,levelId}=useParams();const s=getSection(sectionId),l=getLevel(sectionId,levelId);const nav=useNavigate();
@@ -269,7 +266,7 @@ function Materi(){
   return <main className="page materiPage richMateriPage">
     <div className="materiTop"><Link to={`/section/${s.id}/level/${l.id}`} className="back">× Tutup</Link><div className="materiDots" aria-label={`Kartu ${i+1} dari ${cards.length}`}>{cards.map((c,n)=><button type="button" key={c.id||n} className={`${n===i?'active':''} ${n<i?'done':''}`} disabled={n>i} aria-label={`Kartu ${n+1}`} onClick={()=>setI(n)}/>)}</div><LangSwitch mode={mode} setMode={setMode}/></div>
     <article className={`richMateriCard rich-${card.type||'lesson'}`} key={card.id||i}><RichCardBody card={card} mode={mode} glossary={glossaryKanji} onTerm={openTerm}/></article>
-    {termSheet&&<div className="termSheetBackdrop" role="presentation" onClick={()=>setTermSheet(null)}><section className="termSheet" role="dialog" aria-modal="true" aria-label={`Istilah ${termSheet.kanji}`} onClick={e=>e.stopPropagation()}><button className="termSheetClose" onClick={()=>setTermSheet(null)} aria-label="Tutup">×</button><small>{termSheet.reading}</small><h2>{termSheet.kanji}</h2><p className="termSheetShort">{termSheet.id.short}</p><p>{termSheet.id.long}</p><Link className="primary" to={`/glossary/${termSheet.slug}`}>Halaman glossary lengkap →</Link></section></div>}
+    {termSheet&&<div className="termSheetBackdrop" role="presentation" onClick={()=>setTermSheet(null)}><section className="termSheet" role="dialog" aria-modal="true" aria-label={`Istilah ${termSheet.kanji}`} onClick={e=>e.stopPropagation()}><button className="termSheetClose" onClick={()=>setTermSheet(null)} aria-label="Tutup">×</button>{mode==='kanji'&&<small>{termSheet.reading}</small>}<Furigana field={termField(termSheet)} mode={mode} as="h2" variant="xl"/><p className="termSheetShort">{termSheet.id.short}</p><p>{termSheet.id.long}</p><Link className="primary" to={`/glossary/${termSheet.slug}`}>Halaman glossary lengkap →</Link></section></div>}
     {cardGlossaryTerms(card,glossaryData.terms).length>0&&<section className="materiTerms"><h3>🔎 Cari istilah di glossary</h3><div className="materiTermButtons">{cardGlossaryTerms(card,glossaryData.terms).map(t=><Link key={t.slug} to={`/glossary/${t.slug}`} className="materiTermButton"><small>{t.reading}</small><b>{t.kanji}</b><span>{t.id.short}</span></Link>)}</div></section>}
     <div className="richMateriNav">{i>0&&<button type="button" className="secondary tap" onClick={()=>setI(v=>v-1)}>Kembali</button>}<button type="button" className="primary tap" onClick={()=>i<cards.length-1?setI(i+1):nav(`/section/${s.id}/level/${l.id}/quiz`)}>{i<cards.length-1?'Lanjut':'Mulai quiz'} <ChevronRight/></button></div>
     <button type="button" className="materiSkip" onClick={()=>nav(`/section/${s.id}/level/${l.id}/quiz`)}>Lewati ke quiz</button>
@@ -277,18 +274,17 @@ function Materi(){
 }
 
 function JapaneseTerm({term,mode,className='',onTerm}){
-  const annotated={ja:`${term.kanji}[${term.reading}]`,id:term.kanji};
-  return <AnnotatedText field={annotated} mode={mode} as="span" className={`japaneseTerm ${className}`} glossary={new Set([term.kanji])} onTerm={onTerm}/>;
+  return <Furigana field={termField(term)} mode={mode} as="span" variant="xl" className={`japaneseTerm ${className}`} glossary={new Set([term.kanji])} onTerm={onTerm}/>;
 }
 
 function RichCardBody({card,mode,glossary,onTerm}){
-  const F=({field,as='p',className=''})=><AnnotatedText field={field} mode={mode} as={as} className={className} glossary={glossary} onTerm={onTerm}/>;
+  const F=({field,as='p',className='',variant})=><Furigana field={field} mode={mode} as={as} variant={variant} className={className} glossary={glossary} onTerm={onTerm}/>;
   const heading=card.heading||((card.titleJa||card.titleId)?{ja:card.titleJa||'',id:card.titleId||''}:null);
   const body=card.body||((card.bodyJa||card.bodyId)?{ja:card.bodyJa||'',id:card.bodyId||''}:null);
   if(card.type==='hook') return <><Mascot variant="materi" size="sm"/><F field={body} className="richBody"/></>;
   if(card.type==='term'){const t=card.term;return <div className="richTerm"><JapaneseTerm term={t} mode={mode} onTerm={onTerm}/><div className="termRoman">{mode==='id'?t.meaning:`${t.romaji} / ${t.meaning}`}</div><div className="termExample">{t.example&&mode==='id'?<p>{t.example.id}</p>:t.example&&<F field={t.example}/>}</div></div>}
   if(card.type==='explain') return <><F field={heading} as="h2"/><F field={body} className="richBody"/> </>;
-  if(card.type==='compare') return <><F field={card.heading||heading} as="h2"/><div className="compareGrid">{card.rows.map(r=><div className="compareRow" key={r.term.kanji}><JapaneseTerm term={r.term} mode={mode} className="compareTerm" onTerm={onTerm}/><F field={{ja:r.meaning,id:r.meaning}}/><F field={{ja:r.when,id:r.when}}/></div>)}</div>{(card.note||heading)&&<F field={card.note||heading} className="richNote"/>}</>;
+  if(card.type==='compare') return <><F field={card.heading||heading} as="h2"/><div className="compareGrid">{card.rows.map(r=><div className="compareRow" key={r.term.kanji}><CompareTerm term={r.term} mode={mode} className="compareTerm" glossary={glossary} onTerm={onTerm}/><F field={r.meaning}/><F field={r.when}/></div>)}</div>{(card.note||heading)&&<F field={card.note||heading} className="richNote"/>}</>;
   if(card.type==='checkpoint') return <><span className="richTag">Cek cepat · tidak dinilai</span><F field={card.question?.prompt} className="richQuestion"/><div className="checkpointOpts">{card.question.options.map(o=><div key={o.key} className="checkpointOption"><F field={o.text}/></div>)}</div><p className="richNote">Jawabannya akan dibahas setelah kamu lanjut membaca materi.</p></>;
   if(card.type==='case') return <><span className="richTag">Kasus lapangan</span><F field={heading} as="h2"/><F field={card.scenario} className="richBody"/><F field={card.prompt} className="richPrompt"/><F field={card.reveal} className="richReveal"/></>;
   if(card.type==='exam-tip') return <><span className="richTag">Sudut pandang ujian</span><F field={heading} as="h2"/><F field={body} className="richBody"/></>;
@@ -462,6 +458,10 @@ function Practice(){
 
 function Result(){
   const {sectionId,levelId}=useParams();const {state}=useLocation();const s=getSection(sectionId),l=getLevel(sectionId,levelId);
+  // Guard wajib: baris flowButtons di bawah deref s.levelCount & s.id tanpa optional chaining,
+  // jadi /section/99/level/99/result (atau param non-numerik) bikin TypeError -> layar putih.
+  // Lima komponen ber-param lain sudah pakai pola yang sama; Result ketinggalan.
+  if(!s||!l)return <Navigate to="/"/>;
   const xp = state?.xpDelta ?? ((state?.score||0)*10+30);
   const isPerfect = state?.score===state?.total;
   const isPreview = Boolean(state?.isPreview);
