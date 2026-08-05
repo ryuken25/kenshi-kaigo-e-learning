@@ -6,6 +6,7 @@ import {sections,getSection,getLevel,glossary,allQuestions,randomQuestion} from 
 import {furigana} from './furigana.generated.js';
 import s1l1Content from './content/s1l1.json';
 import s1l1Ja from './content/s1l1-ja.json';
+import glossaryData from './content/glossary.index.json';
 import {GlossaryPage,GlossaryDetail} from './GlossaryPage.jsx';
 import Login from './Login.jsx';
 import {AuthProvider, useAuth} from './context/AuthContext.jsx';
@@ -36,7 +37,7 @@ function LangText({ja,id,mode,as='p',className=''}){
 }
 
 const RUBY_ANNOTATION = /([\u4E00-\u9FFF\u3005\u3006\u30F6]+)\[([\u3041-\u309F\u30A1-\u30FCー]+)\]/g;
-function AnnotatedText({field,mode='kanji',as='p',className=''}){
+function AnnotatedText({field,mode='kanji',as='p',className='',glossary,onTerm}){
   const Tag=as;
   if(field==null) return null;
   const raw=typeof field==='string'?field:(mode==='id'?field.id:(field.ja||field.id||''));
@@ -45,9 +46,9 @@ function AnnotatedText({field,mode='kanji',as='p',className=''}){
   const generated=mode==='furigana' ? (RUBY_ANNOTATION.test(source) ? source : furigana(source)) : source;
   RUBY_ANNOTATION.lastIndex=0;
   const html=mode==='furigana'
-    ? generated.replace(RUBY_ANNOTATION,'<ruby>$1<rt>$2</rt></ruby>')
-    : generated.replace(RUBY_ANNOTATION,'$1');
-  return <Tag className={`annotatedText ${mode==='furigana'?'showFuri':''} ${className}`} dangerouslySetInnerHTML={{__html:html}}/>;
+    ? generated.replace(RUBY_ANNOTATION,(m,base,reading)=>glossary?.has(base)&&onTerm?`<ruby class="termHit" data-term="${base}">${base}<rt>${reading}</rt></ruby>`:`<ruby>${base}<rt>${reading}</rt></ruby>`)
+    : generated.replace(RUBY_ANNOTATION,(m,base)=>glossary?.has(base)&&onTerm?`<span class="termHit" data-term="${base}">${base}</span>`:base);
+  return <Tag onClick={e=>{const hit=e.target.closest?.('[data-term]');if(hit&&onTerm)onTerm(hit.dataset.term)}} className={`annotatedText ${mode==='furigana'?'showFuri':''} ${className}`} dangerouslySetInnerHTML={{__html:html}}/>;
 }
 
 const ASSET = p=>`/assets/hellokitty/${p}`;
@@ -82,17 +83,29 @@ function KawaiiLoader({label='Memuat…'}){
   return <div className="kawaiiLoader"><span className="loaderBow">🎀</span><p>{label}</p></div>;
 }
 
+function ScrollToTop(){
+  const location=useLocation();
+  useEffect(()=>{window.scrollTo(0,0)},[location.pathname,location.search]);
+  return null;
+}
+
+function NavIcon({kind}){
+  const paths={learn:<><path d="M3 10.5 12 4l9 6.5"/><path d="M5.5 9.5V20h13V9.5"/><path d="M9 20v-6h6v6"/></>,exam:<><path d="M6 3h12v18H6z"/><path d="M9 7h6M9 11h6M9 15h3"/><path d="m16 18 1.5 1.5L21 16"/></>,terms:<><path d="M5 4h10a4 4 0 0 1 4 4v12H9a4 4 0 0 1-4-4z"/><path d="M9 4v16"/><path d="M12 9h4M12 12h4"/></>,profile:<><circle cx="12" cy="8" r="3"/><path d="M5 20c.8-3.2 3.1-5 7-5s6.2 1.8 7 5"/></>};
+  return <svg className="navSvg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{paths[kind]}</svg>;
+}
+
 function Shell({children}){
   const loc=useLocation();
   const {isAuthenticated, loading, streakCurrent, totalXp} = useProgress();
   const {status} = useAuth();
   const navItems = [
-    {to:'/', icon:'🎀', label:'Home', match:p=>p==='/'},
-    {to:'/practice', icon:'🌸', label:'Latihan', match:p=>p==='/practice'},
-    {to:'/glossary', icon:'📖', label:'Lesson', match:p=>p.startsWith('/glossary')},
-    {to:isAuthenticated?'/profile':'/login', icon:'💗', label:isAuthenticated?'Profile':'Login', match:p=>p==='/profile'||p==='/login'},
+    {to:'/', kind:'learn', label:'Belajar', match:p=>p==='/'},
+    {to:'/final', kind:'exam', label:'Ujian', match:p=>p.startsWith('/final')},
+    {to:'/glossary', kind:'terms', label:'Istilah', match:p=>p.startsWith('/glossary')},
+    {to:'/profile', kind:'profile', label:'Profil', match:p=>p==='/profile'||p==='/login'},
   ];
   return <div className="app">
+    <ScrollToTop/>
     <header>
       <Link to="/" className="brand"><div className="kitty"><img src={ASSET('hk-face-icon.png')} alt="Kaigo Kitty"/></div><div><b>kaigo kitty</b><small>learn with care</small></div></Link>
       <div className="topStats">
@@ -102,7 +115,7 @@ function Shell({children}){
     </header>
     {children}
     <nav>
-      {navItems.map(n=><Link key={n.label} className={`tap ${n.match(loc.pathname)?'active':''}`} to={n.to}><span className="navEmoji">{n.icon}</span><span>{n.label}</span></Link>)}
+      {navItems.map(n=><Link key={n.label} className={`tap ${n.match(loc.pathname)?'active':''}`} to={n.to}><span className="navEmoji"><NavIcon kind={n.kind}/></span><span>{n.label}</span></Link>)}
     </nav>
   </div>;
 }
@@ -233,8 +246,16 @@ function mergeJapaneseCard(card){
   return out;
 }
 
+function cardGlossaryTerms(card,terms){
+  const text=JSON.stringify(card);
+  return terms.filter(t=>text.includes(t.kanji)).slice(0,8);
+}
+
 function Materi(){
   const {sectionId,levelId}=useParams();const s=getSection(sectionId),l=getLevel(sectionId,levelId);const nav=useNavigate();
+  const [termSheet,setTermSheet]=useState(null);
+  const glossaryKanji=new Set(glossaryData.terms.map(t=>t.kanji));
+  const openTerm=(kanji)=>{const term=glossaryData.terms.find(t=>t.kanji===kanji);if(term)setTermSheet(term)};
   const rich = Number(sectionId)===1 && Number(levelId)===1 ? s1l1Content : null;
   const cards = rich?.materi ? rich.materi.map(mergeJapaneseCard) : l?.materi || [];
   const storeKey=`kk_materi_pos_${sectionId}_${levelId}`;
@@ -247,25 +268,27 @@ function Materi(){
   const card=cards[i];
   return <main className="page materiPage richMateriPage">
     <div className="materiTop"><Link to={`/section/${s.id}/level/${l.id}`} className="back">× Tutup</Link><div className="materiDots" aria-label={`Kartu ${i+1} dari ${cards.length}`}>{cards.map((c,n)=><button type="button" key={c.id||n} className={`${n===i?'active':''} ${n<i?'done':''}`} disabled={n>i} aria-label={`Kartu ${n+1}`} onClick={()=>setI(n)}/>)}</div><LangSwitch mode={mode} setMode={setMode}/></div>
-    <article className={`richMateriCard rich-${card.type||'lesson'}`} key={card.id||i}><RichCardBody card={card} mode={mode}/></article>
+    <article className={`richMateriCard rich-${card.type||'lesson'}`} key={card.id||i}><RichCardBody card={card} mode={mode} glossary={glossaryKanji} onTerm={openTerm}/></article>
+    {termSheet&&<div className="termSheetBackdrop" role="presentation" onClick={()=>setTermSheet(null)}><section className="termSheet" role="dialog" aria-modal="true" aria-label={`Istilah ${termSheet.kanji}`} onClick={e=>e.stopPropagation()}><button className="termSheetClose" onClick={()=>setTermSheet(null)} aria-label="Tutup">×</button><small>{termSheet.reading}</small><h2>{termSheet.kanji}</h2><p className="termSheetShort">{termSheet.id.short}</p><p>{termSheet.id.long}</p><Link className="primary" to={`/glossary/${termSheet.slug}`}>Halaman glossary lengkap →</Link></section></div>}
+    {cardGlossaryTerms(card,glossaryData.terms).length>0&&<section className="materiTerms"><h3>🔎 Cari istilah di glossary</h3><div className="materiTermButtons">{cardGlossaryTerms(card,glossaryData.terms).map(t=><Link key={t.slug} to={`/glossary/${t.slug}`} className="materiTermButton"><small>{t.reading}</small><b>{t.kanji}</b><span>{t.id.short}</span></Link>)}</div></section>}
     <div className="richMateriNav">{i>0&&<button type="button" className="secondary tap" onClick={()=>setI(v=>v-1)}>Kembali</button>}<button type="button" className="primary tap" onClick={()=>i<cards.length-1?setI(i+1):nav(`/section/${s.id}/level/${l.id}/quiz`)}>{i<cards.length-1?'Lanjut':'Mulai quiz'} <ChevronRight/></button></div>
     <button type="button" className="materiSkip" onClick={()=>nav(`/section/${s.id}/level/${l.id}/quiz`)}>Lewati ke quiz</button>
   </main>;
 }
 
-function JapaneseTerm({term,mode,className=''}){
+function JapaneseTerm({term,mode,className='',onTerm}){
   const annotated={ja:`${term.kanji}[${term.reading}]`,id:term.kanji};
-  return <AnnotatedText field={annotated} mode={mode} as="span" className={`japaneseTerm ${className}`}/>;
+  return <AnnotatedText field={annotated} mode={mode} as="span" className={`japaneseTerm ${className}`} glossary={new Set([term.kanji])} onTerm={onTerm}/>;
 }
 
-function RichCardBody({card,mode}){
-  const F=({field,as='p',className=''})=><AnnotatedText field={field} mode={mode} as={as} className={className}/>;
+function RichCardBody({card,mode,glossary,onTerm}){
+  const F=({field,as='p',className=''})=><AnnotatedText field={field} mode={mode} as={as} className={className} glossary={glossary} onTerm={onTerm}/>;
   const heading=card.heading||((card.titleJa||card.titleId)?{ja:card.titleJa||'',id:card.titleId||''}:null);
   const body=card.body||((card.bodyJa||card.bodyId)?{ja:card.bodyJa||'',id:card.bodyId||''}:null);
   if(card.type==='hook') return <><Mascot variant="materi" size="sm"/><F field={body} className="richBody"/></>;
-  if(card.type==='term'){const t=card.term;return <div className="richTerm"><JapaneseTerm term={t} mode={mode} /><div className="termRoman">{mode==='id'?t.meaning:`${t.romaji} / ${t.meaning}`}</div><div className="termExample">{t.example&&mode==='id'?<p>{t.example.id}</p>:t.example&&<F field={t.example}/>}</div></div>}
+  if(card.type==='term'){const t=card.term;return <div className="richTerm"><JapaneseTerm term={t} mode={mode} onTerm={onTerm}/><div className="termRoman">{mode==='id'?t.meaning:`${t.romaji} / ${t.meaning}`}</div><div className="termExample">{t.example&&mode==='id'?<p>{t.example.id}</p>:t.example&&<F field={t.example}/>}</div></div>}
   if(card.type==='explain') return <><F field={heading} as="h2"/><F field={body} className="richBody"/> </>;
-  if(card.type==='compare') return <><F field={card.heading||heading} as="h2"/><div className="compareGrid">{card.rows.map(r=><div className="compareRow" key={r.term.kanji}><JapaneseTerm term={r.term} mode={mode} className="compareTerm"/><F field={{ja:r.meaning,id:r.meaning}}/><F field={{ja:r.when,id:r.when}}/></div>)}</div>{(card.note||heading)&&<F field={card.note||heading} className="richNote"/>}</>;
+  if(card.type==='compare') return <><F field={card.heading||heading} as="h2"/><div className="compareGrid">{card.rows.map(r=><div className="compareRow" key={r.term.kanji}><JapaneseTerm term={r.term} mode={mode} className="compareTerm" onTerm={onTerm}/><F field={{ja:r.meaning,id:r.meaning}}/><F field={{ja:r.when,id:r.when}}/></div>)}</div>{(card.note||heading)&&<F field={card.note||heading} className="richNote"/>}</>;
   if(card.type==='checkpoint') return <><span className="richTag">Cek cepat · tidak dinilai</span><F field={card.question?.prompt} className="richQuestion"/><div className="checkpointOpts">{card.question.options.map(o=><div key={o.key} className="checkpointOption"><F field={o.text}/></div>)}</div><p className="richNote">Jawabannya akan dibahas setelah kamu lanjut membaca materi.</p></>;
   if(card.type==='case') return <><span className="richTag">Kasus lapangan</span><F field={heading} as="h2"/><F field={card.scenario} className="richBody"/><F field={card.prompt} className="richPrompt"/><F field={card.reveal} className="richReveal"/></>;
   if(card.type==='exam-tip') return <><span className="richTag">Sudut pandang ujian</span><F field={heading} as="h2"/><F field={body} className="richBody"/></>;
