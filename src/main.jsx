@@ -514,6 +514,7 @@ function AppShell(){
     <Route path="/glossary" element={<Glossary/>}/>
     <Route path="/glossary/:slug" element={<GlossaryDetail/>}/>
     <Route path="/final" element={<FinalHome/>}/>
+    <Route path="/final/unlimited" element={<UnlimitedFinal/>}/>
     <Route path="/final/:year" element={<FinalYear/>}/>
     <Route path="/final/:year/part/:part" element={<FinalQuiz/>}/>
     <Route path="/final/:year/part/:part/result" element={<FinalResult/>}/>
