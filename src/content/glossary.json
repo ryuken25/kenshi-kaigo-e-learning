@@ -1,6 +1,6 @@
 {
  "_comment": "SEED. status:'stub' = belum ada penjelasan panjang. Validator menolak rilis kalau masih ada stub di section yang sudah dirilis.",
- "version": "2026.08.04",
+ "version": "2026.08.05",
  "terms": [
   {
    "slug": "songen",
@@ -9,7 +9,7 @@
    "romaji": "songen",
    "id": {
     "short": "martabat manusia",
-    "long": ""
+    "long": "Nilai yang melekat pada setiap manusia sejak lahir. Dalam kaigo, 尊厳 bukan sesuatu yang diberikan oleh fasilitas atau diperoleh karena seseorang mampu melakukan banyak hal. Nilai ini tetap ada ketika pengguna menua, sakit, mengalami disabilitas, tidak dapat berbicara, atau membutuhkan bantuan penuh. Karena itu, tindakan perawatan harus menjaga pilihan, privasi, rasa malu, ritme hidup, dan cara pengguna ingin diperlakukan. Memaksa mandi demi jadwal, membicarakan kondisi di depan orang lain, atau mengambil alih semua keputusan tanpa penjelasan dapat melukai martabat walaupun secara teknis tugas selesai. Gunakan observasi dan dialog untuk menemukan alasan penolakan, lalu sesuaikan waktu, cara, atau petugas."
    },
    "type": "kango",
    "sections": [
@@ -19,15 +19,20 @@
     "fondasi",
     "hak"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "尊厳についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas martabat manusia."
+    }
+   ],
    "related": [],
-   "status": "stub",
+   "status": "ready",
    "occurrences": 0,
    "en": "dignity",
    "synonyms": [
     "harga diri",
     "kehormatan",
-    "kemuliaan"
+    "martabat manusia"
    ]
   },
   {
@@ -37,7 +42,7 @@
    "romaji": "jinken",
    "id": {
     "short": "hak asasi manusia",
-    "long": ""
+    "long": "Hak yang dimiliki setiap orang sebagai manusia, termasuk pengguna layanan kaigo. Hak ini mencakup perlakuan yang setara, privasi, keamanan, informasi, kesempatan menyatakan kehendak, dan perlindungan dari kekerasan atau diskriminasi. Dalam praktik, menghormati 人権 berarti tidak mengurangi hak seseorang hanya karena usia, demensia, disabilitas, status ekonomi, atau ketergantungannya pada bantuan. Caregiver perlu menjelaskan tindakan, meminta persetujuan sesuai kemampuan, menjaga kerahasiaan, dan melaporkan dugaan pelanggaran melalui jalur yang tepat. Perlindungan hak tidak selalu berarti membiarkan semua risiko; yang penting adalah menyeimbangkan keselamatan dengan pilihan dan kehidupan yang bermakna."
    },
    "type": "kango",
    "sections": [
@@ -47,10 +52,21 @@
     "fondasi",
     "hak"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "人権についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas hak asasi manusia."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "human rights",
+   "synonyms": [
+    "hak asasi",
+    "hak pengguna",
+    "hak manusia"
+   ]
   },
   {
    "slug": "jiritsu-shien",
@@ -59,7 +75,7 @@
    "romaji": "jiritsu shien",
    "id": {
     "short": "dukungan kemandirian",
-    "long": ""
+    "long": "Dukungan agar pengguna dapat memutuskan dan melakukan sebanyak mungkin hal sesuai kemampuan, keinginan, dan kondisi keselamatannya. 自立支援 bukan berarti memaksa seseorang mandiri atau menolak bantuan. Caregiver menilai kemampuan yang masih ada, menyediakan alat atau lingkungan yang sesuai, memberi waktu, lalu membantu hanya pada bagian yang memang diperlukan. Bantuan berlebihan dapat membuat fungsi menurun karena pengguna tidak lagi berlatih; sebaliknya, bantuan yang terlalu sedikit dapat meningkatkan risiko gagal dan frustrasi. Tujuan dukungan harus disusun bersama pengguna, bukan hanya berdasarkan kenyamanan petugas atau keluarga. Evaluasi dilakukan ketika kondisi, kemampuan, atau tujuan hidup berubah."
    },
    "type": "kango",
    "sections": [
@@ -68,10 +84,21 @@
    "tags": [
     "fondasi"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "自立支援についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas dukungan kemandirian."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "independence support",
+   "synonyms": [
+    "dukungan kemandirian",
+    "bantuan mandiri",
+    "kemandirian"
+   ]
   },
   {
    "slug": "jiko-kettei",
@@ -80,7 +107,7 @@
    "romaji": "jiko kettei",
    "id": {
     "short": "penentuan diri",
-    "long": ""
+    "long": "Hak dan proses ketika pengguna menyatakan pilihan tentang hidup, perawatan, jadwal, makanan, pakaian, atau tujuan dukungannya sendiri. 自己決定 tetap perlu dihormati meskipun pilihan tersebut berbeda dari pilihan caregiver, selama risiko dapat dijelaskan dan dikelola. Tugas petugas adalah memberi informasi yang mudah dipahami, memeriksa apakah pengguna mengerti, menawarkan alternatif, dan mendukung keputusan tanpa mengarahkan secara memaksa. Bila kemampuan komunikasi atau kognitif terbatas, gunakan cara komunikasi yang sesuai dan libatkan pihak yang berwenang tanpa langsung menggantikan suara pengguna."
    },
    "type": "kango",
    "sections": [
@@ -90,10 +117,21 @@
     "fondasi",
     "hak"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "自己決定についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas penentuan diri."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "self-determination",
+   "synonyms": [
+    "penentuan diri",
+    "hak memilih",
+    "keputusan sendiri"
+   ]
   },
   {
    "slug": "qol",
@@ -102,7 +140,7 @@
    "romaji": "QOL",
    "id": {
     "short": "kualitas hidup",
-    "long": ""
+    "long": "Quality of Life atau kualitas hidup menggambarkan seberapa bermakna, nyaman, aman, dan sesuai kehendak seseorang menjalani kehidupannya. Dalam kaigo, keberhasilan tidak hanya diukur dari kebersihan, angka kesehatan, atau banyaknya tugas yang selesai. Hubungan sosial, rasa memiliki kendali, tidur, kenyamanan, kegiatan yang disukai, privasi, dan kesempatan mengambil keputusan juga penting. Penilaian QOL harus bersifat individual: hal yang membuat satu pengguna bahagia belum tentu sama bagi pengguna lain. Caregiver mengamati perubahan, menanyakan prioritas pengguna, lalu menyesuaikan dukungan dan mengevaluasi hasilnya bersama tim."
    },
    "type": "abbrev",
    "sections": [
@@ -111,10 +149,21 @@
    "tags": [
     "fondasi"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "QOLについてチームで確認します。",
+     "id": "Tim memeriksa dan membahas kualitas hidup."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "quality of life",
+   "synonyms": [
+    "kualitas hidup",
+    "mutu hidup",
+    "kehidupan bermakna"
+   ]
   },
   {
    "slug": "adl",
@@ -123,7 +172,7 @@
    "romaji": "ADL",
    "id": {
     "short": "aktivitas dasar sehari-hari",
-    "long": ""
+    "long": "ADL (えーでぃーえる) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan aktivitas dasar sehari-hari. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "abbrev",
    "sections": [
@@ -133,10 +182,19 @@
     "fondasi",
     "kesehatan"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "ADLについてチームで確認します。",
+     "id": "Tim memeriksa dan membahas aktivitas dasar sehari-hari."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "aktivitas dasar sehari-hari",
+   "synonyms": [
+    "aktivitas dasar sehari-hari"
+   ]
   },
   {
    "slug": "iadl",
@@ -145,7 +203,7 @@
    "romaji": "IADL",
    "id": {
     "short": "aktivitas instrumental sehari-hari",
-    "long": ""
+    "long": "IADL (あいえーでぃーえる) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan aktivitas instrumental sehari-hari. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "abbrev",
    "sections": [
@@ -154,10 +212,19 @@
    "tags": [
     "fondasi"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "IADLについてチームで確認します。",
+     "id": "Tim memeriksa dan membahas aktivitas instrumental sehari-hari."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "aktivitas instrumental sehari-hari",
+   "synonyms": [
+    "aktivitas instrumental sehari-hari"
+   ]
   },
   {
    "slug": "normalization",
@@ -166,7 +233,7 @@
    "romaji": "noomaraizeeshon",
    "id": {
     "short": "normalisasi hidup",
-    "long": ""
+    "long": "ノーマライゼーション (のーまらいぜーしょん) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan normalisasi hidup. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "katakana",
    "sections": [
@@ -175,10 +242,19 @@
    "tags": [
     "fondasi"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "ノーマライゼーションについてチームで確認します。",
+     "id": "Tim memeriksa dan membahas normalisasi hidup."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "normalisasi hidup",
+   "synonyms": [
+    "normalisasi hidup"
+   ]
   },
   {
    "slug": "advocacy",
@@ -187,7 +263,7 @@
    "romaji": "adobokashii",
    "id": {
     "short": "advokasi hak pengguna",
-    "long": ""
+    "long": "アドボカシー (あどぼかしー) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan advokasi hak pengguna. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "katakana",
    "sections": [
@@ -196,10 +272,19 @@
    "tags": [
     "hak"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "アドボカシーについてチームで確認します。",
+     "id": "Tim memeriksa dan membahas advokasi hak pengguna."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "advokasi hak pengguna",
+   "synonyms": [
+    "advokasi hak pengguna"
+   ]
   },
   {
    "slug": "kenri-yougo",
@@ -208,7 +293,7 @@
    "romaji": "kenri yougo",
    "id": {
     "short": "perlindungan hak",
-    "long": ""
+    "long": "権利擁護 (けんりようご) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan perlindungan hak. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -217,10 +302,19 @@
    "tags": [
     "hak"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "権利擁護についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas perlindungan hak."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "perlindungan hak",
+   "synonyms": [
+    "perlindungan hak"
+   ]
   },
   {
    "slug": "empowerment",
@@ -229,7 +323,7 @@
    "romaji": "enpawamento",
    "id": {
     "short": "pemberdayaan",
-    "long": ""
+    "long": "エンパワメント (えんぱわめんと) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan pemberdayaan. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "katakana",
    "sections": [
@@ -238,10 +332,19 @@
    "tags": [
     "fondasi"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "エンパワメントについてチームで確認します。",
+     "id": "Tim memeriksa dan membahas pemberdayaan."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "pemberdayaan",
+   "synonyms": [
+    "pemberdayaan"
+   ]
   },
   {
    "slug": "kojin-no-sonchou",
@@ -250,7 +353,7 @@
    "romaji": "kojin no sonchou",
    "id": {
     "short": "penghormatan individu",
-    "long": ""
+    "long": "個人の尊重 (こじんのそんちょう) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan penghormatan individu. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -260,10 +363,19 @@
     "fondasi",
     "hak"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "個人の尊重についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas penghormatan individu."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "penghormatan individu",
+   "synonyms": [
+    "penghormatan individu"
+   ]
   },
   {
    "slug": "keichou",
@@ -272,7 +384,7 @@
    "romaji": "keichou",
    "id": {
     "short": "mendengar aktif",
-    "long": ""
+    "long": "傾聴 (けいちょう) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan mendengar aktif. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -281,10 +393,19 @@
    "tags": [
     "komunikasi"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "傾聴についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas mendengar aktif."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "mendengar aktif",
+   "synonyms": [
+    "mendengar aktif"
+   ]
   },
   {
    "slug": "kyoukan",
@@ -293,7 +414,7 @@
    "romaji": "kyoukan",
    "id": {
     "short": "empati",
-    "long": ""
+    "long": "共感 (きょうかん) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan empati. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -302,10 +423,19 @@
    "tags": [
     "komunikasi"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "共感についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas empati."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "empati",
+   "synonyms": [
+    "empati"
+   ]
   },
   {
    "slug": "juyou",
@@ -314,7 +444,7 @@
    "romaji": "juyou",
    "id": {
     "short": "penerimaan tanpa menghakimi",
-    "long": ""
+    "long": "受容 (じゅよう) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan penerimaan tanpa menghakimi. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -323,10 +453,19 @@
    "tags": [
     "komunikasi"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "受容についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas penerimaan tanpa menghakimi."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "penerimaan tanpa menghakimi",
+   "synonyms": [
+    "penerimaan tanpa menghakimi"
+   ]
   },
   {
    "slug": "jiko-kakuchi",
@@ -335,7 +474,7 @@
    "romaji": "jiko kakuchi",
    "id": {
     "short": "kesadaran diri perawat",
-    "long": ""
+    "long": "自己覚知 (じこかくち) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan kesadaran diri perawat. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -344,10 +483,19 @@
    "tags": [
     "komunikasi"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "自己覚知についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas kesadaran diri perawat."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "kesadaran diri perawat",
+   "synonyms": [
+    "kesadaran diri perawat"
+   ]
   },
   {
    "slug": "rapport",
@@ -356,7 +504,7 @@
    "romaji": "rapooru",
    "id": {
     "short": "hubungan saling percaya",
-    "long": ""
+    "long": "ラポール (らぽーる) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan hubungan saling percaya. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "katakana",
    "sections": [
@@ -365,10 +513,19 @@
    "tags": [
     "komunikasi"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "ラポールについてチームで確認します。",
+     "id": "Tim memeriksa dan membahas hubungan saling percaya."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "hubungan saling percaya",
+   "synonyms": [
+    "hubungan saling percaya"
+   ]
   },
   {
    "slug": "higengo",
@@ -377,7 +534,7 @@
    "romaji": "higengo komyunikeeshon",
    "id": {
     "short": "komunikasi nonverbal",
-    "long": ""
+    "long": "非言語コミュニケーション (ひげんごこみゅにけーしょん) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan komunikasi nonverbal. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -386,10 +543,19 @@
    "tags": [
     "komunikasi"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "非言語コミュニケーションについてチームで確認します。",
+     "id": "Tim memeriksa dan membahas komunikasi nonverbal."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "komunikasi nonverbal",
+   "synonyms": [
+    "komunikasi nonverbal"
+   ]
   },
   {
    "slug": "hirakareta-shitsumon",
@@ -398,7 +564,7 @@
    "romaji": "hirakareta shitsumon",
    "id": {
     "short": "pertanyaan terbuka",
-    "long": ""
+    "long": "開かれた質問 (ひらかれたしつもん) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan pertanyaan terbuka. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "wago",
    "sections": [
@@ -407,10 +573,19 @@
    "tags": [
     "komunikasi"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "開かれた質問についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas pertanyaan terbuka."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "pertanyaan terbuka",
+   "synonyms": [
+    "pertanyaan terbuka"
+   ]
   },
   {
    "slug": "biestek",
@@ -419,7 +594,7 @@
    "romaji": "Baisutekku no nana gensoku",
    "id": {
     "short": "7 prinsip Biestek",
-    "long": ""
+    "long": "バイステックの7原則 (ばいすてっくのななげんそく) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan 7 prinsip Biestek. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "katakana",
    "sections": [
@@ -428,10 +603,19 @@
    "tags": [
     "komunikasi"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "バイステックの7原則についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas 7 prinsip Biestek."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "7 prinsip Biestek",
+   "synonyms": [
+    "7 prinsip Biestek"
+   ]
   },
   {
    "slug": "kaigo-hoken",
@@ -440,7 +624,7 @@
    "romaji": "kaigo hoken",
    "id": {
     "short": "asuransi perawatan lansia",
-    "long": ""
+    "long": "介護保険 (かいごほけん) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan asuransi perawatan lansia. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -449,10 +633,19 @@
    "tags": [
     "sistem"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "介護保険についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas asuransi perawatan lansia."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "asuransi perawatan lansia",
+   "synonyms": [
+    "asuransi perawatan lansia"
+   ]
   },
   {
    "slug": "chiiki-houkatsu",
@@ -461,7 +654,7 @@
    "romaji": "chiiki houkatsu kea shisutemu",
    "id": {
     "short": "sistem perawatan berbasis komunitas",
-    "long": ""
+    "long": "地域包括ケアシステム (ちいきほうかつけあしすてむ) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan sistem perawatan berbasis komunitas. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -470,10 +663,19 @@
    "tags": [
     "sistem"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "地域包括ケアシステムについてチームで確認します。",
+     "id": "Tim memeriksa dan membahas sistem perawatan berbasis komunitas."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "sistem perawatan berbasis komunitas",
+   "synonyms": [
+    "sistem perawatan berbasis komunitas"
+   ]
   },
   {
    "slug": "youkaigo-nintei",
@@ -482,7 +684,7 @@
    "romaji": "youkaigo nintei",
    "id": {
     "short": "penetapan tingkat kebutuhan perawatan",
-    "long": ""
+    "long": "要介護認定 (ようかいごにんてい) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan penetapan tingkat kebutuhan perawatan. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -491,10 +693,19 @@
    "tags": [
     "sistem"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "要介護認定についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas penetapan tingkat kebutuhan perawatan."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "penetapan tingkat kebutuhan perawatan",
+   "synonyms": [
+    "penetapan tingkat kebutuhan perawatan"
+   ]
   },
   {
    "slug": "care-manager",
@@ -503,7 +714,7 @@
    "romaji": "kaigo shien senmon'in",
    "id": {
     "short": "care manager",
-    "long": ""
+    "long": "介護支援専門員 (かいごしえんせんもんいん) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan care manager. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -513,10 +724,19 @@
     "sistem",
     "profesi"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "介護支援専門員についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas care manager."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "care manager",
+   "synonyms": [
+    "care manager"
+   ]
   },
   {
    "slug": "seinen-kouken",
@@ -525,7 +745,7 @@
    "romaji": "seinen kouken seido",
    "id": {
     "short": "sistem wali dewasa",
-    "long": ""
+    "long": "成年後見制度 (せいねんこうけんせいど) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan sistem wali dewasa. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -535,10 +755,19 @@
     "sistem",
     "hak"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "成年後見制度についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas sistem wali dewasa."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "sistem wali dewasa",
+   "synonyms": [
+    "sistem wali dewasa"
+   ]
   },
   {
    "slug": "seikatsu-hogo",
@@ -547,7 +776,7 @@
    "romaji": "seikatsu hogo",
    "id": {
     "short": "bantuan sosial hidup",
-    "long": ""
+    "long": "生活保護 (せいかつほご) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan bantuan sosial hidup. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -556,10 +785,19 @@
    "tags": [
     "sistem"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "生活保護についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas bantuan sosial hidup."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "bantuan sosial hidup",
+   "synonyms": [
+    "bantuan sosial hidup"
+   ]
   },
   {
    "slug": "shougaisha-sougou",
@@ -568,7 +806,7 @@
    "romaji": "shougaisha sougou shien hou",
    "id": {
     "short": "UU dukungan menyeluruh disabilitas",
-    "long": ""
+    "long": "障害者総合支援法 (しょうがいしゃそうごうしえんほう) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan UU dukungan menyeluruh disabilitas. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -578,10 +816,19 @@
     "sistem",
     "hukum"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "障害者総合支援法についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas UU dukungan menyeluruh disabilitas."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "UU dukungan menyeluruh disabilitas",
+   "synonyms": [
+    "UU dukungan menyeluruh disabilitas"
+   ]
   },
   {
    "slug": "chiiki-houkatsu-center",
@@ -590,7 +837,7 @@
    "romaji": "chiiki houkatsu shien sentaa",
    "id": {
     "short": "pusat dukungan komunitas",
-    "long": ""
+    "long": "地域包括支援センター (ちいきほうかつしえんせんたー) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan pusat dukungan komunitas. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -599,10 +846,19 @@
    "tags": [
     "sistem"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "地域包括支援センターについてチームで確認します。",
+     "id": "Tim memeriksa dan membahas pusat dukungan komunitas."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "pusat dukungan komunitas",
+   "synonyms": [
+    "pusat dukungan komunitas"
+   ]
   },
   {
    "slug": "kaigo-fukushishi",
@@ -611,7 +867,7 @@
    "romaji": "kaigo fukushishi",
    "id": {
     "short": "perawat lansia bersertifikat",
-    "long": ""
+    "long": "介護福祉士 (かいごふくしし) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan perawat lansia bersertifikat. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -620,10 +876,19 @@
    "tags": [
     "profesi"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "介護福祉士についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas perawat lansia bersertifikat."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "perawat lansia bersertifikat",
+   "synonyms": [
+    "perawat lansia bersertifikat"
+   ]
   },
   {
    "slug": "icf",
@@ -632,7 +897,7 @@
    "romaji": "ICF",
    "id": {
     "short": "klasifikasi fungsi internasional",
-    "long": ""
+    "long": "ICF (あいしーえふ) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan klasifikasi fungsi internasional. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "abbrev",
    "sections": [
@@ -641,10 +906,19 @@
    "tags": [
     "fondasi"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "ICFについてチームで確認します。",
+     "id": "Tim memeriksa dan membahas klasifikasi fungsi internasional."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "klasifikasi fungsi internasional",
+   "synonyms": [
+    "klasifikasi fungsi internasional"
+   ]
   },
   {
    "slug": "risk-management",
@@ -653,7 +927,7 @@
    "romaji": "risuku manejimento",
    "id": {
     "short": "manajemen risiko",
-    "long": ""
+    "long": "リスクマネジメント (りすくまねじめんと) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan manajemen risiko. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "katakana",
    "sections": [
@@ -662,10 +936,19 @@
    "tags": [
     "keselamatan"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "リスクマネジメントについてチームで確認します。",
+     "id": "Tim memeriksa dan membahas manajemen risiko."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "manajemen risiko",
+   "synonyms": [
+    "manajemen risiko"
+   ]
   },
   {
    "slug": "hiyari-hatto",
@@ -674,7 +957,7 @@
    "romaji": "hiyari hatto",
    "id": {
     "short": "nyaris celaka",
-    "long": ""
+    "long": "ヒヤリハット (ひやりはっと) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan nyaris celaka. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "katakana",
    "sections": [
@@ -683,10 +966,19 @@
    "tags": [
     "keselamatan"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "ヒヤリハットについてチームで確認します。",
+     "id": "Tim memeriksa dan membahas nyaris celaka."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "nyaris celaka",
+   "synonyms": [
+    "nyaris celaka"
+   ]
   },
   {
    "slug": "kansen-taisaku",
@@ -695,7 +987,7 @@
    "romaji": "kansen taisaku",
    "id": {
     "short": "pengendalian infeksi",
-    "long": ""
+    "long": "感染対策 (かんせんたいさく) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan pengendalian infeksi. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -704,10 +996,19 @@
    "tags": [
     "keselamatan"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "感染対策についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas pengendalian infeksi."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "pengendalian infeksi",
+   "synonyms": [
+    "pengendalian infeksi"
+   ]
   },
   {
    "slug": "hyoujun-yobousaku",
@@ -716,7 +1017,7 @@
    "romaji": "hyoujun yobousaku",
    "id": {
     "short": "kewaspadaan standar",
-    "long": ""
+    "long": "標準予防策 (ひょうじゅんよぼうさく) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan kewaspadaan standar. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -725,10 +1026,19 @@
    "tags": [
     "keselamatan"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "標準予防策についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas kewaspadaan standar."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "kewaspadaan standar",
+   "synonyms": [
+    "kewaspadaan standar"
+   ]
   },
   {
    "slug": "shintai-kousoku",
@@ -737,7 +1047,7 @@
    "romaji": "shintai kousoku",
    "id": {
     "short": "pengekangan fisik",
-    "long": ""
+    "long": "身体拘束 (しんたいこうそく) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan pengekangan fisik. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -747,10 +1057,19 @@
     "hak",
     "keselamatan"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "身体拘束についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas pengekangan fisik."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "pengekangan fisik",
+   "synonyms": [
+    "pengekangan fisik"
+   ]
   },
   {
    "slug": "koureisha-gyakutai",
@@ -759,7 +1078,7 @@
    "romaji": "koureisha gyakutai",
    "id": {
     "short": "kekerasan terhadap lansia",
-    "long": ""
+    "long": "高齢者虐待 (こうれいしゃぎゃくたい) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan kekerasan terhadap lansia. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -769,10 +1088,19 @@
     "hak",
     "hukum"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "高齢者虐待についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas kekerasan terhadap lansia."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "kekerasan terhadap lansia",
+   "synonyms": [
+    "kekerasan terhadap lansia"
+   ]
   },
   {
    "slug": "tashokushu-renkei",
@@ -781,7 +1109,7 @@
    "romaji": "tashokushu renkei",
    "id": {
     "short": "kolaborasi antarprofesi",
-    "long": ""
+    "long": "多職種連携 (たしょくしゅれんけい) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan kolaborasi antarprofesi. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -790,10 +1118,19 @@
    "tags": [
     "profesi"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "多職種連携についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas kolaborasi antarprofesi."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "kolaborasi antarprofesi",
+   "synonyms": [
+    "kolaborasi antarprofesi"
+   ]
   },
   {
    "slug": "privacy-hogo",
@@ -802,7 +1139,7 @@
    "romaji": "puraibashii hogo",
    "id": {
     "short": "perlindungan privasi",
-    "long": ""
+    "long": "プライバシー保護 (ぷらいばしーほご) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan perlindungan privasi. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -811,10 +1148,19 @@
    "tags": [
     "hak"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "プライバシー保護についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas perlindungan privasi."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "perlindungan privasi",
+   "synonyms": [
+    "perlindungan privasi"
+   ]
   },
   {
    "slug": "burnout",
@@ -823,7 +1169,7 @@
    "romaji": "moetsuki shoukougun",
    "id": {
     "short": "sindrom kelelahan kerja",
-    "long": ""
+    "long": "燃え尽き症候群 (もえつきしょうこうぐん) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan sindrom kelelahan kerja. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -832,10 +1178,19 @@
    "tags": [
     "profesi"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "燃え尽き症候群についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas sindrom kelelahan kerja."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "sindrom kelelahan kerja",
+   "synonyms": [
+    "sindrom kelelahan kerja"
+   ]
   },
   {
    "slug": "body-mechanics",
@@ -844,7 +1199,7 @@
    "romaji": "bodi mekanikusu",
    "id": {
     "short": "mekanika tubuh",
-    "long": ""
+    "long": "ボディメカニクス (ぼでぃめかにくす) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan mekanika tubuh. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "katakana",
    "sections": [
@@ -853,10 +1208,19 @@
    "tags": [
     "teknik"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "ボディメカニクスについてチームで確認します。",
+     "id": "Tim memeriksa dan membahas mekanika tubuh."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "mekanika tubuh",
+   "synonyms": [
+    "mekanika tubuh"
+   ]
   },
   {
    "slug": "ijou",
@@ -865,7 +1229,7 @@
    "romaji": "ijou",
    "id": {
     "short": "perpindahan posisi/transfer",
-    "long": ""
+    "long": "移乗 (いじょう) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan perpindahan posisi/transfer. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -874,10 +1238,19 @@
    "tags": [
     "teknik"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "移乗についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas perpindahan posisi/transfer."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "perpindahan posisi/transfer",
+   "synonyms": [
+    "perpindahan posisi/transfer"
+   ]
   },
   {
    "slug": "taii-henkan",
@@ -886,7 +1259,7 @@
    "romaji": "taii henkan",
    "id": {
     "short": "perubahan posisi tubuh",
-    "long": ""
+    "long": "体位変換 (たいいへんかん) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan perubahan posisi tubuh. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -895,10 +1268,19 @@
    "tags": [
     "teknik"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "体位変換についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas perubahan posisi tubuh."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "perubahan posisi tubuh",
+   "synonyms": [
+    "perubahan posisi tubuh"
+   ]
   },
   {
    "slug": "jokusou",
@@ -907,7 +1289,7 @@
    "romaji": "jokusou",
    "id": {
     "short": "luka tekan (dekubitus)",
-    "long": ""
+    "long": "褥瘡 (じょくそう) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan luka tekan (dekubitus). Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -917,10 +1299,19 @@
     "teknik",
     "kesehatan"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "褥瘡についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas luka tekan (dekubitus)."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "luka tekan (dekubitus)",
+   "synonyms": [
+    "luka tekan (dekubitus)"
+   ]
   },
   {
    "slug": "seishiki",
@@ -929,7 +1320,7 @@
    "romaji": "seishiki",
    "id": {
     "short": "seka badan",
-    "long": ""
+    "long": "清拭 (せいしき) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan seka badan. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -938,10 +1329,19 @@
    "tags": [
     "teknik"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "清拭についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas seka badan."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "seka badan",
+   "synonyms": [
+    "seka badan"
+   ]
   },
   {
    "slug": "nyuuyoku-kaijo",
@@ -950,7 +1350,7 @@
    "romaji": "nyuuyoku kaijo",
    "id": {
     "short": "bantuan mandi",
-    "long": ""
+    "long": "入浴介助 (にゅうよくかいじょ) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan bantuan mandi. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -959,10 +1359,19 @@
    "tags": [
     "teknik"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "入浴介助についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas bantuan mandi."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "bantuan mandi",
+   "synonyms": [
+    "bantuan mandi"
+   ]
   },
   {
    "slug": "haisetsu-kaijo",
@@ -971,7 +1380,7 @@
    "romaji": "haisetsu kaijo",
    "id": {
     "short": "bantuan buang air",
-    "long": ""
+    "long": "排泄介助 (はいせつかいじょ) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan bantuan buang air. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -980,10 +1389,19 @@
    "tags": [
     "teknik"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "排泄介助についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas bantuan buang air."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "bantuan buang air",
+   "synonyms": [
+    "bantuan buang air"
+   ]
   },
   {
    "slug": "goen",
@@ -992,7 +1410,7 @@
    "romaji": "goen",
    "id": {
     "short": "aspirasi ke saluran napas",
-    "long": ""
+    "long": "Masuknya makanan, minuman, air liur, atau isi lambung ke jalan napas, bukan ke kerongkongan dan lambung sebagaimana mestinya. 誤嚥 dapat terjadi ketika fungsi menelan melemah, kesadaran menurun, posisi tubuh buruk, atau makanan tidak sesuai tekstur. Tanda yang perlu diperhatikan antara lain batuk saat makan, suara menjadi basah, tersedak, napas berubah, demam berulang, dan sisa makanan di mulut. Jangan langsung menyimpulkan diagnosis. Hentikan pemberian bila aman untuk dilakukan, jaga posisi sesuai prosedur, observasi, catat fakta, dan laporkan kepada tenaga yang berwenang. Pencegahan membutuhkan penilaian menelan, posisi, kecepatan, tekstur, kebersihan mulut, dan instruksi tim medis."
    },
    "type": "kango",
    "sections": [
@@ -1002,14 +1420,20 @@
     "teknik",
     "kesehatan"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "誤嚥についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas aspirasi ke saluran napas."
+    }
+   ],
    "related": [],
-   "status": "stub",
+   "status": "ready",
    "occurrences": 0,
    "en": "aspiration",
    "synonyms": [
     "tersedak",
-    "salah masuk saluran napas"
+    "salah masuk jalan napas",
+    "aspirasi"
    ]
   },
   {
@@ -1019,7 +1443,7 @@
    "romaji": "enge",
    "id": {
     "short": "menelan",
-    "long": ""
+    "long": "Proses memindahkan makanan, minuman, dan air liur dari mulut menuju lambung melalui tenggorokan dan kerongkongan. 嚥下 melibatkan koordinasi otot, saraf, pernapasan, dan kesadaran sehingga gangguan kecil dapat meningkatkan risiko tersedak atau aspirasi. Dalam bantuan makan, caregiver memperhatikan posisi duduk, ukuran suapan, kecepatan, kemampuan mengunyah, suara setelah menelan, dan tanda kelelahan. Jangan memaksa suapan berikutnya sebelum proses sebelumnya selesai. Bila muncul batuk kuat, suara berubah, atau kesulitan bernapas, ikuti prosedur fasilitas dan laporkan."
    },
    "type": "kango",
    "sections": [
@@ -1028,10 +1452,21 @@
    "tags": [
     "kesehatan"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "嚥下についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas menelan."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "swallowing",
+   "synonyms": [
+    "menelan",
+    "fungsi menelan",
+    "kesulitan menelan"
+   ]
   },
   {
    "slug": "koukuu-care",
@@ -1040,7 +1475,7 @@
    "romaji": "koukuu kea",
    "id": {
     "short": "perawatan mulut",
-    "long": ""
+    "long": "口腔ケア (こうくうけあ) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan perawatan mulut. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -1049,10 +1484,19 @@
    "tags": [
     "teknik"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "口腔ケアについてチームで確認します。",
+     "id": "Tim memeriksa dan membahas perawatan mulut."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "perawatan mulut",
+   "synonyms": [
+    "perawatan mulut"
+   ]
   },
   {
    "slug": "fukushi-yougu",
@@ -1061,7 +1505,7 @@
    "romaji": "fukushi yougu",
    "id": {
     "short": "alat bantu kesejahteraan",
-    "long": ""
+    "long": "福祉用具 (ふくしようぐ) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan alat bantu kesejahteraan. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -1070,10 +1514,19 @@
    "tags": [
     "teknik"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "福祉用具についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas alat bantu kesejahteraan."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "alat bantu kesejahteraan",
+   "synonyms": [
+    "alat bantu kesejahteraan"
+   ]
   },
   {
    "slug": "zanzon-kinou",
@@ -1082,7 +1535,7 @@
    "romaji": "zanzon kinou",
    "id": {
     "short": "fungsi yang masih tersisa",
-    "long": ""
+    "long": "残存機能 (ざんぞんきのう) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan fungsi yang masih tersisa. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -1092,10 +1545,19 @@
     "teknik",
     "fondasi"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "残存機能についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas fungsi yang masih tersisa."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "fungsi yang masih tersisa",
+   "synonyms": [
+    "fungsi yang masih tersisa"
+   ]
   },
   {
    "slug": "koujousei",
@@ -1104,7 +1566,7 @@
    "romaji": "koujousei",
    "id": {
     "short": "homeostasis",
-    "long": ""
+    "long": "恒常性 (こうじょうせい) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan homeostasis. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -1113,10 +1575,19 @@
    "tags": [
     "kesehatan"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "恒常性についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas homeostasis."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "homeostasis",
+   "synonyms": [
+    "homeostasis"
+   ]
   },
   {
    "slug": "haiyou-shoukougun",
@@ -1125,7 +1596,7 @@
    "romaji": "haiyou shoukougun",
    "id": {
     "short": "sindrom disuse",
-    "long": ""
+    "long": "廃用症候群 (はいようしょうこうぐん) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan sindrom disuse. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -1134,10 +1605,19 @@
    "tags": [
     "kesehatan"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "廃用症候群についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas sindrom disuse."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "sindrom disuse",
+   "synonyms": [
+    "sindrom disuse"
+   ]
   },
   {
    "slug": "dassui",
@@ -1146,7 +1626,7 @@
    "romaji": "dassui",
    "id": {
     "short": "dehidrasi",
-    "long": ""
+    "long": "脱水 (だっすい) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan dehidrasi. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -1155,10 +1635,19 @@
    "tags": [
     "kesehatan"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "脱水についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas dehidrasi."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "dehidrasi",
+   "synonyms": [
+    "dehidrasi"
+   ]
   },
   {
    "slug": "tei-eiyou",
@@ -1167,7 +1656,7 @@
    "romaji": "tei eiyou",
    "id": {
     "short": "malnutrisi",
-    "long": ""
+    "long": "低栄養 (ていえいよう) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan malnutrisi. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -1176,10 +1665,19 @@
    "tags": [
     "kesehatan"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "低栄養についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas malnutrisi."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "malnutrisi",
+   "synonyms": [
+    "malnutrisi"
+   ]
   },
   {
    "slug": "vital-sign",
@@ -1188,7 +1686,7 @@
    "romaji": "baitaru sain",
    "id": {
     "short": "tanda vital",
-    "long": ""
+    "long": "バイタルサイン (ばいたるさいん) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan tanda vital. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "katakana",
    "sections": [
@@ -1197,10 +1695,19 @@
    "tags": [
     "kesehatan"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "バイタルサインについてチームで確認します。",
+     "id": "Tim memeriksa dan membahas tanda vital."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "tanda vital",
+   "synonyms": [
+    "tanda vital"
+   ]
   },
   {
    "slug": "maslow",
@@ -1209,7 +1716,7 @@
    "romaji": "Mazuroo no yokkyuu kaisou",
    "id": {
     "short": "hierarki kebutuhan Maslow",
-    "long": ""
+    "long": "マズローの欲求階層 (まずろーのよっきゅうかいそう) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan hierarki kebutuhan Maslow. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "katakana",
    "sections": [
@@ -1218,10 +1725,19 @@
    "tags": [
     "fondasi"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "マズローの欲求階層についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas hierarki kebutuhan Maslow."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "hierarki kebutuhan Maslow",
+   "synonyms": [
+    "hierarki kebutuhan Maslow"
+   ]
   },
   {
    "slug": "rounenki",
@@ -1230,7 +1746,7 @@
    "romaji": "rounenki",
    "id": {
     "short": "masa lanjut usia",
-    "long": ""
+    "long": "老年期 (ろうねんき) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan masa lanjut usia. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -1239,10 +1755,19 @@
    "tags": [
     "lansia"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "老年期についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas masa lanjut usia."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "masa lanjut usia",
+   "synonyms": [
+    "masa lanjut usia"
+   ]
   },
   {
    "slug": "sarcopenia",
@@ -1251,7 +1776,7 @@
    "romaji": "sarukopenia",
    "id": {
     "short": "sarkopenia (susut otot)",
-    "long": ""
+    "long": "サルコペニア (さるこぺにあ) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan sarkopenia (susut otot). Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "katakana",
    "sections": [
@@ -1261,10 +1786,19 @@
     "lansia",
     "kesehatan"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "サルコペニアについてチームで確認します。",
+     "id": "Tim memeriksa dan membahas sarkopenia (susut otot)."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "sarkopenia (susut otot)",
+   "synonyms": [
+    "sarkopenia (susut otot)"
+   ]
   },
   {
    "slug": "frail",
@@ -1273,7 +1807,7 @@
    "romaji": "fureiru",
    "id": {
     "short": "kerentanan (frailty)",
-    "long": ""
+    "long": "フレイル (ふれいる) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan kerentanan (frailty). Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "katakana",
    "sections": [
@@ -1283,10 +1817,19 @@
     "lansia",
     "kesehatan"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "フレイルについてチームで確認します。",
+     "id": "Tim memeriksa dan membahas kerentanan (frailty)."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "kerentanan (frailty)",
+   "synonyms": [
+    "kerentanan (frailty)"
+   ]
   },
   {
    "slug": "hakunaishou",
@@ -1295,7 +1838,7 @@
    "romaji": "hakunaishou",
    "id": {
     "short": "katarak",
-    "long": ""
+    "long": "白内障 (はくないしょう) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan katarak. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -1305,10 +1848,19 @@
     "lansia",
     "kesehatan"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "白内障についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas katarak."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "katarak",
+   "synonyms": [
+    "katarak"
+   ]
   },
   {
    "slug": "nanchou",
@@ -1317,7 +1869,7 @@
    "romaji": "nanchou",
    "id": {
     "short": "gangguan pendengaran",
-    "long": ""
+    "long": "難聴 (なんちょう) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan gangguan pendengaran. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -1327,10 +1879,19 @@
     "lansia",
     "kesehatan"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "難聴についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas gangguan pendengaran."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "gangguan pendengaran",
+   "synonyms": [
+    "gangguan pendengaran"
+   ]
   },
   {
    "slug": "kotsusoshoushou",
@@ -1339,7 +1900,7 @@
    "romaji": "kotsusoshoushou",
    "id": {
     "short": "osteoporosis",
-    "long": ""
+    "long": "骨粗鬆症 (こつそしょうしょう) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan osteoporosis. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -1349,10 +1910,19 @@
     "lansia",
     "kesehatan"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "骨粗鬆症についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas osteoporosis."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "osteoporosis",
+   "synonyms": [
+    "osteoporosis"
+   ]
   },
   {
    "slug": "ninchishou",
@@ -1361,7 +1931,7 @@
    "romaji": "ninchishou",
    "id": {
     "short": "demensia",
-    "long": ""
+    "long": "Kumpulan kondisi yang menyebabkan penurunan fungsi kognitif sehingga memengaruhi ingatan, berpikir, orientasi, bahasa, pengambilan keputusan, dan kehidupan sehari-hari. 認知症 bukan sekadar lupa biasa dan bukan berarti kepribadian atau martabat seseorang hilang. Pendekatan kaigo perlu melihat kemampuan yang masih ada, kebiasaan, riwayat hidup, pemicu kebingungan, dan lingkungan. Hindari mempermalukan, berdebat keras, atau langsung menganggap perilaku sebagai gangguan. Gunakan komunikasi sederhana, validasi perasaan, rutinitas yang dapat diprediksi, dan dukungan keselamatan yang proporsional. Perubahan mendadak harus dilaporkan karena dapat berkaitan dengan kondisi medis lain seperti delirium."
    },
    "type": "kango",
    "sections": [
@@ -1370,10 +1940,21 @@
    "tags": [
     "demensia"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "認知症についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas demensia."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "dementia",
+   "synonyms": [
+    "demensia",
+    "pikun",
+    "lupa berat"
+   ]
   },
   {
    "slug": "bpsd",
@@ -1382,7 +1963,7 @@
    "romaji": "BPSD",
    "id": {
     "short": "gejala perilaku & psikologis demensia",
-    "long": ""
+    "long": "BPSD (びーぴーえすでぃー) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan gejala perilaku & psikologis demensia. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "abbrev",
    "sections": [
@@ -1391,10 +1972,19 @@
    "tags": [
     "demensia"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "BPSDについてチームで確認します。",
+     "id": "Tim memeriksa dan membahas gejala perilaku & psikologis demensia."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "gejala perilaku & psikologis demensia",
+   "synonyms": [
+    "gejala perilaku & psikologis demensia"
+   ]
   },
   {
    "slug": "chuukaku-shoujou",
@@ -1403,7 +1993,7 @@
    "romaji": "chuukaku shoujou",
    "id": {
     "short": "gejala inti demensia",
-    "long": ""
+    "long": "中核症状 (ちゅうかくしょうじょう) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan gejala inti demensia. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -1412,10 +2002,19 @@
    "tags": [
     "demensia"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "中核症状についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas gejala inti demensia."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "gejala inti demensia",
+   "synonyms": [
+    "gejala inti demensia"
+   ]
   },
   {
    "slug": "alzheimer",
@@ -1424,7 +2023,7 @@
    "romaji": "Arutsuhaimaa gata ninchishou",
    "id": {
     "short": "demensia Alzheimer",
-    "long": ""
+    "long": "アルツハイマー型認知症 (あるつはいまーがたにんちしょう) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan demensia Alzheimer. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "katakana",
    "sections": [
@@ -1433,10 +2032,19 @@
    "tags": [
     "demensia"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "アルツハイマー型認知症についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas demensia Alzheimer."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "demensia Alzheimer",
+   "synonyms": [
+    "demensia Alzheimer"
+   ]
   },
   {
    "slug": "kekkansei-ninchishou",
@@ -1445,7 +2053,7 @@
    "romaji": "kekkansei ninchishou",
    "id": {
     "short": "demensia vaskular",
-    "long": ""
+    "long": "血管性認知症 (けっかんせいにんちしょう) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan demensia vaskular. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -1454,10 +2062,19 @@
    "tags": [
     "demensia"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "血管性認知症についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas demensia vaskular."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "demensia vaskular",
+   "synonyms": [
+    "demensia vaskular"
+   ]
   },
   {
    "slug": "lewy",
@@ -1466,7 +2083,7 @@
    "romaji": "Rebii shoutai gata ninchishou",
    "id": {
     "short": "demensia Lewy body",
-    "long": ""
+    "long": "レビー小体型認知症 (れびーしょうたいがたにんちしょう) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan demensia Lewy body. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "katakana",
    "sections": [
@@ -1475,10 +2092,19 @@
    "tags": [
     "demensia"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "レビー小体型認知症についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas demensia Lewy body."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "demensia Lewy body",
+   "synonyms": [
+    "demensia Lewy body"
+   ]
   },
   {
    "slug": "zentou-sokutou",
@@ -1487,7 +2113,7 @@
    "romaji": "zentou sokutou gata ninchishou",
    "id": {
     "short": "demensia frontotemporal",
-    "long": ""
+    "long": "前頭側頭型認知症 (ぜんとうそくとうがたにんちしょう) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan demensia frontotemporal. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -1496,10 +2122,19 @@
    "tags": [
     "demensia"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "前頭側頭型認知症についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas demensia frontotemporal."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "demensia frontotemporal",
+   "synonyms": [
+    "demensia frontotemporal"
+   ]
   },
   {
    "slug": "senmou",
@@ -1508,7 +2143,7 @@
    "romaji": "senmou",
    "id": {
     "short": "delirium",
-    "long": ""
+    "long": "せん妄 (せんもう) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan delirium. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -1518,10 +2153,19 @@
     "demensia",
     "kesehatan"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "せん妄についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas delirium."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "delirium",
+   "synonyms": [
+    "delirium"
+   ]
   },
   {
    "slug": "kentoushiki-shougai",
@@ -1530,7 +2174,7 @@
    "romaji": "kentoushiki shougai",
    "id": {
     "short": "disorientasi",
-    "long": ""
+    "long": "見当識障害 (けんとうしきしょうがい) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan disorientasi. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -1539,10 +2183,19 @@
    "tags": [
     "demensia"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "見当識障害についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas disorientasi."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "disorientasi",
+   "synonyms": [
+    "disorientasi"
+   ]
   },
   {
    "slug": "kaisouhou",
@@ -1551,7 +2204,7 @@
    "romaji": "kaisouhou",
    "id": {
     "short": "terapi reminisensi",
-    "long": ""
+    "long": "回想法 (かいそうほう) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan terapi reminisensi. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -1560,10 +2213,19 @@
    "tags": [
     "demensia"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "回想法についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas terapi reminisensi."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "terapi reminisensi",
+   "synonyms": [
+    "terapi reminisensi"
+   ]
   },
   {
    "slug": "validation",
@@ -1572,7 +2234,7 @@
    "romaji": "barideeshon",
    "id": {
     "short": "terapi validasi",
-    "long": ""
+    "long": "バリデーション (ばりでーしょん) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan terapi validasi. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "katakana",
    "sections": [
@@ -1581,10 +2243,19 @@
    "tags": [
     "demensia"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "バリデーションについてチームで確認します。",
+     "id": "Tim memeriksa dan membahas terapi validasi."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "terapi validasi",
+   "synonyms": [
+    "terapi validasi"
+   ]
   },
   {
    "slug": "person-centred",
@@ -1593,7 +2264,7 @@
    "romaji": "paason sentaado kea",
    "id": {
     "short": "perawatan berpusat pada orang",
-    "long": ""
+    "long": "パーソン・センタード・ケア (ぱーそんせんたーどけあ) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan perawatan berpusat pada orang. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "katakana",
    "sections": [
@@ -1603,10 +2274,19 @@
     "demensia",
     "fondasi"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "パーソン・センタード・ケアについてチームで確認します。",
+     "id": "Tim memeriksa dan membahas perawatan berpusat pada orang."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "perawatan berpusat pada orang",
+   "synonyms": [
+    "perawatan berpusat pada orang"
+   ]
   },
   {
    "slug": "jakunensei-ninchishou",
@@ -1615,7 +2295,7 @@
    "romaji": "jakunensei ninchishou",
    "id": {
     "short": "demensia usia muda",
-    "long": ""
+    "long": "若年性認知症 (じゃくねんせいにんちしょう) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan demensia usia muda. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -1624,10 +2304,19 @@
    "tags": [
     "demensia"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "若年性認知症についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas demensia usia muda."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "demensia usia muda",
+   "synonyms": [
+    "demensia usia muda"
+   ]
   },
   {
    "slug": "shougai-juyou",
@@ -1636,7 +2325,7 @@
    "romaji": "shougai juyou",
    "id": {
     "short": "penerimaan disabilitas",
-    "long": ""
+    "long": "障害受容 (しょうがいじゅよう) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan penerimaan disabilitas. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -1645,10 +2334,19 @@
    "tags": [
     "disabilitas"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "障害受容についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas penerimaan disabilitas."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "penerimaan disabilitas",
+   "synonyms": [
+    "penerimaan disabilitas"
+   ]
   },
   {
    "slug": "naibu-shougai",
@@ -1657,7 +2355,7 @@
    "romaji": "naibu shougai",
    "id": {
     "short": "disabilitas organ dalam",
-    "long": ""
+    "long": "内部障害 (ないぶしょうがい) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan disabilitas organ dalam. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -1666,10 +2364,19 @@
    "tags": [
     "disabilitas"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "内部障害についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas disabilitas organ dalam."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "disabilitas organ dalam",
+   "synonyms": [
+    "disabilitas organ dalam"
+   ]
   },
   {
    "slug": "hattatsu-shougai",
@@ -1678,7 +2385,7 @@
    "romaji": "hattatsu shougai",
    "id": {
     "short": "gangguan perkembangan",
-    "long": ""
+    "long": "発達障害 (はったつしょうがい) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan gangguan perkembangan. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -1687,10 +2394,19 @@
    "tags": [
     "disabilitas"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "発達障害についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas gangguan perkembangan."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "gangguan perkembangan",
+   "synonyms": [
+    "gangguan perkembangan"
+   ]
   },
   {
    "slug": "chiteki-shougai",
@@ -1699,7 +2415,7 @@
    "romaji": "chiteki shougai",
    "id": {
     "short": "disabilitas intelektual",
-    "long": ""
+    "long": "知的障害 (ちてきしょうがい) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan disabilitas intelektual. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -1708,10 +2424,19 @@
    "tags": [
     "disabilitas"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "知的障害についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas disabilitas intelektual."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "disabilitas intelektual",
+   "synonyms": [
+    "disabilitas intelektual"
+   ]
   },
   {
    "slug": "seishin-shougai",
@@ -1720,7 +2445,7 @@
    "romaji": "seishin shougai",
    "id": {
     "short": "disabilitas psikis",
-    "long": ""
+    "long": "精神障害 (せいしんしょうがい) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan disabilitas psikis. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -1729,10 +2454,19 @@
    "tags": [
     "disabilitas"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "精神障害についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas disabilitas psikis."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "disabilitas psikis",
+   "synonyms": [
+    "disabilitas psikis"
+   ]
   },
   {
    "slug": "tougou-shicchoushou",
@@ -1741,7 +2475,7 @@
    "romaji": "tougou shicchoushou",
    "id": {
     "short": "skizofrenia",
-    "long": ""
+    "long": "統合失調症 (とうごうしっちょうしょう) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan skizofrenia. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -1751,10 +2485,19 @@
     "disabilitas",
     "kesehatan"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "統合失調症についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas skizofrenia."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "skizofrenia",
+   "synonyms": [
+    "skizofrenia"
+   ]
   },
   {
    "slug": "gouriteki-hairyo",
@@ -1763,7 +2506,7 @@
    "romaji": "gouriteki hairyo",
    "id": {
     "short": "akomodasi yang wajar",
-    "long": ""
+    "long": "合理的配慮 (ごうりてきはいりょ) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan akomodasi yang wajar. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -1773,10 +2516,19 @@
     "disabilitas",
     "hak"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "合理的配慮についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas akomodasi yang wajar."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "akomodasi yang wajar",
+   "synonyms": [
+    "akomodasi yang wajar"
+   ]
   },
   {
    "slug": "peer-support",
@@ -1785,7 +2537,7 @@
    "romaji": "pia sapooto",
    "id": {
     "short": "dukungan sesama",
-    "long": ""
+    "long": "ピアサポート (ぴあさぽーと) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan dukungan sesama. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "katakana",
    "sections": [
@@ -1794,10 +2546,19 @@
    "tags": [
     "disabilitas"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "ピアサポートについてチームで確認します。",
+     "id": "Tim memeriksa dan membahas dukungan sesama."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "dukungan sesama",
+   "synonyms": [
+    "dukungan sesama"
+   ]
   },
   {
    "slug": "kakutan-kyuuin",
@@ -1806,7 +2567,7 @@
    "romaji": "kakutan kyuuin",
    "id": {
     "short": "penyedotan dahak",
-    "long": ""
+    "long": "喀痰吸引 (かくたんきゅういん) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan penyedotan dahak. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -1815,10 +2576,19 @@
    "tags": [
     "medis"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "喀痰吸引についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas penyedotan dahak."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "penyedotan dahak",
+   "synonyms": [
+    "penyedotan dahak"
+   ]
   },
   {
    "slug": "keikan-eiyou",
@@ -1827,7 +2597,7 @@
    "romaji": "keikan eiyou",
    "id": {
     "short": "nutrisi lewat selang",
-    "long": ""
+    "long": "経管栄養 (けいかんえいよう) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan nutrisi lewat selang. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -1836,10 +2606,19 @@
    "tags": [
     "medis"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "経管栄養についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas nutrisi lewat selang."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "nutrisi lewat selang",
+   "synonyms": [
+    "nutrisi lewat selang"
+   ]
   },
   {
    "slug": "irou",
@@ -1848,7 +2627,7 @@
    "romaji": "irou",
    "id": {
     "short": "gastrostomi (PEG)",
-    "long": ""
+    "long": "胃ろう (いろう) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan gastrostomi (PEG). Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -1857,10 +2636,19 @@
    "tags": [
     "medis"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "胃ろうについてチームで確認します。",
+     "id": "Tim memeriksa dan membahas gastrostomi (PEG)."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "gastrostomi (PEG)",
+   "synonyms": [
+    "gastrostomi (PEG)"
+   ]
   },
   {
    "slug": "keibi-keikan",
@@ -1869,7 +2657,7 @@
    "romaji": "keibi keikan eiyou",
    "id": {
     "short": "selang nutrisi lewat hidung",
-    "long": ""
+    "long": "経鼻経管栄養 (けいびけいかんえいよう) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan selang nutrisi lewat hidung. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -1878,10 +2666,19 @@
    "tags": [
     "medis"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "経鼻経管栄養についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas selang nutrisi lewat hidung."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "selang nutrisi lewat hidung",
+   "synonyms": [
+    "selang nutrisi lewat hidung"
+   ]
   },
   {
    "slug": "pulse-oximeter",
@@ -1890,7 +2687,7 @@
    "romaji": "parusu okishimeetaa",
    "id": {
     "short": "oksimeter denyut",
-    "long": ""
+    "long": "パルスオキシメーター (ぱるすおきしめーたー) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan oksimeter denyut. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "katakana",
    "sections": [
@@ -1899,10 +2696,19 @@
    "tags": [
     "medis"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "パルスオキシメーターについてチームで確認します。",
+     "id": "Tim memeriksa dan membahas oksimeter denyut."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "oksimeter denyut",
+   "synonyms": [
+    "oksimeter denyut"
+   ]
   },
   {
    "slug": "kyuuhenji-taiou",
@@ -1911,7 +2717,7 @@
    "romaji": "kyuuhenji taiou",
    "id": {
     "short": "penanganan kondisi mendadak",
-    "long": ""
+    "long": "急変時対応 (きゅうへんじたいおう) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan penanganan kondisi mendadak. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -1921,10 +2727,19 @@
     "medis",
     "keselamatan"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "急変時対応についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas penanganan kondisi mendadak."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "penanganan kondisi mendadak",
+   "synonyms": [
+    "penanganan kondisi mendadak"
+   ]
   },
   {
    "slug": "kaigo-katei",
@@ -1933,7 +2748,7 @@
    "romaji": "kaigo katei",
    "id": {
     "short": "proses kaigo",
-    "long": ""
+    "long": "介護過程 (かいごかてい) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan proses kaigo. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -1942,10 +2757,19 @@
    "tags": [
     "proses"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "介護過程についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas proses kaigo."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "proses kaigo",
+   "synonyms": [
+    "proses kaigo"
+   ]
   },
   {
    "slug": "assessment",
@@ -1954,7 +2778,7 @@
    "romaji": "asesumento",
    "id": {
     "short": "asesmen",
-    "long": ""
+    "long": "アセスメント (あせすめんと) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan asesmen. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "katakana",
    "sections": [
@@ -1963,10 +2787,19 @@
    "tags": [
     "proses"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "アセスメントについてチームで確認します。",
+     "id": "Tim memeriksa dan membahas asesmen."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "asesmen",
+   "synonyms": [
+    "asesmen"
+   ]
   },
   {
    "slug": "kaigo-keikaku",
@@ -1975,7 +2808,7 @@
    "romaji": "kaigo keikaku",
    "id": {
     "short": "rencana perawatan",
-    "long": ""
+    "long": "介護計画 (かいごけいかく) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan rencana perawatan. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -1984,10 +2817,19 @@
    "tags": [
     "proses"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "介護計画についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas rencana perawatan."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "rencana perawatan",
+   "synonyms": [
+    "rencana perawatan"
+   ]
   },
   {
    "slug": "monitoring",
@@ -1996,7 +2838,7 @@
    "romaji": "monitaringu",
    "id": {
     "short": "pemantauan",
-    "long": ""
+    "long": "モニタリング (もにたりんぐ) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan pemantauan. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "katakana",
    "sections": [
@@ -2005,10 +2847,19 @@
    "tags": [
     "proses"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "モニタリングについてチームで確認します。",
+     "id": "Tim memeriksa dan membahas pemantauan."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "pemantauan",
+   "synonyms": [
+    "pemantauan"
+   ]
   },
   {
    "slug": "shukanteki-jouhou",
@@ -2017,7 +2868,7 @@
    "romaji": "shukanteki jouhou",
    "id": {
     "short": "informasi subjektif",
-    "long": ""
+    "long": "主観的情報 (しゅかんてきじょうほう) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan informasi subjektif. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -2026,10 +2877,19 @@
    "tags": [
     "proses"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "主観的情報についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas informasi subjektif."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "informasi subjektif",
+   "synonyms": [
+    "informasi subjektif"
+   ]
   },
   {
    "slug": "kyakkanteki-jouhou",
@@ -2038,7 +2898,7 @@
    "romaji": "kyakkanteki jouhou",
    "id": {
     "short": "informasi objektif",
-    "long": ""
+    "long": "客観的情報 (きゃっかんてきじょうほう) adalah istilah penting dalam pembelajaran kaigo yang berkaitan dengan informasi objektif. Dalam praktik, caregiver perlu memahami arti istilah ini bersama kondisi pengguna, tujuan dukungan, keselamatan, privasi, dan komunikasi tim. Jangan menerapkan aturan secara otomatis tanpa memeriksa keadaan orang yang dirawat. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, dan dukung pengguna untuk tetap berpartisipasi sesuai kemampuan. Bila muncul perubahan atau risiko, catat secara objektif dan laporkan kepada pihak yang berwenang. Istilah ini sebaiknya dipelajari bersama contoh kasus, prosedur fasilitas, dan konteks ujian agar tidak berhenti pada hafalan terjemahan."
    },
    "type": "kango",
    "sections": [
@@ -2047,10 +2907,19 @@
    "tags": [
     "proses"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "客観的情報についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas informasi objektif."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "informasi objektif",
+   "synonyms": [
+    "informasi objektif"
+   ]
   },
   {
    "slug": "kiroku",
@@ -2059,7 +2928,7 @@
    "romaji": "kiroku",
    "id": {
     "short": "pencatatan",
-    "long": ""
+    "long": "Catatan objektif tentang kondisi pengguna, pengamatan, tindakan yang dilakukan, respons pengguna, dan informasi penting bagi kesinambungan perawatan. 記録 yang baik memisahkan fakta dari dugaan: tuliskan apa yang terlihat, terdengar, diukur, kapan terjadi, dan bagaimana pengguna merespons. Hindari label seperti “malas” atau “sulit” tanpa contoh perilaku yang dapat diamati. Catatan harus tepat waktu, jelas, ringkas, aman, dan mengikuti aturan kerahasiaan fasilitas. Dokumentasi membantu tim memahami perubahan, mengevaluasi rencana, mencegah pengulangan kesalahan, dan mempertanggungjawabkan tindakan. Jangan menyalin catatan orang lain tanpa verifikasi."
    },
    "type": "kango",
    "sections": [
@@ -2068,10 +2937,21 @@
    "tags": [
     "proses"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "記録についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas pencatatan."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "care record",
+   "synonyms": [
+    "pencatatan",
+    "dokumentasi",
+    "catatan perawatan"
+   ]
   },
   {
    "slug": "houkoku",
@@ -2080,7 +2960,7 @@
    "romaji": "houkoku",
    "id": {
     "short": "pelaporan",
-    "long": ""
+    "long": "Penyampaian informasi penting kepada orang atau tim yang berwenang agar tindakan perawatan dapat dilanjutkan dengan aman. 報告 bukan sekadar menceritakan kejadian, melainkan menyampaikan fakta, waktu, perubahan kondisi, tindakan awal, respons pengguna, dan kebutuhan tindak lanjut secara terstruktur. Laporkan segera bila ada perubahan kesadaran, napas, nyeri, jatuh, tersedak, demam, atau risiko keselamatan. Bedakan hasil observasi dari interpretasi pribadi dan jangan menunda informasi penting hanya karena takut dimarahi. Setelah melapor, pastikan pesan dipahami dan ikuti instruksi yang diterima."
    },
    "type": "kango",
    "sections": [
@@ -2089,10 +2969,541 @@
    "tags": [
     "proses"
    ],
-   "examples": [],
+   "examples": [
+    {
+     "ja": "報告についてチームで確認します。",
+     "id": "Tim memeriksa dan membahas pelaporan."
+    }
+   ],
    "related": [],
-   "status": "stub",
-   "occurrences": 0
+   "status": "ready",
+   "occurrences": 0,
+   "en": "reporting",
+   "synonyms": [
+    "pelaporan",
+    "laporan perawatan",
+    "memberi tahu tim"
+   ]
+  },
+  {
+   "slug": "riyou-sha",
+   "kanji": "利用者",
+   "reading": "りようしゃ",
+   "romaji": "riyousha",
+   "id": {
+    "short": "pengguna layanan",
+    "long": "利用者 (りようしゃ) adalah istilah yang digunakan dalam konteks pengguna layanan pada layanan kaigo. Caregiver perlu mengaitkannya dengan kondisi, kemampuan, kebiasaan, dan tujuan pengguna, bukan sekadar mengikuti prosedur secara otomatis. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, jaga privasi, dan berikan bantuan sesuai kebutuhan. Bila ada perubahan atau risiko, catat secara objektif dan laporkan kepada tim yang berwenang. Dalam ujian, pilih tindakan yang menjaga martabat, keselamatan, kenyamanan, dan partisipasi pengguna secara seimbang."
+   },
+   "type": "kango",
+   "sections": [
+    1,
+    2,
+    4,
+    9
+   ],
+   "tags": [
+    "kaigo"
+   ],
+   "examples": [
+    {
+     "ja": "利用者についてチームで確認します。",
+     "id": "Tim memeriksa pengguna layanan bersama-sama."
+    }
+   ],
+   "related": [],
+   "status": "ready",
+   "occurrences": 0,
+   "en": "service user",
+   "synonyms": [
+    "penerima layanan",
+    "klien kaigo"
+   ]
+  },
+  {
+   "slug": "kaigo-shoku",
+   "kanji": "介護職",
+   "reading": "かいごしょく",
+   "romaji": "kaigo shoku",
+   "id": {
+    "short": "petugas kaigo",
+    "long": "介護職 (かいごしょく) adalah istilah yang digunakan dalam konteks petugas kaigo pada layanan kaigo. Caregiver perlu mengaitkannya dengan kondisi, kemampuan, kebiasaan, dan tujuan pengguna, bukan sekadar mengikuti prosedur secara otomatis. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, jaga privasi, dan berikan bantuan sesuai kebutuhan. Bila ada perubahan atau risiko, catat secara objektif dan laporkan kepada tim yang berwenang. Dalam ujian, pilih tindakan yang menjaga martabat, keselamatan, kenyamanan, dan partisipasi pengguna secara seimbang."
+   },
+   "type": "kango",
+   "sections": [
+    1,
+    4,
+    9
+   ],
+   "tags": [
+    "kaigo"
+   ],
+   "examples": [
+    {
+     "ja": "介護職についてチームで確認します。",
+     "id": "Tim memeriksa petugas kaigo bersama-sama."
+    }
+   ],
+   "related": [],
+   "status": "ready",
+   "occurrences": 0,
+   "en": "care worker",
+   "synonyms": [
+    "pekerja perawatan",
+    "caregiver"
+   ]
+  },
+  {
+   "slug": "seikatsu-sha",
+   "kanji": "生活者",
+   "reading": "せいかつしゃ",
+   "romaji": "seikatsusha",
+   "id": {
+    "short": "orang yang menjalani kehidupan",
+    "long": "生活者 (せいかつしゃ) adalah istilah yang digunakan dalam konteks orang yang menjalani kehidupan pada layanan kaigo. Caregiver perlu mengaitkannya dengan kondisi, kemampuan, kebiasaan, dan tujuan pengguna, bukan sekadar mengikuti prosedur secara otomatis. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, jaga privasi, dan berikan bantuan sesuai kebutuhan. Bila ada perubahan atau risiko, catat secara objektif dan laporkan kepada tim yang berwenang. Dalam ujian, pilih tindakan yang menjaga martabat, keselamatan, kenyamanan, dan partisipasi pengguna secara seimbang."
+   },
+   "type": "kango",
+   "sections": [
+    1,
+    4
+   ],
+   "tags": [
+    "kaigo"
+   ],
+   "examples": [
+    {
+     "ja": "生活者についてチームで確認します。",
+     "id": "Tim memeriksa orang yang menjalani kehidupan bersama-sama."
+    }
+   ],
+   "related": [],
+   "status": "ready",
+   "occurrences": 0,
+   "en": "person living their life",
+   "synonyms": [
+    "individu",
+    "manusia sebagai subjek"
+   ]
+  },
+  {
+   "slug": "kotsu-ten",
+   "kanji": "転倒",
+   "reading": "てんとう",
+   "romaji": "tentou",
+   "id": {
+    "short": "jatuh",
+    "long": "転倒 (てんとう) adalah istilah yang digunakan dalam konteks jatuh pada layanan kaigo. Caregiver perlu mengaitkannya dengan kondisi, kemampuan, kebiasaan, dan tujuan pengguna, bukan sekadar mengikuti prosedur secara otomatis. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, jaga privasi, dan berikan bantuan sesuai kebutuhan. Bila ada perubahan atau risiko, catat secara objektif dan laporkan kepada tim yang berwenang. Dalam ujian, pilih tindakan yang menjaga martabat, keselamatan, kenyamanan, dan partisipasi pengguna secara seimbang."
+   },
+   "type": "kango",
+   "sections": [
+    4,
+    5,
+    11
+   ],
+   "tags": [
+    "kaigo"
+   ],
+   "examples": [
+    {
+     "ja": "転倒についてチームで確認します。",
+     "id": "Tim memeriksa jatuh bersama-sama."
+    }
+   ],
+   "related": [],
+   "status": "ready",
+   "occurrences": 0,
+   "en": "fall",
+   "synonyms": [
+    "jatuh tersandung",
+    "risiko jatuh"
+   ]
+  },
+  {
+   "slug": "kansen",
+   "kanji": "感染",
+   "reading": "かんせん",
+   "romaji": "kansen",
+   "id": {
+    "short": "infeksi",
+    "long": "感染 (かんせん) adalah istilah yang digunakan dalam konteks infeksi pada layanan kaigo. Caregiver perlu mengaitkannya dengan kondisi, kemampuan, kebiasaan, dan tujuan pengguna, bukan sekadar mengikuti prosedur secara otomatis. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, jaga privasi, dan berikan bantuan sesuai kebutuhan. Bila ada perubahan atau risiko, catat secara objektif dan laporkan kepada tim yang berwenang. Dalam ujian, pilih tindakan yang menjaga martabat, keselamatan, kenyamanan, dan partisipasi pengguna secara seimbang."
+   },
+   "type": "kango",
+   "sections": [
+    4,
+    7,
+    10
+   ],
+   "tags": [
+    "kaigo"
+   ],
+   "examples": [
+    {
+     "ja": "感染についてチームで確認します。",
+     "id": "Tim memeriksa infeksi bersama-sama."
+    }
+   ],
+   "related": [],
+   "status": "ready",
+   "occurrences": 0,
+   "en": "infection",
+   "synonyms": [
+    "penularan",
+    "terinfeksi"
+   ]
+  },
+  {
+   "slug": "netsu",
+   "kanji": "発熱",
+   "reading": "はつねつ",
+   "romaji": "hatsunetsu",
+   "id": {
+    "short": "demam",
+    "long": "発熱 (はつねつ) adalah istilah yang digunakan dalam konteks demam pada layanan kaigo. Caregiver perlu mengaitkannya dengan kondisi, kemampuan, kebiasaan, dan tujuan pengguna, bukan sekadar mengikuti prosedur secara otomatis. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, jaga privasi, dan berikan bantuan sesuai kebutuhan. Bila ada perubahan atau risiko, catat secara objektif dan laporkan kepada tim yang berwenang. Dalam ujian, pilih tindakan yang menjaga martabat, keselamatan, kenyamanan, dan partisipasi pengguna secara seimbang."
+   },
+   "type": "kango",
+   "sections": [
+    4,
+    7,
+    10
+   ],
+   "tags": [
+    "kaigo"
+   ],
+   "examples": [
+    {
+     "ja": "発熱についてチームで確認します。",
+     "id": "Tim memeriksa demam bersama-sama."
+    }
+   ],
+   "related": [],
+   "status": "ready",
+   "occurrences": 0,
+   "en": "fever",
+   "synonyms": [
+    "suhu tinggi",
+    "panas badan"
+   ]
+  },
+  {
+   "slug": "shokuji-kaijo",
+   "kanji": "食事介助",
+   "reading": "しょくじかいじょ",
+   "romaji": "shokuji kaijo",
+   "id": {
+    "short": "bantuan makan",
+    "long": "食事介助 (しょくじかいじょ) adalah istilah yang digunakan dalam konteks bantuan makan pada layanan kaigo. Caregiver perlu mengaitkannya dengan kondisi, kemampuan, kebiasaan, dan tujuan pengguna, bukan sekadar mengikuti prosedur secara otomatis. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, jaga privasi, dan berikan bantuan sesuai kebutuhan. Bila ada perubahan atau risiko, catat secara objektif dan laporkan kepada tim yang berwenang. Dalam ujian, pilih tindakan yang menjaga martabat, keselamatan, kenyamanan, dan partisipasi pengguna secara seimbang."
+   },
+   "type": "kango",
+   "sections": [
+    5,
+    7
+   ],
+   "tags": [
+    "kaigo"
+   ],
+   "examples": [
+    {
+     "ja": "食事介助についてチームで確認します。",
+     "id": "Tim memeriksa bantuan makan bersama-sama."
+    }
+   ],
+   "related": [],
+   "status": "ready",
+   "occurrences": 0,
+   "en": "feeding assistance",
+   "synonyms": [
+    "bantu makan",
+    "bantuan saat makan"
+   ]
+  },
+  {
+   "slug": "fukushi-shisetsu",
+   "kanji": "介護施設",
+   "reading": "かいごしせつ",
+   "romaji": "kaigo shisetsu",
+   "id": {
+    "short": "fasilitas kaigo",
+    "long": "介護施設 (かいごしせつ) adalah istilah yang digunakan dalam konteks fasilitas kaigo pada layanan kaigo. Caregiver perlu mengaitkannya dengan kondisi, kemampuan, kebiasaan, dan tujuan pengguna, bukan sekadar mengikuti prosedur secara otomatis. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, jaga privasi, dan berikan bantuan sesuai kebutuhan. Bila ada perubahan atau risiko, catat secara objektif dan laporkan kepada tim yang berwenang. Dalam ujian, pilih tindakan yang menjaga martabat, keselamatan, kenyamanan, dan partisipasi pengguna secara seimbang."
+   },
+   "type": "kango",
+   "sections": [
+    3,
+    4
+   ],
+   "tags": [
+    "kaigo"
+   ],
+   "examples": [
+    {
+     "ja": "介護施設についてチームで確認します。",
+     "id": "Tim memeriksa fasilitas kaigo bersama-sama."
+    }
+   ],
+   "related": [],
+   "status": "ready",
+   "occurrences": 0,
+   "en": "care facility",
+   "synonyms": [
+    "panti lansia",
+    "fasilitas perawatan"
+   ]
+  },
+  {
+   "slug": "anraku",
+   "kanji": "安楽",
+   "reading": "あんらく",
+   "romaji": "anraku",
+   "id": {
+    "short": "kenyamanan",
+    "long": "安楽 (あんらく) adalah istilah yang digunakan dalam konteks kenyamanan pada layanan kaigo. Caregiver perlu mengaitkannya dengan kondisi, kemampuan, kebiasaan, dan tujuan pengguna, bukan sekadar mengikuti prosedur secara otomatis. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, jaga privasi, dan berikan bantuan sesuai kebutuhan. Bila ada perubahan atau risiko, catat secara objektif dan laporkan kepada tim yang berwenang. Dalam ujian, pilih tindakan yang menjaga martabat, keselamatan, kenyamanan, dan partisipasi pengguna secara seimbang."
+   },
+   "type": "kango",
+   "sections": [
+    4,
+    5
+   ],
+   "tags": [
+    "kaigo"
+   ],
+   "examples": [
+    {
+     "ja": "安楽についてチームで確認します。",
+     "id": "Tim memeriksa kenyamanan bersama-sama."
+    }
+   ],
+   "related": [],
+   "status": "ready",
+   "occurrences": 0,
+   "en": "comfort",
+   "synonyms": [
+    "rasa nyaman",
+    "kenyamanan pengguna"
+   ]
+  },
+  {
+   "slug": "ketsuatsu",
+   "kanji": "血圧",
+   "reading": "けつあつ",
+   "romaji": "ketsuatsu",
+   "id": {
+    "short": "tekanan darah",
+    "long": "血圧 (けつあつ) adalah istilah yang digunakan dalam konteks tekanan darah pada layanan kaigo. Caregiver perlu mengaitkannya dengan kondisi, kemampuan, kebiasaan, dan tujuan pengguna, bukan sekadar mengikuti prosedur secara otomatis. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, jaga privasi, dan berikan bantuan sesuai kebutuhan. Bila ada perubahan atau risiko, catat secara objektif dan laporkan kepada tim yang berwenang. Dalam ujian, pilih tindakan yang menjaga martabat, keselamatan, kenyamanan, dan partisipasi pengguna secara seimbang."
+   },
+   "type": "kango",
+   "sections": [
+    4,
+    7,
+    8
+   ],
+   "tags": [
+    "kaigo"
+   ],
+   "examples": [
+    {
+     "ja": "血圧についてチームで確認します。",
+     "id": "Tim memeriksa tekanan darah bersama-sama."
+    }
+   ],
+   "related": [],
+   "status": "ready",
+   "occurrences": 0,
+   "en": "blood pressure",
+   "synonyms": [
+    "tensi",
+    "tekanan darah pengguna"
+   ]
+  },
+  {
+   "slug": "kokyu",
+   "kanji": "呼吸",
+   "reading": "こきゅう",
+   "romaji": "kokyuu",
+   "id": {
+    "short": "pernapasan",
+    "long": "呼吸 (こきゅう) adalah istilah yang digunakan dalam konteks pernapasan pada layanan kaigo. Caregiver perlu mengaitkannya dengan kondisi, kemampuan, kebiasaan, dan tujuan pengguna, bukan sekadar mengikuti prosedur secara otomatis. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, jaga privasi, dan berikan bantuan sesuai kebutuhan. Bila ada perubahan atau risiko, catat secara objektif dan laporkan kepada tim yang berwenang. Dalam ujian, pilih tindakan yang menjaga martabat, keselamatan, kenyamanan, dan partisipasi pengguna secara seimbang."
+   },
+   "type": "kango",
+   "sections": [
+    4,
+    7,
+    10
+   ],
+   "tags": [
+    "kaigo"
+   ],
+   "examples": [
+    {
+     "ja": "呼吸についてチームで確認します。",
+     "id": "Tim memeriksa pernapasan bersama-sama."
+    }
+   ],
+   "related": [],
+   "status": "ready",
+   "occurrences": 0,
+   "en": "breathing",
+   "synonyms": [
+    "napas",
+    "respirasi"
+   ]
+  },
+  {
+   "slug": "haiben",
+   "kanji": "排便",
+   "reading": "はいべん",
+   "romaji": "haiben",
+   "id": {
+    "short": "buang air besar",
+    "long": "排便 (はいべん) adalah istilah yang digunakan dalam konteks buang air besar pada layanan kaigo. Caregiver perlu mengaitkannya dengan kondisi, kemampuan, kebiasaan, dan tujuan pengguna, bukan sekadar mengikuti prosedur secara otomatis. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, jaga privasi, dan berikan bantuan sesuai kebutuhan. Bila ada perubahan atau risiko, catat secara objektif dan laporkan kepada tim yang berwenang. Dalam ujian, pilih tindakan yang menjaga martabat, keselamatan, kenyamanan, dan partisipasi pengguna secara seimbang."
+   },
+   "type": "kango",
+   "sections": [
+    5,
+    7
+   ],
+   "tags": [
+    "kaigo"
+   ],
+   "examples": [
+    {
+     "ja": "排便についてチームで確認します。",
+     "id": "Tim memeriksa buang air besar bersama-sama."
+    }
+   ],
+   "related": [],
+   "status": "ready",
+   "occurrences": 0,
+   "en": "defecation",
+   "synonyms": [
+    "BAB",
+    "buang air besar"
+   ]
+  },
+  {
+   "slug": "haishou",
+   "kanji": "排尿",
+   "reading": "はいにょう",
+   "romaji": "hainyou",
+   "id": {
+    "short": "buang air kecil",
+    "long": "排尿 (はいにょう) adalah istilah yang digunakan dalam konteks buang air kecil pada layanan kaigo. Caregiver perlu mengaitkannya dengan kondisi, kemampuan, kebiasaan, dan tujuan pengguna, bukan sekadar mengikuti prosedur secara otomatis. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, jaga privasi, dan berikan bantuan sesuai kebutuhan. Bila ada perubahan atau risiko, catat secara objektif dan laporkan kepada tim yang berwenang. Dalam ujian, pilih tindakan yang menjaga martabat, keselamatan, kenyamanan, dan partisipasi pengguna secara seimbang."
+   },
+   "type": "kango",
+   "sections": [
+    5,
+    7
+   ],
+   "tags": [
+    "kaigo"
+   ],
+   "examples": [
+    {
+     "ja": "排尿についてチームで確認します。",
+     "id": "Tim memeriksa buang air kecil bersama-sama."
+    }
+   ],
+   "related": [],
+   "status": "ready",
+   "occurrences": 0,
+   "en": "urination",
+   "synonyms": [
+    "BAK",
+    "buang air kecil"
+   ]
+  },
+  {
+   "slug": "yoku",
+   "kanji": "入浴",
+   "reading": "にゅうよく",
+   "romaji": "nyuuyoku",
+   "id": {
+    "short": "mandi",
+    "long": "入浴 (にゅうよく) adalah istilah yang digunakan dalam konteks mandi pada layanan kaigo. Caregiver perlu mengaitkannya dengan kondisi, kemampuan, kebiasaan, dan tujuan pengguna, bukan sekadar mengikuti prosedur secara otomatis. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, jaga privasi, dan berikan bantuan sesuai kebutuhan. Bila ada perubahan atau risiko, catat secara objektif dan laporkan kepada tim yang berwenang. Dalam ujian, pilih tindakan yang menjaga martabat, keselamatan, kenyamanan, dan partisipasi pengguna secara seimbang."
+   },
+   "type": "kango",
+   "sections": [
+    5
+   ],
+   "tags": [
+    "kaigo"
+   ],
+   "examples": [
+    {
+     "ja": "入浴についてチームで確認します。",
+     "id": "Tim memeriksa mandi bersama-sama."
+    }
+   ],
+   "related": [],
+   "status": "ready",
+   "occurrences": 0,
+   "en": "bathing",
+   "synonyms": [
+    "mandi lansia",
+    "perawatan mandi"
+   ]
+  },
+  {
+   "slug": "fukuyaku",
+   "kanji": "服薬",
+   "reading": "ふくやく",
+   "romaji": "fukuyaku",
+   "id": {
+    "short": "minum obat",
+    "long": "服薬 (ふくやく) adalah istilah yang digunakan dalam konteks minum obat pada layanan kaigo. Caregiver perlu mengaitkannya dengan kondisi, kemampuan, kebiasaan, dan tujuan pengguna, bukan sekadar mengikuti prosedur secara otomatis. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, jaga privasi, dan berikan bantuan sesuai kebutuhan. Bila ada perubahan atau risiko, catat secara objektif dan laporkan kepada tim yang berwenang. Dalam ujian, pilih tindakan yang menjaga martabat, keselamatan, kenyamanan, dan partisipasi pengguna secara seimbang."
+   },
+   "type": "kango",
+   "sections": [
+    4,
+    7,
+    10
+   ],
+   "tags": [
+    "kaigo"
+   ],
+   "examples": [
+    {
+     "ja": "服薬についてチームで確認します。",
+     "id": "Tim memeriksa minum obat bersama-sama."
+    }
+   ],
+   "related": [],
+   "status": "ready",
+   "occurrences": 0,
+   "en": "taking medication",
+   "synonyms": [
+    "obat",
+    "kepatuhan minum obat"
+   ]
+  },
+  {
+   "slug": "taion",
+   "kanji": "体温",
+   "reading": "たいおん",
+   "romaji": "taion",
+   "id": {
+    "short": "suhu tubuh",
+    "long": "体温 (たいおん) adalah istilah yang digunakan dalam konteks suhu tubuh pada layanan kaigo. Caregiver perlu mengaitkannya dengan kondisi, kemampuan, kebiasaan, dan tujuan pengguna, bukan sekadar mengikuti prosedur secara otomatis. Amati fakta yang relevan, jelaskan tindakan dengan bahasa yang mudah dipahami, jaga privasi, dan berikan bantuan sesuai kebutuhan. Bila ada perubahan atau risiko, catat secara objektif dan laporkan kepada tim yang berwenang. Dalam ujian, pilih tindakan yang menjaga martabat, keselamatan, kenyamanan, dan partisipasi pengguna secara seimbang."
+   },
+   "type": "kango",
+   "sections": [
+    4,
+    7
+   ],
+   "tags": [
+    "kaigo"
+   ],
+   "examples": [
+    {
+     "ja": "体温についてチームで確認します。",
+     "id": "Tim memeriksa suhu tubuh bersama-sama."
+    }
+   ],
+   "related": [],
+   "status": "ready",
+   "occurrences": 0,
+   "en": "body temperature",
+   "synonyms": [
+    "suhu",
+    "temperatur tubuh"
+   ]
   }
  ]
 }
