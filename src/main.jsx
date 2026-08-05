@@ -8,6 +8,7 @@ import s1l1Content from './content/s1l1.json';
 import s1l1Ja from './content/s1l1-ja.json';
 import glossaryData from './content/glossary.index.json';
 import {GlossaryPage,GlossaryDetail} from './GlossaryPage.jsx';
+import {FinalHome,FinalYear,FinalQuiz,FinalResult} from './FinalTest.jsx';
 import Login from './Login.jsx';
 import {AuthProvider, useAuth} from './context/AuthContext.jsx';
 import {ProgressProvider, useProgress, readGuestProgress} from './context/ProgressContext.jsx';
@@ -30,25 +31,23 @@ function LangSwitch({mode,setMode,className=''}){
 }
 
 function LangText({ja,id,mode,as='p',className=''}){
-  const Tag = as;
-  if(mode==='id') return <Tag className={className}>{id}</Tag>;
-  if(mode==='furigana') return <Tag className={className} dangerouslySetInnerHTML={{__html:furigana(ja)}}/>;
-  return <Tag className={className}>{ja}</Tag>;
+  return <AnnotatedText field={{ja,id}} mode={mode==='furigana'?'furigana':mode} as={as} className={className}/>;
 }
 
 const RUBY_ANNOTATION = /([\u4E00-\u9FFF\u3005\u3006\u30F6]+)\[([\u3041-\u309F\u30A1-\u30FCー]+)\]/g;
+function parseJapanese(source){
+  const out=[];let last=0,m;const re=/([\u4E00-\u9FFF\u3005\u3006\u30F6]+)\[([\u3041-\u309F\u30A1-\u30FCー]+)\]/g;
+  while((m=re.exec(source))){if(m.index>last)out.push({type:'text',value:source.slice(last,m.index)});out.push({type:'ruby',base:m[1],reading:m[2]});last=m.index+m[0].length}
+  if(last<source.length)out.push({type:'text',value:source.slice(last)});return out;
+}
 function AnnotatedText({field,mode='kanji',as='p',className='',glossary,onTerm}){
-  const Tag=as;
-  if(field==null) return null;
-  const raw=typeof field==='string'?field:(mode==='id'?field.id:(field.ja||field.id||''));
-  if(mode==='id' && typeof field==='object' && field.id) return <Tag className={className}>{field.id}</Tag>;
-  const source=raw||'';
-  const generated=mode==='furigana' ? (RUBY_ANNOTATION.test(source) ? source : furigana(source)) : source;
-  RUBY_ANNOTATION.lastIndex=0;
-  const html=mode==='furigana'
-    ? generated.replace(RUBY_ANNOTATION,(m,base,reading)=>glossary?.has(base)&&onTerm?`<ruby class="termHit" data-term="${base}">${base}<rt>${reading}</rt></ruby>`:`<ruby>${base}<rt>${reading}</rt></ruby>`)
-    : generated.replace(RUBY_ANNOTATION,(m,base)=>glossary?.has(base)&&onTerm?`<span class="termHit" data-term="${base}">${base}</span>`:base);
-  return <Tag onClick={e=>{const hit=e.target.closest?.('[data-term]');if(hit&&onTerm)onTerm(hit.dataset.term)}} className={`annotatedText ${mode==='furigana'?'showFuri':''} ${className}`} dangerouslySetInnerHTML={{__html:html}}/>;
+  const Tag=as;if(field==null)return null;
+  if(mode==='id'&&typeof field==='object'&&field.id)return <Tag lang="id" className={`fg fg--id ${className}`}>{field.id}</Tag>;
+  const source=typeof field==='string'?field:(field.ja||field.id||'');
+  const generated=mode==='furigana'&&!/\[[\u3041-\u309F]/.test(source)?furigana(source):source;
+  const tokens=parseJapanese(generated);
+  const handle=e=>{const hit=e.target.closest?.('[data-term]');if(hit&&onTerm)onTerm(hit.dataset.term)};
+  return <Tag lang="ja" onClick={handle} className={`fg annotatedText ${mode==='furigana'?'showFuri':''} ${className}`}>{tokens.map((t,i)=>t.type==='text'?<span key={i}>{t.value}</span>:<span key={i} className={`fg-ruby${glossary?.has(t.base)&&onTerm?' is-term':''}`} data-term={glossary?.has(t.base)&&onTerm?t.base:undefined}><span className="fg-rt">{mode==='furigana'?t.reading:' '}</span><span className="fg-rb">{t.base}</span></span>)}</Tag>;
 }
 
 const ASSET = p=>`/assets/hellokitty/${p}`;
@@ -150,6 +149,7 @@ function Home(){
   return <main><section className="welcome"><div><p className="eyebrow">OHAYŌ, KENSHI 🌷</p><h1>Belajar merawat<br/><em>dengan hati.</em></h1><p className="muted">13 section · {totalLevels} level · pelan-pelan sampai mahir.</p></div><Mascot variant="home" size="md"/></section>
     <div className="daily"><div><b>Daily care</b><p>Setiap kartu kecil membuatmu lebih dekat.</p><div className="progress"><i style={{width:`${Math.min(100,(completedCount/totalLevels)*100)}%`}}/></div></div><span className="badge">{completedCount} done</span></div>
     {!isAuthenticated && <div className="objective" style={{marginBottom:12}}><Info/><div><b>Progress kamu belum tersimpan permanen</b><p>Login pakai email biar XP & streak-nya kesimpen selamanya. <Link to="/login">Login sekarang</Link></p></div></div>}
+    <Link className="finalHomeBanner" to="/final"><div><b>Ujian Akhir</b><span>Simulasi 2021–2026 · 125 soal per tahun</span></div><ChevronRight/></Link>
     <div className="sectionHead"><div><h2>Learning path</h2><p>Dari fondasi sampai case study ✨</p></div><button className="round"><Menu size={19}/></button></div>
     <div className="sectionGrid">{sections.map((s)=><SectionCard key={s.id} section={s} official={unlockMap[s.id]?.official ?? (s.id===1)} completedLevels={unlockMap[s.id]?.completedLevels||0}/>)}</div>
   </main>;
@@ -513,6 +513,11 @@ function AppShell(){
     <Route path="/profile" element={<Profile/>}/>
     <Route path="/glossary" element={<Glossary/>}/>
     <Route path="/glossary/:slug" element={<GlossaryDetail/>}/>
+    <Route path="/final" element={<FinalHome/>}/>
+    <Route path="/final/:year" element={<FinalYear/>}/>
+    <Route path="/final/:year/part/:part" element={<FinalQuiz/>}/>
+    <Route path="/final/:year/part/:part/result" element={<FinalResult/>}/>
+    <Route path="/final/:year/result" element={<FinalResult/>}/>
     <Route path="/practice" element={<Practice/>}/>
     <Route path="/section/:sectionId" element={<SectionOverview/>}/>
     <Route path="/section/:sectionId/recap" element={<Recap/>}/>
