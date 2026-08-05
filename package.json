@@ -9,10 +9,11 @@
     "validate:glossary": "node scripts/validate-glossary.mjs",
     "validate:final": "node scripts/validate-final.mjs",
     "validate:sections": "node scripts/validate-sections.mjs",
+    "validate:jsx": "node scripts/validate-jsx.mjs",
     "validate:ruby": "node scripts/validate-ruby.mjs",
     "validate:furigana": "node scripts/qa/verify-furigana-headless.mjs",
     "validate:furigana:measure": "node scripts/qa/verify-furigana-headless.mjs --measure",
-    "validate": "npm run validate:glossary && npm run validate:final && npm run validate:sections && npm run validate:ruby && npm run validate:furigana",
+    "validate": "npm run validate:glossary && npm run validate:final && npm run validate:sections && npm run validate:jsx && npm run validate:ruby && npm run validate:furigana",
     "preview": "vite preview"
   },
   "dependencies": {

@@ -8,7 +8,7 @@ import s1l1Content from './content/s1l1.json';
 import s1l1Ja from './content/s1l1-ja.json';
 import glossaryData from './content/glossary.index.json';
 import {GlossaryPage,GlossaryDetail} from './GlossaryPage.jsx';
-import {FinalHome,FinalYear,FinalQuiz,FinalResult} from './FinalTest.jsx';
+import {FinalHome,FinalYear,FinalQuiz,FinalResult,UnlimitedFinal} from './FinalTest.jsx';
 import Login from './Login.jsx';
 import {AuthProvider, useAuth} from './context/AuthContext.jsx';
 import {ProgressProvider, useProgress, readGuestProgress} from './context/ProgressContext.jsx';
@@ -518,7 +518,9 @@ function AppShell(){
     <Route path="/final/:year" element={<FinalYear/>}/>
     <Route path="/final/:year/part/:part" element={<FinalQuiz/>}/>
     <Route path="/final/:year/part/:part/result" element={<FinalResult/>}/>
-    <Route path="/final/:year/result" element={<FinalResult/>}/>
+    {/* /final/:year/result dihapus: FinalResult butuh :part, jadi route itu selalu nampilin
+        hasil kosong yang menyesatkan, dan nol Link/navigate yang ngarah ke sana. Kalau nanti
+        mau ada ringkasan per-tahun, itu komponen baru — bukan FinalResult tanpa :part. */}
     <Route path="/practice" element={<Practice/>}/>
     <Route path="/section/:sectionId" element={<SectionOverview/>}/>
     <Route path="/section/:sectionId/recap" element={<Recap/>}/>
