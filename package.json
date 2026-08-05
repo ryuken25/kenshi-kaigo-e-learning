@@ -11,6 +11,7 @@
     "validate:sections": "node scripts/validate-sections.mjs",
     "validate:jsx": "node scripts/validate-jsx.mjs",
     "validate:overflow": "node scripts/qa/check-overflow.mjs",
+    "validate:browsers": "node scripts/qa/verify-cross-browser.mjs",
     "validate:ruby": "node scripts/validate-ruby.mjs",
     "validate:furigana": "node scripts/qa/verify-furigana-headless.mjs",
     "validate:furigana:measure": "node scripts/qa/verify-furigana-headless.mjs --measure",

@@ -61,7 +61,7 @@ there is no dotenv loader in them, so export it in your shell first.
 ## Validation gates
 
 ```bash
-npm run validate      # runs the five gates below, in order — use before pushing
+npm run validate      # runs the six gates below, in order — use before pushing
 ```
 
 | Gate | Asserts |
@@ -69,25 +69,44 @@ npm run validate      # runs the five gates below, in order — use before pushi
 | `validate:glossary` | Slug/kanji uniqueness, readings are pure hiragana, related-slug refs resolve |
 | `validate:final` | 6 years × 125 questions, 5 options each, answer in range, 5 parts of 25 |
 | `validate:sections` | Level counts agree across `src/data.js`, `api/_sections.mjs`, and `005_*.sql` |
+| `validate:jsx` | Every `<Capitalized/>` used in JSX is declared in that file |
 | `validate:ruby` | No leaked bracket annotations (three failure classes, documented in the script) |
 | `validate:furigana` | Ruby layout contract — static CSS analysis via postcss |
 
+Three further gates are not in the chain, because each needs something the others don't:
+
 ```bash
-npm run validate:furigana:measure   # adds real glyph measurement in headless Chrome
+npm run validate:furigana:measure   # real glyph measurement in headless Chrome (needs a browser)
+npm run validate:overflow           # non-ruby overflow + touch targets <44px (needs a browser)
+npm run validate:browsers           # WebKit + Firefox + Chromium (needs a live deployment)
 ```
+
+`validate:jsx` exists because of an outage worth understanding: `main.jsx` used `<UnlimitedFinal/>`
+without importing it, and **every route went blank**. `element={<Foo/>}` dereferences the
+identifier while React builds the `<Routes>` children array, so the `ReferenceError` fires before
+any route is matched, and with no error boundary React unmounts the entire tree. `npm run build`
+exits 0 on this — a bare identifier in JSX could legitimately be a global, so the bundler emits it
+as written. The build stayed green for as long as production was white.
 
 Two traps worth knowing:
 
 - **Never pipe these to check success.** The shell reports the *last* command's exit status, so
   `npm run validate | tail` prints `EXIT=0` even when validation failed. Run them bare.
-- **`validate:furigana` exits `2`** — distinct from both pass (`0`) and fail (`1`) — when it cannot
-  find a browser to measure with, so "measured nothing" can never be misread as "passed".
+- **`validate:furigana` and `validate:browsers` exit `2`** — distinct from both pass (`0`) and
+  fail (`1`) — when they cannot find a browser or engine to measure with, so "measured nothing"
+  can never be misread as "passed".
 
 The measure layer drives an installed Chrome or Edge over CDP with no Puppeteer dependency, and
-measures real glyph boxes at 360 / 768 / 1280 px: reading above base, centers aligned, no
-collisions, minimum font size, kanji not stretched, and no horizontal overflow past the parent.
-It is Chromium-only. `scripts/qa/verify-furigana.js` remains the manual counterpart — pasted into
-the console on a materi page in ふり mode to get real Safari/iOS and Firefox evidence.
+measures real glyph boxes at 320 / 360 / 402 / 444 / 768 / 1280 / 1920 px — 402 is iPhone 17
+(1206 physical / DPR 3) and 444 is Poco F6 (1220 / DPR 2.75). It checks reading above base,
+centers aligned, no collisions, minimum font size, kanji not stretched, and no horizontal overflow.
+
+`validate:browsers` covers the engine gap: Playwright driving **WebKit (Safari's engine)**,
+Firefox, and Chromium over 11 routes × the same 7 widths against the deployed site. Playwright is
+intentionally not a dependency — the script finds it in the npx cache and selects the build whose
+browser revisions are actually present, since several versions coexist and each pins a different
+revision. Real iOS Safari on hardware remains the one thing no script here covers;
+`scripts/qa/verify-furigana.js` is the manual console counterpart for that.
 
 ---
 

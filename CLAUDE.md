@@ -10,16 +10,21 @@ npm run dev                  # Vite dev server (frontend only — /api/* returns
 npm run build                # build-glossary-index.mjs, then vite build
 npm run preview
 
-npm run validate             # runs all five gates below in order; use this before pushing
+npm run validate             # runs all six gates below in order; use this before pushing
 npm run validate:glossary    # slug/kanji uniqueness, reading is pure hiragana, related-slug refs resolve
 npm run validate:final       # asserts 6 years × 125 questions, 5 options, answer ∈ 1..5, 5 parts of 25
 npm run validate:sections    # src/data.js level counts == SECTION_LEVELS in api/_sections.mjs (+ the 005 migration)
+npm run validate:jsx         # every <Capitalized/> in JSX is declared in that file (see below — a bare one blanks the app)
 npm run validate:ruby        # static gate: no leaked bracket annotations (3 classes, see below)
 npm run validate:furigana    # furigana layout: postcss CSS analysis (layer 1)
-npm run validate:furigana:measure   # + real glyph measurement in headless Chrome at 360/768/1280px (layer 2)
+npm run validate:furigana:measure   # + real glyph measurement in headless Chrome at 320/360/402/444/768/1280/1920px (layer 2)
+npm run validate:overflow    # non-ruby horizontal overflow + touch targets <44px, same widths
+npm run validate:browsers    # WebKit (Safari engine) + Firefox + Chromium against production via Playwright
 ```
 
-There is no test runner, linter, or formatter. The `validate:*` scripts are the only automated checks — treat them as the test suite. `npm run validate` chains all five and is what you want after touching content, CSS, or `api/_sections.mjs`.
+There is no test runner, linter, or formatter. The `validate:*` scripts are the only automated checks — treat them as the test suite. `npm run validate` chains six of them and is what you want after touching content, CSS, or `api/_sections.mjs`. `validate:overflow` and `validate:browsers` are deliberately **not** in that chain: the first needs a browser, the second needs a live deployment.
+
+A third gate exists because of an outage: `validate:jsx`. `main.jsx` once used `<UnlimitedFinal/>` without importing it, and **every route rendered blank** — `element={<Foo/>}` dereferences the identifier while React builds the `<Routes>` children array, so the `ReferenceError` fires before any path is matched, and with no error boundary in `src/` React unmounts the whole tree. `npm run build` exits 0 on this: a bare identifier in JSX is syntactically valid (it could be a global), so the bundler emits it verbatim. The build was green the entire time production was a white screen.
 
 Two traps when reading their results:
 - **Never pipe them** (`… | tail`) to check success. The shell reports the *last* command's exit code, so a real failure reads as `EXIT=0`. Run them bare.
@@ -70,7 +75,11 @@ Ruby verification is two independent gates, both wired into `npm run validate`:
 - `scripts/validate-ruby.mjs` (`npm run validate:ruby`) — static gate against the three bracket-leak classes that have actually occurred: HTML ruby tags in data, a bracket whose contents are not pure kana (`拭[拭]`), and a non-kanji base (`1[ひと]つ`). Any of them renders the bracket literally on screen, because there is no `dangerouslySetInnerHTML` to fall back on.
 - `scripts/qa/verify-furigana-headless.mjs` (`npm run validate:furigana`, add `:measure` for layer 2) — layer 1 statically analyses the CSS via postcss; layer 2 drives installed Chrome/Edge over CDP and *measures real glyph boxes* at 360/768/1280px (reading above base, centers aligned, no collisions, min font size, kanji not stretched, no overflow past the parent). `SAMPLES` is audit-derived, not hand-picked — worst-case tokens by base length and kana:kanji ratio, plus the real `.termSheet h2` and `.japaneseTerm` containers, since a synthetic `<div>` understates the problem (same token: 333.6px synthetic vs 421.3px real). **Exit code 2 means "measured nothing"** (no browser found) and is deliberately not 0, so a missing browser can never read as green.
 
-`scripts/qa/verify-furigana.js` is the older manual counterpart: pasted into a browser console on a materi page in ふり mode. It is still the only way to get real Safari/iOS and Firefox evidence, which the headless verifier (Chromium-only) cannot provide.
+`scripts/qa/verify-furigana.js` is the older manual counterpart: pasted into a browser console on a materi page in ふり mode. Real iOS Safari on hardware is still the one thing no script here covers.
+
+`npm run validate:browsers` (`scripts/qa/verify-cross-browser.mjs`) closes the engine gap the headless verifier cannot: it drives **WebKit (Safari's engine), Firefox, and Chromium** via Playwright over 11 routes × 7 widths (320/360/402/444/768/1280/1920 — 402 is iPhone 17, 444 is Poco F6) against the deployed site, checking horizontal scrollability, ruby geometry, bracket leaks, and blank pages. Playwright is deliberately **not** a dependency; the script locates it in the npx cache and picks the build whose browser revisions are actually downloaded (several versions coexist and each wants a different revision — grabbing the first one makes WebKit fail to launch even though the binary exists). Like the furigana gate it exits **2** when no engine runs, so "measured nothing" cannot read as green. Two false-positive classes are excluded by design and documented in the script: elements inside an `overflow-x:auto` scroller (`.glossaryChips` is an intentional 1377px chip strip in a 324px box) and absolutely-positioned decoration (`.sparkle`). The authoritative signal is `html.scrollWidth > html.clientWidth`.
+
+`npm run validate:overflow` (`scripts/qa/check-overflow.mjs`) measures non-ruby horizontal overflow and sub-44px touch targets over the same widths, against local CSS rather than the deployed site.
 
 ### Auth and progress
 
