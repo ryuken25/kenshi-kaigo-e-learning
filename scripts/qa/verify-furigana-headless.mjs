@@ -31,7 +31,7 @@ import postcss from 'postcss';
 const ROOT = path.resolve(import.meta.dirname, '../..');
 const CENTER_TOL = 3;   // px, sama seperti versi manual
 const OVERLAP_TOL = 1;  // px
-const MIN_RT_PX = 11;   // .fg-rt = max(11px,.55em) di routing.css
+const MIN_RT_PX = 13;   // .fg-rt = max(13px,.55em) di routing.css (dinaikkan dari 11px demi keterbacaan)
 const wantMeasure = process.argv.includes('--measure');
 const fails = [];
 const notes = [];

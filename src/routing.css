@@ -25,10 +25,15 @@
    WebKit, Firefox, dan Chromium (ketiganya diukur). */
 .fg-ruby{display:inline-flex;flex-direction:column-reverse;align-items:center;vertical-align:text-bottom;margin-inline:.1em;line-height:1.2;text-align:center;white-space:nowrap}
 .fg-rb{display:block;line-height:1.1;white-space:nowrap}
-/* letter-spacing SENGAJA tetap 0: itu properti horizontal, dan menaikkannya melebarkan
-   token bacaan sampai luber di 320px (kebukti: gate measure gagal 4 token). Ruang ekstra
-   yang diminta murni vertikal — line-height & margin-bottom. */
-.fg-rt{display:block;font-size:max(11px,.55em);font-weight:500;line-height:1.28;margin-bottom:.16em;letter-spacing:0;white-space:nowrap;text-align:center;color:var(--kk-furi);user-select:none;-webkit-user-select:none}
+/* Lantai 11px -> 13px (rasio .55em SENGAJA tidak diubah).
+   Dua angka ini mengatur konteks berbeda: lantai px yang menang di TEKS BIASA (font 16px,
+   .55em cuma 8.8px), rasio em yang menang di JUDUL BESAR (.fg--xl dst). Jadi menaikkan
+   lantai bikin bacaan di paragraf — tempat user benar-benar membaca — jadi lebih besar,
+   tanpa menyentuh judul sama sekali.
+   Rasio em TIDAK dinaikkan karena lebar token = max(kanji, bacaan) dan pada istilah panjang
+   BACAAN-lah pengekangnya: diukur di 320px, .58em bikin .termSheet h2 luber 5.5px dan .60em
+   luber 14.2px. Lantai 13px muat di semua konteks (dan 14px pun masih muat — ada sisa). */
+.fg-rt{display:block;font-size:max(13px,.55em);font-weight:500;line-height:1.28;margin-bottom:.16em;letter-spacing:0;white-space:nowrap;text-align:center;color:var(--kk-furi);user-select:none;-webkit-user-select:none}
 /* mode 漢字: bacaan BENAR-BENAR dibuang dari layout (display:none), bukan cuma disembunyikan.
    Pilihan sadar dari user: mode 漢字 harus rapat, tanpa ruang nganggur di atas tiap baris —
    79px vs 87.8px. Konsekuensinya yang diterima: toggle 漢字⇄ふり MENGGESER teks ~9px per baris
@@ -45,7 +50,7 @@
 .fg-ruby.is-term:hover{background:var(--kk-pink-50)}
 .fg-ruby.is-term:focus-visible{outline:2px solid var(--pink-deep);outline-offset:2px}
 /* desktop sedikit lebih rapat — HARUS di atas rule varian, spesifisitasnya sama */
-@media(min-width:768px){.fg[lang="ja"]{line-height:2.2}.fg-ruby{margin-inline:.085em}.fg-rt{font-size:max(12px,.55em)}}
+@media(min-width:768px){.fg[lang="ja"]{line-height:2.2}.fg-ruby{margin-inline:.085em}.fg-rt{font-size:max(14px,.55em)}}
 /* mode ID — latin, tidak pernah punya ruby */
 .fg--id{font-family:var(--font-latin);font-weight:600;font-size:clamp(16px,.3vw + 14.5px,19px);line-height:1.65;letter-spacing:0}
 /* varian ukuran kontainer (setelah media query & .fg--id supaya menang) */
