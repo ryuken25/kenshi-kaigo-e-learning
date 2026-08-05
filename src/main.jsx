@@ -93,7 +93,7 @@ function Shell({children}){
   return <div className="app">
     <ScrollToTop/>
     <header>
-      <Link to="/" className="brand"><div className="kitty"><img src={ASSET('hk-face-icon.png')} alt="Kaigo Kitty"/></div><div><b>kaigo kitty</b><small>learn with care</small></div></Link>
+      <Link to="/" className="brand"><div className="kitty"><img src={ASSET('hk-face-icon.png')} alt="Kaigo Kitty"/></div><div><b>kaigo kitty</b><small>belajar kaigo</small></div></Link>
       <div className="topStats">
         <span><Flame size={16} fill="#ff718f"/> {loading && status==='authenticated' ? '…' : streakCurrent}</span>
         <span className="xpStat"><Heart size={16} fill="#ff718f"/> {loading && status==='authenticated' ? '…' : totalXp} XP</span>
@@ -133,12 +133,12 @@ function Home(){
   const {isAuthenticated, guestProgress, totalXp, completedCount, loading} = useProgress();
   const unlockMap = useSectionUnlockMap();
   const totalLevels = sections.reduce((a,s)=>a+s.levelCount,0);
-  if(loading) return <main><KawaiiLoader label="Menyiapkan learning path…"/></main>;
-  return <main><section className="welcome"><div><p className="eyebrow">OHAYŌ, KENSHI 🌷</p><h1>Belajar merawat<br/><em>dengan hati.</em></h1><p className="muted">13 section · {totalLevels} level · pelan-pelan sampai mahir.</p></div><Mascot variant="home" size="md"/></section>
-    <div className="daily"><div><b>Daily care</b><p>Setiap kartu kecil membuatmu lebih dekat.</p><div className="progress"><i style={{width:`${Math.min(100,(completedCount/totalLevels)*100)}%`}}/></div></div><span className="badge">{completedCount} done</span></div>
+  if(loading) return <main><KawaiiLoader label="Menyiapkan materi…"/></main>;
+  return <main><section className="welcome"><div><p className="eyebrow">OHAYŌ, KENSHI 🌷</p><h1>Belajar merawat<br/><em>dengan hati.</em></h1><p className="muted">13 bab · {totalLevels} level · dikerjakan sedikit demi sedikit.</p></div><Mascot variant="home" size="md"/></section>
+    <div className="daily"><div><b>Hari ini</b><p>Satu kartu sekali duduk sudah cukup.</p><div className="progress"><i style={{width:`${Math.min(100,(completedCount/totalLevels)*100)}%`}}/></div></div><span className="badge">{completedCount} selesai</span></div>
     {!isAuthenticated && <div className="objective" style={{marginBottom:12}}><Info/><div><b>Progress kamu belum tersimpan permanen</b><p>Login pakai email biar XP & streak-nya kesimpen selamanya. <Link to="/login">Login sekarang</Link></p></div></div>}
-    <Link className="finalHomeBanner" to="/final"><div><b>Ujian Akhir</b><span>Simulasi 2021–2026 · 125 soal per tahun</span></div><ChevronRight/></Link>
-    <div className="sectionHead"><div><h2>Learning path</h2><p>Dari fondasi sampai case study ✨</p></div><button className="round"><Menu size={19}/></button></div>
+    <Link className="finalHomeBanner" to="/final"><div><b>Ujian Akhir</b><span>Soal asli 2021–2026 · 125 butir tiap tahun</span></div><ChevronRight/></Link>
+    <div className="sectionHead"><div><h2>Urutan belajar</h2><p>Mulai dari martabat, berakhir di studi kasus</p></div><button className="round"><Menu size={19}/></button></div>
     <div className="sectionGrid">{sections.map((s)=><SectionCard key={s.id} section={s} official={unlockMap[s.id]?.official ?? (s.id===1)} completedLevels={unlockMap[s.id]?.completedLevels||0}/>)}</div>
   </main>;
 }
@@ -179,7 +179,7 @@ function SectionOverview(){
   });
   const currentIdx = levelStates.findIndex(x=>!x.completed);
 
-  return <main className="page skillPage"><Link to="/" className="back"><ArrowLeft size={16}/> Learning path</Link>
+  return <main className="page skillPage"><Link to="/" className="back"><ArrowLeft size={16}/> Urutan belajar</Link>
     <div className="sectionHero"><span>{s.icon}</span><div><small>SECTION {s.id}</small><h1>{s.titleJa}</h1><p>{s.titleId}</p></div></div>
     <p className="muted">{s.description}</p>
     {!sectionOfficial && <div className="previewBanner"><Lock size={16}/><span>Section ini belum resmi terbuka — kamu tetap bisa preview materi & coba quiz, tapi progress tidak dihitung completed sampai section sebelumnya selesai.</span></div>}
@@ -476,7 +476,7 @@ function Result(){
   </main>;
 }
 
-function Recap(){const {sectionId}=useParams(),s=getSection(sectionId);if(!s)return <Navigate to="/"/>;return <main className="page result"><div className="sectionHero"><span>{s.icon}</span><div><small>RECAP</small><h1>{s.titleJa}</h1><p>Section review · {s.titleId}</p></div></div><Mascot variant="recap" size="md"/><h2>Ready for a little challenge?</h2><p className="muted">Uji pemahamanmu dengan soal campuran dari semua level.</p><Link className="primary big tap" to={`/section/${s.id}/level/1/quiz`}>Mulai recap <Star/></Link></main>;}
+function Recap(){const {sectionId}=useParams(),s=getSection(sectionId);if(!s)return <Navigate to="/"/>;return <main className="page result"><div className="sectionHero"><span>{s.icon}</span><div><small>RECAP</small><h1>{s.titleJa}</h1><p>Section review · {s.titleId}</p></div></div><Mascot variant="recap" size="md"/><h2>Siap diuji?</h2><p className="muted">Soal campuran dari semua level di section ini.</p><Link className="primary big tap" to={`/section/${s.id}/level/1/quiz`}>Mulai recap <Star/></Link></main>;}
 
 function Glossary(){return <GlossaryPage/>;}
 
@@ -497,7 +497,7 @@ function Profile(){
         <div><b>{completedCount}</b><small>levels</small></div>
       </div>
     </div>
-    <div className="tip"><Star fill="#ffb73b"/> <span><b>Little reminder</b><br/>Kamu tidak harus sempurna. Konsisten itu cukup.</span></div>
+    <div className="tip"><Star fill="#ffb73b"/> <span><b>Pelan saja</b><br/>Tidak harus sempurna. Yang penting jalan terus.</span></div>
     {isAuthenticated ? (
       <button className="secondary big tap" style={{marginTop:16}} onClick={doLogout}>Logout</button>
     ) : (

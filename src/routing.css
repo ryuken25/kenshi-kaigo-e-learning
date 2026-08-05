@@ -7,12 +7,20 @@
    tumpang tindih) & identik di Safari maupun Chrome.
    DILARANG di sini: order:1/2, position:absolute, ruby-position / -webkit-ruby-position. */
 .fg{font-family:var(--font-latin);font-size:clamp(16px,.45vw + 14px,22px);font-weight:700;line-height:1.7;letter-spacing:.01em;margin:0;white-space:pre-line}
-.fg[lang="ja"]{font-family:var(--font-jp);line-height:2.05;word-break:normal;overflow-wrap:normal;line-break:strict}
+/* line-height 2.05->2.35 & .fg-rt margin/leading dinaikkan: bacaan jadi lebih lega dan
+   kebaca, tanpa mengubah ukuran kanji sedikit pun (.fg-rb tidak disentuh). Ruang ekstra
+   murni VERTIKAL — lebar token tidak berubah, jadi kecocokan di 320px tetap aman.
+   Karena mode 漢字 menyembunyikan bacaan pakai visibility (bukan display:none), ruang ini
+   tetap ada di kedua mode, jadi toggle 漢字⇄ふり tidak bikin teks melompat. */
+.fg[lang="ja"]{font-family:var(--font-jp);line-height:2.35;word-break:normal;overflow-wrap:normal;line-break:strict}
 /* align-items:center bikin item TIDAK ikut baseline-align, jadi baseline kontainer
    disintesis dari tepi bawah box -> kanji mendarat pas di baseline teks sekitarnya. */
 .fg-ruby{display:inline-flex;flex-direction:column-reverse;align-items:center;vertical-align:baseline;margin-inline:.1em;line-height:1.2;text-align:center;white-space:nowrap}
 .fg-rb{display:block;line-height:1.1;white-space:nowrap}
-.fg-rt{display:block;font-size:max(11px,.55em);font-weight:500;line-height:1.12;margin-bottom:.04em;letter-spacing:0;white-space:nowrap;text-align:center;color:var(--kk-furi);user-select:none;-webkit-user-select:none}
+/* letter-spacing SENGAJA tetap 0: itu properti horizontal, dan menaikkannya melebarkan
+   token bacaan sampai luber di 320px (kebukti: gate measure gagal 4 token). Ruang ekstra
+   yang diminta murni vertikal — line-height & margin-bottom. */
+.fg-rt{display:block;font-size:max(11px,.55em);font-weight:500;line-height:1.28;margin-bottom:.16em;letter-spacing:0;white-space:nowrap;text-align:center;color:var(--kk-furi);user-select:none;-webkit-user-select:none}
 /* mode 漢字: bacaan disembunyikan TAPI tetap makan tempat, biar 漢字⇄ふり tidak menggeser baris */
 .fg[data-mode="kanji"] .fg-rt{visibility:hidden}
 /* kill-switch: kalau ada ruby mentah nyelip lagi, jangan sampai balik ke absolute */
@@ -24,7 +32,7 @@
 .fg-ruby.is-term:hover{background:var(--kk-pink-50)}
 .fg-ruby.is-term:focus-visible{outline:2px solid var(--pink-deep);outline-offset:2px}
 /* desktop sedikit lebih rapat — HARUS di atas rule varian, spesifisitasnya sama */
-@media(min-width:768px){.fg[lang="ja"]{line-height:1.95}.fg-ruby{margin-inline:.085em}.fg-rt{font-size:max(12px,.55em)}}
+@media(min-width:768px){.fg[lang="ja"]{line-height:2.2}.fg-ruby{margin-inline:.085em}.fg-rt{font-size:max(12px,.55em)}}
 /* mode ID — latin, tidak pernah punya ruby */
 .fg--id{font-family:var(--font-latin);font-weight:600;font-size:clamp(16px,.3vw + 14.5px,19px);line-height:1.65;letter-spacing:0}
 /* varian ukuran kontainer (setelah media query & .fg--id supaya menang) */
@@ -36,8 +44,8 @@
    Hanya berpengaruh di viewport <633px; di atas itu 6vw sudah >=38px, jadi tablet/desktop
    tidak berubah sama sekali. Batas nyata: `npm run validate:furigana:measure`. */
 .fg--xl{font-size:clamp(26px,6vw,56px)}
-.fg--tight[lang="ja"]{line-height:1.8}
-.fg--lg[lang="ja"],.fg--xl[lang="ja"]{line-height:1.85}
+.fg--tight[lang="ja"]{line-height:2.0}
+.fg--lg[lang="ja"],.fg--xl[lang="ja"]{line-height:2.1}
 .fg__p{display:block;margin:0 0 1em}.fg__p:last-child{margin-bottom:0}
 .fg__note{color:var(--muted);font-weight:500;font-size:.82em;font-style:italic}
 /* kartu compare (CompareTerm) */
@@ -247,6 +255,22 @@
 /* practice mode */
 .practiceHero{text-align:center;padding:8px 0 18px}
 .practiceHero .mascotImg{margin:0 auto 10px}
+
+/* Enam class di bawah ini dipakai di JSX tapi belum pernah punya rule sama sekali, jadi
+   elemennya jatuh ke display:inline dan anak-anaknya nempel jadi satu baris — itu sebabnya
+   banner di halaman Belajar kebaca "Ujian AkhirSimulasi 2021-2026 · 125 soal per tahun".
+   Dijaga sekarang oleh `npm run validate:css-classes`. */
+.finalHomeBanner{display:flex;align-items:center;gap:12px;margin:0 20px 22px;padding:16px 18px;border:1px solid #ffd4e4;border-radius:var(--radius-lg);background:linear-gradient(135deg,#fff,#fff4f9);box-shadow:var(--shadow-pink);text-decoration:none;color:inherit}
+.finalHomeBanner>div{display:flex;flex-direction:column;gap:3px;min-width:0;flex:1}
+.finalHomeBanner b{font:600 17px Fredoka;color:var(--pink-deep)}
+.finalHomeBanner span{font-size:12.5px;color:var(--muted);line-height:1.45}
+.finalHomeBanner svg{flex:none;color:var(--pink-deep)}
+.glossaryHero{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:4px 0 14px}
+.glossaryHero p{margin:0}
+.detailSourceNote{font-size:12.5px;color:var(--muted);line-height:1.6;margin:10px 0 0}
+.externalGlossary{display:inline-flex;align-items:center;gap:6px;min-height:44px;font-size:13px;font-weight:600;color:var(--pink-deep);text-decoration:underline;text-underline-offset:3px}
+.answerPopupText{display:block;line-height:1.55}
+.source{font-size:12px;color:var(--muted);margin:6px 0 0}
 
 /* term sheet backdrop — tanpa rule ini .termSheet cuma ikut aliran dokumen (position:static,
    z-index:auto), jadi role="dialog" aria-modal="true" bohong: sheet-nya nempel di bawah kartu
