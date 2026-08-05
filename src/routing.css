@@ -290,6 +290,23 @@
 .answerPopupText{display:block;line-height:1.55}
 .source{font-size:12px;color:var(--muted);margin:6px 0 0}
 
+/* Tombol istilah di kartu materi: dulu <Link> yang melempar user ke tab glossary dan
+   memutus alur baca. Sekarang <button> yang membuka termSheet di tempat. Halaman glossary
+   lengkap tetap bisa dituju lewat tautan sekunder di dalam popup-nya. */
+.termSheetMore{display:inline-flex;align-items:center;gap:6px;min-height:44px;margin-top:12px;font-size:13.5px;font-weight:600;color:var(--pink-deep);text-decoration:underline;text-underline-offset:3px}
+.materiTermButton{text-align:left;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:2px;min-width:0;width:100%;color:inherit;text-decoration:none}
+.materiTermButton small{color:var(--muted);font-size:11px}
+.materiTermButton b{font-size:17px}
+.materiTermButton span{font-size:12px;color:var(--muted);line-height:1.45}
+
+/* "Cek istilah lain" — bagian jelajah di halaman detail glossary. */
+.glossaryExplore .exploreGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,150px),1fr));gap:10px}
+.exploreCard{display:flex;flex-direction:column;gap:2px;padding:12px 14px;background:var(--pink-paler);border-radius:14px;text-decoration:none;color:inherit;min-width:0}
+.exploreCard small{color:var(--muted);font-size:11px}
+.exploreCard b{font-size:18px}
+.exploreCard span{font-size:12px;color:var(--muted);line-height:1.45;overflow:hidden;text-overflow:ellipsis}
+.exploreAll{display:inline-flex;align-items:center;min-height:44px;margin-top:12px;font-size:13px;font-weight:600;color:var(--pink-deep);text-decoration:underline;text-underline-offset:3px}
+
 /* term sheet backdrop — tanpa rule ini .termSheet cuma ikut aliran dokumen (position:static,
    z-index:auto), jadi role="dialog" aria-modal="true" bohong: sheet-nya nempel di bawah kartu
    dan bagian bawahnya ketutup nav (fixed, z-index 30). z-index 80 di atas tangga yang ada

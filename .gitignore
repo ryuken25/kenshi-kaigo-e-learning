@@ -16,10 +16,16 @@ creds*.txt
 secrets.txt
 
 # Local agent/tool config (contains API tokens)
-.claude/settings.json
-.claude/settings.local.json
+# SELURUH .claude/ diabaikan, bukan cuma settings — agent bisa menulis file lain di situ.
+.claude/
+
+# Skill/prompt library lokal — bukan bagian dari produk
+skills/
 
 # Local file backups
+# Catatan: .backup/ pernah IKUT TER-COMMIT (8 file) walau baris ini sudah ada, karena
+# .gitignore tidak berlaku surut untuk file yang terlanjur di-track. Sudah di-untrack
+# dengan `git rm -r --cached .backup`. Kalau muncul lagi di `git status`, itu sebabnya.
 .backup/
 
 # DB dumps produced by scripts/backup-db.mjs
