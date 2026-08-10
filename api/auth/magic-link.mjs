@@ -33,9 +33,9 @@ export default async function handler(req, res) {
     await transporter.sendMail({
       from: process.env.SMTP_FROM || process.env.SMTP_USER,
       to: email,
-      subject: 'Your Kaigo Kitty sign-in link',
+      subject: 'Your Kenshi Kaigo E-Learning sign-in link',
       text: `Open this link within 20 minutes to sign in: ${link}`,
-      html: `<p>Open this link within 20 minutes to sign in to Kaigo Kitty:</p><p><a href="${link}">Sign in to Kaigo Kitty</a></p>`,
+      html: `<p>Open this link within 20 minutes to sign in to Kenshi Kaigo E-Learning:</p><p><a href="${link}">Sign in to Kenshi Kaigo E-Learning</a></p>`,
     });
 
     return json(res, { ok: true, message: 'If the address is eligible, a sign-in link has been sent.' });

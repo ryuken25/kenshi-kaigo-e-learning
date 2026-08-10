@@ -19,7 +19,7 @@ const CSS = ['src/styles.css', 'src/routing.css', 'src/translation.css', 'src/au
 const HTML = `<!doctype html><html lang="id"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <style>${CSS}</style></head><body><div class="app">
-<header><a class="brand"><span class="kitty"></span><span><b>Kaigo Kitty</b><small>KAIGO FUKUSHISHI</small></span></a>
+<header><a class="brand"><span class="kitty"></span><span><b>kenshi kaigo e-learning</b><small>KAIGO FUKUSHISHI</small></span></a>
 <div class="topStats"><span>🔥 12</span><span class="xpStat">⭐ 1240 XP</span></div></header>
 <main class="page">
 <div class="sectionGrid">

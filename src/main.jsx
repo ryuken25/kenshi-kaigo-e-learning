@@ -100,7 +100,7 @@ function Shell({children}){
   return <div className="app">
     <ScrollToTop/>
     <header>
-      <Link to="/belajar" className="brand"><div className="kitty"><img src={ASSET('hk-face-icon.png')} alt="Kaigo Kitty"/></div><div><b>kaigo kitty</b><small>belajar kaigo</small></div></Link>
+      <Link to="/belajar" className="brand"><div className="kitty"><img src={ASSET('hk-face-icon.png')} alt="Kenshi Kaigo E-Learning"/></div><div><b>kenshi kaigo e-learning</b><small>belajar kaigo</small></div></Link>
       <div className="topStats">
         <span><Flame size={16} fill="#ff718f"/> {loading && status==='authenticated' ? '…' : streakCurrent}<span className="statLabel">hari</span></span>
         <span className="xpStat"><Heart size={16} fill="#ff718f"/> {loading && status==='authenticated' ? '…' : totalXp}<span className="statLabel">XP</span></span>
@@ -566,7 +566,7 @@ function Landing(){
   if(status==='authenticated')return <Navigate to="/belajar" replace/>;
   return <main className="page landingPage"><div className="landingCard">
     <Mascot variant="home" size="md"/>
-    <p className="eyebrow">KAIGO KITTY</p>
+    <p className="eyebrow">KENSHI KAIGO E-LEARNING</p>
     <h1>Belajar 介護福祉士<br/>dengan bahasa Indonesia</h1>
     <ul className="landingPoints">
       <li>13 bab · 152 level</li>

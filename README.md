@@ -1,10 +1,10 @@
-# Kaigo Kitty
+# Kenshi Kaigo E-Learning
 
 Mobile-first learning app for the Japanese **介護福祉士** (Certified Care Worker) national
 examination. Japanese source text with Indonesian explanations, a three-mode language toggle
 (漢字 / ふりがな / Indonesian), 13 sections across 152 levels, and a 6-year mock exam.
 
-Production: <https://kaigo-kitty.vercel.app>
+Production: <https://kaigo.wyna.dev> (alias Vercel: `kaigo-kitty.vercel.app`)
 
 ---
 
@@ -47,10 +47,10 @@ Set these in Vercel (Project → Settings → Environment Variables). Never comm
 | --- | --- |
 | `DATABASE_URL` | Neon pooled connection string (runtime) |
 | `DATABASE_URL_UNPOOLED` | Direct endpoint; use for migrations, not runtime |
-| `APP_URL` | Public origin, e.g. `https://kaigo-kitty.vercel.app`; used to build magic-link URLs |
+| `APP_URL` | Public origin, e.g. `https://kaigo.wyna.dev`; used to build magic-link URLs |
 | `SMTP_HOST` / `SMTP_PORT` / `SMTP_SECURE` | Mail transport (`587` / `false` for STARTTLS) |
 | `SMTP_USER` / `SMTP_PASS` | Mail credentials |
-| `SMTP_FROM` | From header, e.g. `Kaigo Kitty <no-reply@example.com>` |
+| `SMTP_FROM` | From header, e.g. `Kenshi Kaigo E-Learning <no-reply@example.com>` |
 | `CHROME_PATH` | Optional. Browser binary for `validate:furigana:measure` if auto-detection fails |
 
 `.env*` is gitignored. Database scripts read `DATABASE_URL` from the ambient environment —

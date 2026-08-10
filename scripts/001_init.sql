@@ -1,4 +1,4 @@
--- 001_init.sql — Kaigo Kitty schema (idempotent, aman dijalankan berulang)
+-- 001_init.sql — Kenshi Kaigo E-Learning schema (idempotent, aman dijalankan berulang)
 -- Jalankan pakai DATABASE_URL_UNPOOLED.
 
 BEGIN;
