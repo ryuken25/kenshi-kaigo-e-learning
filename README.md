@@ -61,7 +61,7 @@ there is no dotenv loader in them, so export it in your shell first.
 ## Validation gates
 
 ```bash
-npm run validate      # runs the six gates below, in order — use before pushing
+npm run validate      # runs the eight gates below, in order — use before pushing
 ```
 
 | Gate | Asserts |
@@ -70,7 +70,9 @@ npm run validate      # runs the six gates below, in order — use before pushin
 | `validate:final` | 6 years × 125 questions, 5 options each, answer in range, 5 parts of 25 |
 | `validate:sections` | Level counts agree across `src/data.js`, `api/_sections.mjs`, and `005_*.sql` |
 | `validate:jsx` | Every `<Capitalized/>` used in JSX is declared in that file |
+| `validate:css-classes` | Every `className` in JSX has a matching rule in the six CSS files |
 | `validate:ruby` | No leaked bracket annotations (three failure classes, documented in the script) |
+| `validate:translation` | Indonesian translation quality — no boilerplate skeletons, no kanji leaks into ID fields, length/paragraph parity; also runs as a `prebuild` hook |
 | `validate:furigana` | Ruby layout contract — static CSS analysis via postcss |
 
 Three further gates are not in the chain, because each needs something the others don't:
@@ -120,7 +122,7 @@ exam. Questions carry `correctIndex` (0-based into `choices`), not an `answer` f
 
 Two files are hand-written and set the intended quality bar: `src/content/s1l1.json` (Indonesian,
 10 cards — its `_comment` calls itself the density benchmark) and `src/content/s1l1-ja.json`
-(the Japanese overlay). `src/content/glossary.json` holds 114 hand-written terms.
+(the Japanese overlay). `src/content/glossary.json` holds 133 hand-written terms.
 
 Consequence: editing generated Japanese text means editing a **template**, which changes hundreds
 of levels at once. Identify which layer you are in before changing content.
@@ -188,6 +190,9 @@ parts are open from the start.
 | `/` | Section list / home |
 | `/login` | Magic-link sign-in |
 | `/profile` | Profile and stats |
+| `/friends` | Friend list, requests, and handle lookup |
+| `/leaderboard` | Global public ranking and friends ranking |
+| `/achievements` | Achievement list and avatar frames |
 | `/glossary`, `/glossary/:slug` | Glossary index and term detail |
 | `/section/:sectionId` | Level list |
 | `/section/:sectionId/recap` | Section recap |

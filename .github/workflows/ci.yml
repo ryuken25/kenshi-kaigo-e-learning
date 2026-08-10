@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+      - run: npm ci
+      # 8 gate berurutan (validate:furigana layer 1 = analisis postcss, tanpa browser).
+      # Lalu build penuh — prebuild hook menjalankan validate:translation sekali lagi.
+      - run: npm run validate
+      - run: npm run build
+
+  translation-tamper-probe:
+    # 47-QA-V7 E5: sengaja merusak terjemahan lalu memastikan auditor MENOLAKnya.
+    # Kalau job ini hijau, gate terjemahan rusak dan tidak boleh dipercaya.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+      - run: npm ci
+      - name: Rusak terjemahan dengan sengaja
+        run: |
+          node -e "
+          const fs=require('fs');
+          const p='src/content/translations.js';
+          const s=fs.readFileSync(p,'utf8');
+          const broken=s.replace('adalah tema yang diujikan dalam ujian nasional','adalah materi penting. Hubungkan teori dengan martabat');
+          if(broken===s) throw new Error('tamper anchor tidak ditemukan — perbarui probe ini');
+          fs.writeFileSync(p,broken);
+          "
+      - name: Auditor harus gagal
+        run: |
+          if npm run validate:translation > /tmp/tamper.log 2>&1; then
+            echo "GATE RUSAK: terjemahan rusak lolos validate:translation"
+            exit 1
+          fi
+          grep -qE 'filler_phrase|template' /tmp/tamper.log || { echo "gagal bukan karena alasan yang benar"; cat /tmp/tamper.log; exit 1; }
+          echo "Auditor menolak terjemahan rusak dengan benar."

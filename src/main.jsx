@@ -90,8 +90,8 @@ function Shell({children}){
     {to:'/', kind:'learn', label:'Belajar', match:p=>p==='/'},
     {to:'/final', kind:'exam', label:'Ujian', match:p=>p.startsWith('/final')},
     {to:'/glossary', kind:'terms', label:'Istilah', match:p=>p.startsWith('/glossary')},
-    {to:'/friends', kind:'friends', label:'Teman', match:p=>p.startsWith('/friends')},
-    {to:'/leaderboard', kind:'rank', label:'Peringkat', match:p=>p.startsWith('/leaderboard')},
+    {to:'/friends', kind:'friends', label:'Teman', cls:'navFriends', match:p=>p.startsWith('/friends')},
+    {to:'/leaderboard', kind:'rank', label:'Peringkat', cls:'navRank', match:p=>p.startsWith('/leaderboard')},
     {to:'/profile', kind:'profile', label:'Profil', match:p=>p==='/profile'||p==='/login'},
   ];
   return <div className="app">
@@ -99,13 +99,13 @@ function Shell({children}){
     <header>
       <Link to="/" className="brand"><div className="kitty"><img src={ASSET('hk-face-icon.png')} alt="Kaigo Kitty"/></div><div><b>kaigo kitty</b><small>belajar kaigo</small></div></Link>
       <div className="topStats">
-        <span><Flame size={16} fill="#ff718f"/> {loading && status==='authenticated' ? '…' : streakCurrent}</span>
-        <span className="xpStat"><Heart size={16} fill="#ff718f"/> {loading && status==='authenticated' ? '…' : totalXp} XP</span>
+        <span><Flame size={16} fill="#ff718f"/> {loading && status==='authenticated' ? '…' : streakCurrent}<span className="statLabel">hari</span></span>
+        <span className="xpStat"><Heart size={16} fill="#ff718f"/> {loading && status==='authenticated' ? '…' : totalXp}<span className="statLabel">XP</span></span>
       </div>
     </header>
     {children}
     <nav>
-      {navItems.map(n=><Link key={n.label} className={`tap ${n.match(loc.pathname)?'active':''}`} to={n.to}><span className="navEmoji"><NavIcon kind={n.kind}/></span><span>{n.label}</span></Link>)}
+      {navItems.map(n=><Link key={n.label} className={`tap ${n.cls||''} ${n.match(loc.pathname)?'active':''}`} to={n.to}><span className="navEmoji"><NavIcon kind={n.kind}/></span><span>{n.label}</span></Link>)}
     </nav>
   </div>;
 }
@@ -151,7 +151,7 @@ function SectionCard({section,official,completedLevels}){
   return <Link to={`/section/${section.id}`} className={`sectionCard tap ${!official?'preview-only':''}`}>
     {!official && <span className="previewPill"><Lock size={10}/> preview</span>}
     <div className="sectionIcon">{section.icon}</div>
-    <div className="sectionCopy"><small>SECTION {String(section.id).padStart(2,'0')}</small><b>{section.titleJa}</b><span>{section.titleId}</span><div className="miniProgress"><i style={{width:`${completedLevels/section.levelCount*100}%`}}/></div><em>{completedLevels}/{section.levelCount} levels</em></div>
+    <div className="sectionCopy"><small>SECTION {String(section.id).padStart(2,'0')}</small><b>{section.titleJa}</b><span>{section.titleId}</span><div className="miniProgress"><i style={{width:`${completedLevels/section.levelCount*100}%`}}/></div><em>{completedLevels}/{section.levelCount} level selesai</em></div>
     <ChevronRight/>
   </Link>;
 }
@@ -185,7 +185,7 @@ function SectionOverview(){
 
   return <main className="page skillPage"><Link to="/" className="back"><ArrowLeft size={16}/> Urutan belajar</Link>
     <div className="sectionHero"><span>{s.icon}</span><div><small>SECTION {s.id}</small><h1>{s.titleJa}</h1><p>{s.titleId}</p></div></div>
-    <p className="muted">{s.description}</p>
+    <p className="muted">{s.descriptionId||s.description}</p>
     {!sectionOfficial && <div className="previewBanner"><Lock size={16}/><span>Section ini belum resmi terbuka — kamu tetap bisa preview materi & coba quiz, tapi progress tidak dihitung completed sampai section sebelumnya selesai.</span></div>}
     <div className="skillPath">
       {levelStates.map(({l,i,levelUnlocked,completed,previewOnly})=>{
@@ -200,7 +200,7 @@ function SectionOverview(){
               {completed ? <Check size={isMilestone?26:20}/> : previewOnly ? <Lock size={isMilestone?22:16}/> : isMilestone ? <Star size={24} fill="#fff"/> : l.id}
               {isCurrent && <span className="currentPing"/>}
             </Link>
-            <span className="skillNodeLabel">{isMilestone ? '🎀 Recap' : l.titleJa}</span>
+            <span className="skillNodeLabel">{isMilestone ? '🎀 Ulasan' : l.titleId}</span>
           </div>
         </div>;
       })}
@@ -510,12 +510,12 @@ function Profile(){
         <div><b>{completedCount}</b><small>levels</small></div>
       </div>
     </div>
+    <div className="socialLinks">
+      <Link className="tap" to="/friends"><Users size={21}/> Teman</Link>
+      <Link className="tap" to="/leaderboard"><Trophy size={21}/> Peringkat</Link>
+      <Link className="tap" to="/achievements"><Medal size={21}/> Achievement</Link>
+    </div>
     {isAuthenticated ? <>
-      <div className="socialLinks">
-        <Link className="tap" to="/friends"><Users size={21}/> Teman</Link>
-        <Link className="tap" to="/leaderboard"><Trophy size={21}/> Peringkat</Link>
-        <Link className="tap" to="/achievements"><Medal size={21}/> Achievement</Link>
-      </div>
       <ProfileEditor/>
       <div className="tip" style={{marginTop:16}}><Star fill="#ffb73b"/> <span><b>Pelan saja</b><br/>Tidak harus sempurna. Yang penting jalan terus.</span></div>
       <button className="secondary big tap" style={{marginTop:16}} onClick={doLogout}>Logout</button>

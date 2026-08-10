@@ -64,6 +64,7 @@ header{
 .kitty img{width:100%;height:100%;object-fit:contain;padding:4px}
 .topStats{display:flex;align-items:center;gap:8px;color:var(--pink-deep);font-weight:700;font-size:12.5px;flex:none}
 .topStats span{display:flex;align-items:center;gap:4px;background:var(--pink-pale);padding:6px 9px;border-radius:999px;white-space:nowrap}
+.topStats .statLabel{font-size:9px;font-weight:600;opacity:.6;letter-spacing:.03em}
 .topStats .xpStat{display:none}
 @media (min-width:420px){.topStats .xpStat{display:flex}}
 
@@ -206,6 +207,9 @@ nav a{background:none;color:#7a5f6c;display:flex;flex-direction:column;gap:3px;a
 nav a:active .navEmoji{transform:scale(.82)}
 nav a.active .navEmoji{background:var(--pink-pale);transform:translateY(-2px);box-shadow:0 4px 10px -3px rgba(255,120,170,.5);animation:bounceIn .4s ease}
 nav a.active{color:var(--pink-deep)}
+/* Mobile (<1024px) nav cuma 4 item: Teman & Peringkat disembunyikan, tetap bisa lewat
+   kartu di halaman profil & sidebar desktop. nav a flex:1, jadi 4 item sisa tetap rata — tanpa gap. */
+@media (max-width:1023.98px){nav a.navFriends,nav a.navRank{display:none}}
 
 /* Desktop shell: sidebar kiri seperti learning apps desktop; mobile tetap bottom nav 4 item */
 @media (max-width:600px){

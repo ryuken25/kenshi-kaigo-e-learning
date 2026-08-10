@@ -14,9 +14,11 @@
     "validate:overflow": "node scripts/qa/check-overflow.mjs",
     "validate:browsers": "node scripts/qa/verify-cross-browser.mjs",
     "validate:ruby": "node scripts/validate-ruby.mjs",
+    "validate:translation": "node scripts/audit-translation-quality.mjs --strict",
     "validate:furigana": "node scripts/qa/verify-furigana-headless.mjs",
     "validate:furigana:measure": "node scripts/qa/verify-furigana-headless.mjs --measure",
-    "validate": "npm run validate:glossary && npm run validate:final && npm run validate:sections && npm run validate:jsx && npm run validate:css-classes && npm run validate:ruby && npm run validate:furigana",
+    "validate": "npm run validate:glossary && npm run validate:final && npm run validate:sections && npm run validate:jsx && npm run validate:css-classes && npm run validate:ruby && npm run validate:translation && npm run validate:furigana",
+    "prebuild": "npm run validate:translation",
     "preview": "vite preview"
   },
   "dependencies": {
