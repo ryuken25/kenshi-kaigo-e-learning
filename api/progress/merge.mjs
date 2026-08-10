@@ -1,5 +1,5 @@
 import { db } from '../_db.mjs';
-import { requireUser, computeXpCandidate, computeStars } from '../_auth.mjs';
+import { requireUser, computeXpCandidate, computeStars, recomputeAllXp } from '../_auth.mjs';
 import { isValidLevel } from '../_sections.mjs';
 
 export default async function handler(req, res) {
@@ -19,8 +19,8 @@ export default async function handler(req, res) {
 
     const already = await sql`SELECT 1 FROM progress_merges WHERE client_id = ${clientId}`;
     if (already[0]) {
-      const totalXpRows = await sql`SELECT COALESCE(SUM(xp_earned),0)::int AS total FROM level_progress WHERE user_id = ${user.id}`;
-      return res.status(200).json({ alreadyMerged: true, totalXp: totalXpRows[0].total, merged: 0, skipped: 0 });
+      const totalXp = await recomputeAllXp(sql, user.id);
+      return res.status(200).json({ alreadyMerged: true, totalXp, merged: 0, skipped: 0 });
     }
 
     let merged = 0, skipped = 0;
@@ -56,8 +56,7 @@ export default async function handler(req, res) {
 
     await sql`INSERT INTO progress_merges(client_id, user_id, entries_count) VALUES (${clientId}, ${user.id}, ${merged})`;
 
-    const totalXpRows = await sql`SELECT COALESCE(SUM(xp_earned),0)::int AS total FROM level_progress WHERE user_id = ${user.id}`;
-    const totalXp = totalXpRows[0].total;
+    const totalXp = await recomputeAllXp(sql, user.id);
     await sql`UPDATE app_users SET total_xp = ${totalXp}, updated_at = now() WHERE id = ${user.id}`;
 
     return res.status(200).json({ merged, skipped, totalXp, alreadyMerged: false });

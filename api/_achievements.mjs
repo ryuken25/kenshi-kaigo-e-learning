@@ -4,10 +4,11 @@
 //   1. evaluateAchievements(sql, userId) — murni dari stats server, idempoten.
 //      Dipanggil setelah completion resmi (api/progress.mjs), PATCH profile,
 //      dan accept pertemanan.
-//   2. reportClientAchievements(sql, userId, ids) — client melaporkan
-//      achievement WHITELIST (ujian & glossary), karena progress FinalTest
-//      masih di localStorage sehingga server tidak bisa memverifikasinya.
-//      Jalur ini validasi server: ID di luar whitelist DITOLAK diam-diam.
+//   2. reportClientAchievements(sql, userId, ids) — unlock ID whitelist yang
+//      sumber datanya tidak bisa diverifikasi server penuh (glossary, unlimited
+//      practice). Achievement ujian (exam-*) sekarang di-unlock api/final.mjs
+//      lewat fungsi ini juga — final_progress terverifikasi server, tapi jalur
+//      dedupe + sync bingkainya sama. ID di luar whitelist DITOLAK diam-diam.
 //
 // XP REWARD BELUM DIBAYAR (sengaja): total_xp selalu direcompute dari
 // SUM(level_progress.xp_earned) — menyuntikkan XP dari luar merusak invariant

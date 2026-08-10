@@ -1,5 +1,5 @@
 import { db } from './_db.mjs';
-import { requireUser, computeXpCandidate, computeStars, PREVIEW_XP_FLAT } from './_auth.mjs';
+import { requireUser, computeXpCandidate, computeStars, PREVIEW_XP_FLAT, recomputeAllXp } from './_auth.mjs';
 import { evaluateAchievements } from './_achievements.mjs';
 import { SECTION_COUNT, levelsInSection, meetsSectionGate, sectionPercent } from './_sections.mjs';
 
@@ -12,8 +12,8 @@ function todayInTz(tz) {
 }
 
 async function recomputeTotalXp(sql, userId) {
-  const rows = await sql`SELECT COALESCE(SUM(xp_earned),0)::int AS total FROM level_progress WHERE user_id = ${userId}`;
-  return rows[0].total;
+  // Gabungan level + ujian akhir (final_progress) — lihat recomputeAllXp di _auth.mjs.
+  return recomputeAllXp(sql, userId);
 }
 
 async function applyStreak(sql, user) {

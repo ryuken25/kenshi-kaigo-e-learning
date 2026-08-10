@@ -24,7 +24,7 @@ export async function requireUser(sql, req) {
     SELECT u.id, u.email, u.name, u.avatar_seed, u.timezone,
            u.total_xp, u.streak_current, u.streak_longest, u.last_active_date,
            u.handle, u.display_name, u.avatar_key, u.theme, u.gender,
-           u.onboarded_step, u.visibility, u.avatar_frame, u.handle_changed_at
+           u.onboarded_step, u.visibility, u.avatar_frame, u.handle_changed_at, u.pref_final_mode
     FROM app_sessions s
     JOIN app_users u ON u.id = s.user_id
     WHERE s.token_hash = ${hash(raw)} AND s.expires_at > now() AND s.revoked_at IS NULL
@@ -39,6 +39,17 @@ export async function requireUser(sql, req) {
 // LEVELS_PER_SECTION lama dihapus: nilainya hardcoded 17 padahal cuma section 11
 // yang punya 17 level, jadi 11 dari 13 section tidak pernah bisa lolos gate 80%.
 export { SECTION_COUNT as SECTIONS, levelsInSection, meetsSectionGate, sectionPercent } from './_sections.mjs';
+
+// Total XP gabungan: level_progress + final_progress. Semua recompute total_xp
+// WAJIB lewat sini sejak ujian akhir punya xp_earned sendiri (api/final.mjs) —
+// kalau final_progress tidak ikut dijumlahkan, total user turun lagi tiap submit
+// level berikutnya. scripts/verify-consistency.mjs menjaga invariant yang sama.
+export async function recomputeAllXp(sql, userId) {
+  const rows = await sql`
+    SELECT COALESCE((SELECT SUM(xp_earned) FROM level_progress WHERE user_id = ${userId}), 0)::int
+         + COALESCE((SELECT SUM(xp_earned) FROM final_progress  WHERE user_id = ${userId}), 0)::int AS total`;
+  return rows[0].total;
+}
 
 // isRepeat: true kalau level ini SUDAH pernah berstatus 'completed' sebelumnya (grinding ulang).
 // Completion pertama kali dapat XP penuh; replay cuma dapat 20% (minimum 2 XP).
