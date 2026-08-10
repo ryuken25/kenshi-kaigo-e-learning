@@ -31,3 +31,6 @@ skills/
 # DB dumps produced by scripts/backup-db.mjs
 *.dump.json
 backup-*.json
+
+# Smoke-test scratch dir (payload, token, header temp — jangan pernah ke-commit)
+.smoke/

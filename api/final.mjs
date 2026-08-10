@@ -2,11 +2,12 @@ import { db } from './_db.mjs';
 import { requireUser, recomputeAllXp } from './_auth.mjs';
 import { reportClientAchievements } from './_achievements.mjs';
 import finalData from '../src/content/final/index.js';
+import { PARTS, PER_PART, UUID_RE, sanitizeAnswers, finalXpFor } from './_final.mjs';
 
 // GET  /api/final              — progress ujian semua tahun {progress, prefMode}.
 // POST /api/final              — submit satu bagian (25 soal).
-// POST /api/final/local-merge  — angkat data lama kk_final_progress (localStorage) sekali per client.
-// PATCH /api/final             — simpan preferensi mode (practice/exam) ke app_users.pref_final_mode.
+// POST /api/final/local-merge  — angkat data lama / offline (final/local-merge.mjs).
+// PATCH /api/final             — simpan preferensi mode ke app_users.pref_final_mode.
 //
 // KEAMANAN (pola sama dengan api/progress.mjs):
 // - correct TIDAK dipercaya dari client — server menghitung ulang dari bank soal
@@ -16,27 +17,7 @@ import finalData from '../src/content/final/index.js';
 //   (replay mengembalikan response cache, tidak pernah mendobel attempts/XP).
 // - XP ujian disimpan di final_progress.xp_earned; total_xp direcompute gabungan
 //   (recomputeAllXp) dan dicatat ke app_users supaya leaderboard konsisten.
-const PARTS = 5, PER_PART = 25, YEARS = Object.keys(finalData).map(Number);
-const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-
-function sanitizeAnswers(raw, part) {
-  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return null;
-  const from = (part - 1) * PER_PART + 1, to = part * PER_PART, clean = {};
-  for (const [k, v] of Object.entries(raw)) {
-    if (Object.keys(clean).length >= PER_PART) break;
-    const kn = Number(k);
-    if (Number.isInteger(kn) && kn >= from && kn <= to && ['1', '2', '3', '4', '5'].includes(v)) clean[String(kn)] = v;
-  }
-  return clean;
-}
-
-// XP bagian ujian: skala linear benar/25 (max 20), nol kalau tidak ada yang benar,
-// replay bagian yang sudah pernah dicoba cuma 20% (min 2) — pola replay level.
-function finalXpFor({ correct, isRepeat }) {
-  if (correct === 0) return 0;
-  const full = Math.max(2, Math.round((correct / PER_PART) * 20));
-  return isRepeat ? Math.max(2, Math.round(full * 0.2)) : full;
-}
+const YEARS = Object.keys(finalData).map(Number);
 
 // Achievement ujian dihitung server sekarang (final_progress bisa diverifikasi).
 // Kelimanya ada di whitelist CLIENT_REPORTABLE, jadi unlock lewat jalur yang sama
@@ -86,37 +67,6 @@ export default async function handler(req, res) {
     }
 
     if (req.method === 'POST') {
-      // ===== MERGE DATA LAMA (localStorage) — upsert idempoten, tidak membayar XP retroaktif.
-      // Klien memanggil ini sekali untuk data era-guest (flag lokal kk_final_merged) dan
-      // bisa memanggil lagi per bagian untuk replay submit offline; karena ON CONFLICT
-      // tidak menaikkan attempts, pemanggilan berulang tidak pernah mendobel statistik. =====
-      if (String(req.url || '').includes('/local-merge')) {
-        const entries = Array.isArray(req.body?.entries) ? req.body.entries : [];
-        if (entries.length > 40) return res.status(400).json({ error: 'invalid_input', message: 'too many entries' });
-        let merged = 0;
-        for (const e of entries) {
-          const year = Number(e.year), part = Number(e.part), best = Number(e.best), answered = Number(e.answered);
-          const clean = sanitizeAnswers(e.answers, part);
-          if (!finalData[year] || !Number.isInteger(part) || part < 1 || part > PARTS ||
-              !Number.isInteger(best) || best < 0 || best > PER_PART ||
-              !Number.isInteger(answered) || answered < 0 || answered > PER_PART || !clean) continue;
-          const mode = e.mode === 'exam' ? 'exam' : 'practice';
-          await sql`
-            INSERT INTO final_progress(user_id, year, part, mode, correct_count, answered, best_correct, attempts, xp_earned, answers, first_done_at, last_attempt)
-            VALUES (${user.id}, ${year}, ${part}, ${mode}, ${best}, ${answered}, ${best}, 1, 0, ${JSON.stringify(clean)}, now(), now())
-            ON CONFLICT (user_id, year, part) DO UPDATE SET
-              best_correct = GREATEST(final_progress.best_correct, EXCLUDED.best_correct),
-              correct_count = GREATEST(final_progress.correct_count, EXCLUDED.correct_count),
-              answered = GREATEST(final_progress.answered, EXCLUDED.answered),
-              mode = EXCLUDED.mode,
-              answers = CASE WHEN EXCLUDED.best_correct > final_progress.best_correct THEN EXCLUDED.answers ELSE final_progress.answers END,
-              last_attempt = now()
-          `;
-          merged++;
-        }
-        return res.status(200).json({ merged });
-      }
-
       // ===== SUBMIT SATU BAGIAN =====
       const body = req.body || {};
       const year = Number(body.year), part = Number(body.part);
