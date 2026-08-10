@@ -141,13 +141,12 @@ npm run validate                # sekarang 8 gate: glossary, final, sections,
 | distribusi jawaban level (harus 18–21%) | ✅ 18.7 / 19.5 / 21.1 / 20.7 / 20.1 (760 soal, 0 level seragam) |
 | distribusi jawaban ujian | ✅ 18.9 / 20.0 / 20.4 / 22.3 / 18.4 (750 soal) |
 
-### Produksi kaigo.wyna.dev (diisi setelah deploy)
+### Produksi kaigo.wyna.dev (deploy 2026-08-11, commit 6d5bcb7)
 
-| Cek (47-QA-V7 A6–A9) | Hasil |
+| Cek | Hasil |
 |---|---|
-| Mode ID di materi: teks nyata, tanpa kanji judul | … |
-| titleId level bebas kanji | … |
-| Nav HP 4 item / desktop 6 item | … |
-| Kartu Teman & Peringkat di profil | … |
-| Header streak/XP berlabel | … |
-| /api/health & auth tetap hidup | … |
+| Homepage & /friends route | ✅ 200 |
+| API hidup (leaderboard/achievements jawab auth-gate, bukan 404 SPA) | ✅ `{"error":"Not signed in"}` |
+| Bundle JS berisi terjemahan baru ("adalah tema yang diujikan", judul topik) | ✅ terverifikasi di index-BStZtlsp.js |
+| Bundle CSS berisi aturan nav mobile & label header | ✅ navFriends & statLabel ada di index-D5JUn8JX.css |
+| CI GitHub Actions (validate+build & tamper-probe) | ✅ success di 6d5bcb7 — probe terjemahan-rusak bekerja |
