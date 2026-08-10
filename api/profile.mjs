@@ -1,6 +1,7 @@
 import { db } from './_db.mjs';
 import { requireUser } from './_auth.mjs';
 import { evaluateAchievements } from './_achievements.mjs';
+import { CHARACTERS } from './_characters.mjs';
 
 // GET /api/profile — profil lengkap user login + status cooldown handle.
 // PATCH /api/profile — update field parsial. Semua nilai divalidasi di SERVER
@@ -33,7 +34,8 @@ export function handleCooldownEnd(handleChangedAt) {
 async function fetchProfile(sql, userId) {
   const rows = await sql`
     SELECT handle, display_name, avatar_key, theme, gender, onboarded_step, visibility,
-           avatar_frame, total_xp, streak_current, streak_longest, handle_changed_at
+           avatar_frame, total_xp, streak_current, streak_longest, handle_changed_at,
+           character_id, characters_unlocked
     FROM app_users WHERE id=${userId}`;
   return rows[0] || null;
 }
@@ -43,6 +45,7 @@ const toJson = (p) => ({
   gender: p.gender, onboardedStep: p.onboarded_step, visibility: p.visibility,
   avatarFrame: p.avatar_frame, totalXp: p.total_xp, streakCurrent: p.streak_current,
   streakLongest: p.streak_longest,
+  characterId: p.character_id, charactersUnlocked: p.characters_unlocked || [],
 });
 
 export default async function handler(req, res) {
@@ -96,6 +99,15 @@ export default async function handler(req, res) {
       if (body.theme !== undefined) {
         if (!THEMES.includes(body.theme)) return res.status(400).json({ error: 'invalid_input', message: 'Tema tidak dikenal' });
         push('theme', body.theme);
+      }
+      if (body.characterId !== undefined) {
+        const c = String(body.characterId);
+        if (!CHARACTERS.includes(c)) return res.status(400).json({ error: 'invalid_input', message: 'Karakter tidak dikenal' });
+        // doc 49: server WAJIB cek karakter ada di characters_unlocked — kalau
+        // tidak, karakter terkunci (termasuk nagi/beni "segera hadir") bisa
+        // dipakai lewat API.
+        if (!(p.characters_unlocked || []).includes(c)) return res.status(403).json({ error: 'character_locked', message: 'Karakter ini belum terbuka' });
+        push('character_id', c);
       }
       if (body.gender !== undefined) {
         if (!GENDERS.includes(body.gender)) return res.status(400).json({ error: 'invalid_input', message: 'Pilihan tidak dikenal' });

@@ -301,6 +301,12 @@
    memutus alur baca. Sekarang <button> yang membuka termSheet di tempat. Halaman glossary
    lengkap tetap bisa dituju lewat tautan sekunder di dalam popup-nya. */
 .termSheetMore{display:inline-flex;align-items:center;gap:6px;min-height:44px;margin-top:12px;font-size:13.5px;font-weight:600;color:var(--pink-deep);text-decoration:underline;text-underline-offset:3px}
+/* Chip istilah mendatar (doc 52 §F): kanji + romaji saja, ketuk → termSheet.
+   Ganti tumpukan 3-baris lama (~400px hemat vertikal). */
+.materiTermChips{display:flex;gap:8px;flex-wrap:wrap}
+.materiTermChip{display:inline-flex;align-items:baseline;gap:6px;min-height:44px;padding:9px 13px;border-radius:999px;background:#fff;border:1px solid var(--kk-pink-300);box-shadow:0 3px 10px -6px var(--shadow-pink);color:inherit;white-space:nowrap}
+.materiTermChip b{font:700 17px Fredoka;color:var(--ink)}
+.materiTermChip small{font-size:11px;color:var(--kk-furi)}
 .materiTermButton{text-align:left;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:2px;min-width:0;width:100%;color:inherit;text-decoration:none}
 .materiTermButton small{color:var(--muted);font-size:11px}
 .materiTermButton b{font-size:17px}

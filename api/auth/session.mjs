@@ -29,6 +29,9 @@ export default async function handler(req, res) {
           visibility: user.visibility,
           avatarFrame: user.avatar_frame,
           handleChangedAt: user.handle_changed_at,
+          // Karakter orisinal (008/doc 49) — tema tombol + maskot ikut characterId.
+          characterId: user.character_id,
+          charactersUnlocked: user.characters_unlocked || [],
         },
       });
     }

@@ -24,7 +24,8 @@ export async function requireUser(sql, req) {
     SELECT u.id, u.email, u.name, u.avatar_seed, u.timezone,
            u.total_xp, u.streak_current, u.streak_longest, u.last_active_date,
            u.handle, u.display_name, u.avatar_key, u.theme, u.gender,
-           u.onboarded_step, u.visibility, u.avatar_frame, u.handle_changed_at, u.pref_final_mode
+           u.onboarded_step, u.visibility, u.avatar_frame, u.handle_changed_at, u.pref_final_mode,
+           u.character_id, u.characters_unlocked
     FROM app_sessions s
     JOIN app_users u ON u.id = s.user_id
     WHERE s.token_hash = ${hash(raw)} AND s.expires_at > now() AND s.revoked_at IS NULL

@@ -2,7 +2,7 @@ import React,{useEffect,useState} from 'react';
 import {Navigate} from 'react-router-dom';
 import {ChevronRight,Search,UserPlus,Check,X,Users,Trophy,Medal,Sparkles} from 'lucide-react';
 import {useAuth} from './context/AuthContext.jsx';
-import {THEMES,GENDERS,AVATARS,CATEGORY_META,FRAME_META,HANDLE_RE,patchProfile,friendsAction,Avatar,useAchToast} from './lib/social.jsx';
+import {THEMES,GENDERS,CHARACTERS,CHARACTER_IDS,GENDER_PAIRS,COMING_SOON,charPath,applyChar,CATEGORY_META,FRAME_META,HANDLE_RE,patchProfile,friendsAction,Avatar,useAchToast} from './lib/social.jsx';
 
 /* ============================================================================
    KOMPONEN SOSIAL — onboarding, teman, papan peringkat, achievement, editor profil.
@@ -13,31 +13,33 @@ import {THEMES,GENDERS,AVATARS,CATEGORY_META,FRAME_META,HANDLE_RE,patchProfile,f
 const themeDotClass = (key)=>`themeDot${key.charAt(0).toUpperCase()}${key.slice(1)}`;
 const REL_LABEL = {self:'Kamu',friend:'Teman',incoming:'Minta berteman',outgoing:'Menunggu',blocked:'Diblokir',none:'Belum berteman'};
 
-/* ---------- Onboarding: gender+tema+avatar → handle ---------- */
+/* ---------- Onboarding: gender+karakter → handle (doc 49: karakter menentukan tema) ---------- */
 export function OnboardingWizard({onDone}){
   const {user,refresh,isAuthenticated} = useAuth();
   const toast = useAchToast();
   const step = user?.onboardedStep === 'handle' ? 'handle' : 'gender';
   const [gender,setGender] = useState(user?.gender || null);
-  const [theme,setTheme] = useState(user?.theme && user.theme!=='kitty' ? user.theme : null);
-  const [avatarKey,setAvatarKey] = useState(user?.avatarKey || 'kitty-1');
+  const [charId,setCharId] = useState(user?.characterId || 'momo');
   const [handle,setHandle] = useState(user?.handle || '');
   const [saving,setSaving] = useState(false);
   const [error,setError] = useState('');
   // Guard SETELAH semua hook — hook order harus konsisten antar render.
   if(!isAuthenticated) return <Navigate to="/login" replace/>;
 
-  // Pilih gender → auto-sarankan tema (tetap bisa diubah manual).
+  // Pilih gender → tampilkan pasangan awal gender itu; karakter default ikut.
   const pickGender = (g)=>{
     setGender(g.value);
-    setTheme(t=>t || g.theme);
+    if(!GENDER_PAIRS[g.value]?.includes(charId)) setCharId(g.value==='male'?'sora':'momo');
+  };
+  const pickChar = (id)=>{
+    setCharId(id);
+    applyChar(id); // skin ganti instan bahkan sebelum disimpan
   };
 
   const submitIdentity = async ()=>{
     if(!gender) return setError('Pilih salah satu dulu ya.');
-    if(!theme) return setError('Pilih tema tampilan dulu.');
     setSaving(true); setError('');
-    const r = await patchProfile({gender,theme,avatarKey,onboardedStep:'handle'});
+    const r = await patchProfile({gender,characterId:charId,onboardedStep:'handle'});
     setSaving(false);
     if(!r.ok) return setError(r.data?.message || 'Gagal menyimpan — coba lagi.');
     toast(r.data.newAchievements);
@@ -84,26 +86,23 @@ export function OnboardingWizard({onDone}){
   return <main className="page onboarding">
     <p className="obStep">Langkah 1 dari 2</p>
     <h1>Kenalan dulu yuk 👋</h1>
-    <p className="muted">Pilihan ini menentukan tampilan tema aplikasimu.</p>
+    <p className="muted">Pilih teman belajarmu — karakter menentukan warna tema aplikasimu.</p>
     <div className="obChoices">
       {GENDERS.map(g=><button key={g.value} type="button" className={`obChoice tap ${gender===g.value?'on':''}`} onClick={()=>pickGender(g)}><span>{g.emoji}</span>{g.label}</button>)}
     </div>
     {gender && <>
-      <p className="obHint">Tema tampilan — disarankan dari pilihanmu, tapi bebas diganti:</p>
-      <div className="obThemes">
-        {THEMES.map(t=><button key={t.key} type="button" className={`obTheme tap ${theme===t.key?'on':''}`} onClick={()=>setTheme(t.key)}>
-          <span className={`obThemeDot ${themeDotClass(t.key)}`}>{t.emoji}</span>
-          <span className="obThemeCopy"><b>{t.name} · {t.ja}</b><small>{t.desc}</small></span>
+      <p className="obHint">Pilih karaktermu:</p>
+      <div className="obCharGrid">
+        {(GENDER_PAIRS[gender]||['momo']).map(id=><button key={id} type="button" className={`obChar tap ${charId===id?'on':''}`} onClick={()=>pickChar(id)}>
+          <img src={charPath(id,'idle')} alt={CHARACTERS[id].name}/>
+          <b>{CHARACTERS[id].name}</b>
+          <small>{CHARACTERS[id].species} · {CHARACTERS[id].desc}</small>
         </button>)}
       </div>
-      <p className="obHint">Pilih avatar:</p>
-      <div className="avatarGrid" style={{maxWidth:380,margin:'0 auto 14px'}}>
-        {Object.entries(AVATARS).map(([k,a])=><button key={k} type="button" className={`tap ${avatarKey===k?'on':''}`} onClick={()=>setAvatarKey(k)} aria-label={a.label}><Avatar avatarKey={k} size={48}/></button>)}
-      </div>
-      <div className="obPreview"><Avatar avatarKey={avatarKey} size={72}/></div>
+      <div className="obPreview"><Avatar characterId={charId} size={72}/></div>
     </>}
     {error && <small className="obError">{error}</small>}
-    <div className="flowButtons" style={{padding:'0 0 10px'}}><button className="primary big tap" onClick={submitIdentity} disabled={saving||!gender||!theme}>{saving?'Menyimpan…':'Lanjut'} <ChevronRight/></button></div>
+    <div className="flowButtons" style={{padding:'0 0 10px'}}><button className="primary big tap" onClick={submitIdentity} disabled={saving||!gender}>{saving?'Menyimpan…':'Lanjut'} <ChevronRight/></button></div>
   </main>;
 }
 
@@ -141,7 +140,7 @@ export function ProfileEditor(){
     }
     toast(r.data.newAchievements);
     setData(d=>({...d,profile:r.data.profile,handleCooldownEndsAt:r.data.handleCooldownEndsAt}));
-    if(fields.theme || fields.avatarKey || fields.handle) await refresh(); // tema/avatar langsung kepakai app
+    if(fields.theme || fields.avatarKey || fields.handle || fields.characterId) await refresh(); // tema/karakter langsung kepakai app
     setMsg(`${label} tersimpan ✓`);
   };
 
@@ -157,14 +156,14 @@ export function ProfileEditor(){
       <button className="secondary tap" disabled={busy || cooldownActive || !handle.trim() || handle.trim()===(p.handle||'')} onClick={()=>save({handle:handle.trim()},'Handle')}>{cooldownActive?'Terkunci':'Simpan'}</button>
     </div>
     {cooldownActive && <p className="cooldownNote">Handle bisa diganti lagi setelah {new Date(data.handleCooldownEndsAt).toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'})} (aturan 7 hari).</p>}
-    <div><p className="muted" style={{margin:'4px 0 8px'}}>Avatar</p>
-      <div className="avatarGrid">{Object.entries(AVATARS).map(([k])=><button key={k} type="button" className={`tap ${p.avatarKey===k?'on':''}`} onClick={()=>p.avatarKey!==k&&save({avatarKey:k},'Avatar')}><Avatar avatarKey={k} size={48}/></button>)}</div>
-    </div>
-    <div><p className="muted" style={{margin:'4px 0 8px'}}>Tema tampilan</p>
-      <div className="themeGrid">{THEMES.map(t=><button key={t.key} type="button" className={`obTheme tap ${p.theme===t.key?'on':''}`} onClick={()=>p.theme!==t.key&&save({theme:t.key},'Tema')}>
-        <span className={`obThemeDot ${themeDotClass(t.key)}`}>{t.emoji}</span>
-        <span className="obThemeCopy"><b>{t.name}</b><small>{t.desc}</small></span>
-      </button>)}</div>
+    <div><p className="muted" style={{margin:'4px 0 8px'}}>Karakter <small style={{fontWeight:400}}>· tema warna mengikuti karakter, ganti kapan saja</small></p>
+      <div className="charGrid">{CHARACTER_IDS.map(id=>{const unlocked=(p.charactersUnlocked||[]).includes(id),soon=COMING_SOON.includes(id);
+        return <button key={id} type="button" disabled={!unlocked} className={`charTile tap ${p.characterId===id?'on':''} ${!unlocked?'locked':''}`} onClick={()=>unlocked&&p.characterId!==id&&save({characterId:id},'Karakter')}>
+          <img src={charPath(id,'idle')} alt={CHARACTERS[id].name}/>
+          <b>{CHARACTERS[id].name}</b>
+          <small>{unlocked?CHARACTERS[id].species:soon?'Segera hadir':'Belum terbuka'}</small>
+        </button>;})}
+      </div>
     </div>
     <div><p className="muted" style={{margin:'4px 0 8px'}}>Visibilitas di papan peringkat global</p>
       <div className="visibilityToggle">
@@ -230,7 +229,7 @@ export function FriendsPage(){
     {result !== undefined && (result===null
       ? <div className="resultCard"><div className="friendInfo"><b>Tidak ditemukan</b><small>Pastikan handle-nya benar (huruf kecil semua).</small></div></div>
       : <div className="resultCard">
-          <Avatar avatarKey={result.avatarKey} frame={result.avatarFrame} size={44}/>
+          <Avatar characterId={result.characterId} frame={result.avatarFrame} size={44}/>
           <div className="friendInfo"><b>{result.displayName}</b><small>@{result.handle} · {result.totalXp} XP</small></div>
           <span className={`relPill ${result.relationship}`}>{REL_LABEL[result.relationship]}</span>
           <div className="friendActions">
@@ -250,7 +249,7 @@ export function FriendsPage(){
     {list.length===0
       ? <div className="emptyState"><span>{tab==='friends'?'🌸':'💌'}</span>{tab==='friends'?'Belum ada teman. Cari seseorang lewat handle di kotak atas!':tab==='incoming'?'Belum ada permintaan masuk.':'Belum ada permintaan keluar.'}</div>
       : list.map(u=><div className="friendRow" key={u.handle}>
-          <Avatar avatarKey={u.avatarKey} frame={u.avatarFrame} size={44}/>
+          <Avatar characterId={u.characterId} frame={u.avatarFrame} size={44}/>
           <div className="friendInfo"><b>{u.displayName}</b><small>@{u.handle} · {u.totalXp} XP · streak {u.streak}</small></div>
           <div className="friendActions">
             {tab==='incoming' && <><button className="tap" onClick={()=>act('accept',u.handle)} disabled={busy}><Check size={13}/> Terima</button><button className="tap ghost" onClick={()=>act('decline',u.handle)} disabled={busy}><X size={13}/></button></>}
@@ -295,12 +294,12 @@ export function LeaderboardPage(){
         ? <div className="emptyState"><span>{tab==='friends'?'🌸':'🏆'}</span>{tab==='friends'?'Belum ada yang tampil. Tambah teman dulu!':'Belum ada XP mingguan dari profil publik.'}</div>
         : data.rows.map(r=><div className={`lbRow ${r.isMe?'isMe':''} ${r.rank===1?'top1':''}`} key={r.handle}>
             <span className="lbRank">{r.rank===1?'👑':r.rank}</span>
-            <Avatar avatarKey={r.avatarKey} frame={r.avatarFrame} size={40}/>
+            <Avatar characterId={r.characterId} frame={r.avatarFrame} size={40}/>
             <div className="lbInfo"><b>{r.displayName}{r.isMe?' (kamu)':''}</b><small>@{r.handle} · streak {r.streak}</small></div>
             <span className="lbXp">{r.weeklyXp} XP</span>
           </div>)}
       {tab==='global' && data.me && <div className="lbMe">
-        <Avatar avatarKey={user?.avatarKey} frame={user?.avatarFrame} size={40}/>
+        <Avatar characterId={user?.characterId} frame={user?.avatarFrame} size={40}/>
         <div><b>Posisimu: #{data.me.rank}{data.me.delta!==null && data.me.delta!==0 && <span className={`lbDelta ${data.me.delta>0?'up':'down'}`}> {data.me.delta>0?'▲':'▼'}{Math.abs(data.me.delta)}</span>}</b>
         <small>{data.me.weeklyXp} XP minggu ini{!data.me.inTop?' · di luar top 100, terus kejar!':''}{data.me.handle===null?'':' · @'+data.me.handle}</small></div>
         <Medal size={18} style={{color:'var(--gold-deep)',marginLeft:'auto'}}/>
@@ -332,7 +331,7 @@ export function AchievementsPage(){
   return <main className="page">
     <h1 className="pageTitle">Achievement <span>· {data.unlockedCount}/{data.achievements.length}</span></h1>
     <div className="achHeader">
-      <Avatar avatarKey={user?.avatarKey} frame={data.currentFrame} size={76}/>
+      <Avatar characterId={user?.characterId} frame={data.currentFrame} size={76}/>
       <p className="achCount">{data.unlockedCount} terbuka <small>· bingkai: {FRAME_META[data.currentFrame]?.emoji||'—'} {FRAME_META[data.currentFrame]?.label||'Polos'}</small></p>
       <div className="frameLadder">
         {data.frameTiers.map((t,i)=>{

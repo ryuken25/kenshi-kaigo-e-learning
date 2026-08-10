@@ -32,6 +32,7 @@ function weekStartTokyo(now = new Date()) {
 const rowJson = (r, i, myHandle) => ({
   rank: i + 1, handle: r.handle, displayName: r.display_name || r.handle,
   avatarKey: r.avatar_key, avatarFrame: r.avatar_frame, streak: r.streak_current,
+  characterId: r.character_id || 'momo',
   weeklyXp: r.xp, isMe: r.handle === myHandle,
 });
 
@@ -54,7 +55,7 @@ export default async function handler(req, res) {
           SELECT user_id, SUM(xp_gained)::int AS xp FROM daily_activity
           WHERE activity_date >= ${weekStart}::date GROUP BY user_id
         )
-        SELECT u.handle, u.display_name, u.avatar_key, u.avatar_frame, u.streak_current, wk.xp
+        SELECT u.handle, u.display_name, u.avatar_key, u.avatar_frame, u.character_id, u.streak_current, wk.xp
         FROM wk JOIN app_users u ON u.id = wk.user_id
         WHERE u.visibility='public' AND u.handle IS NOT NULL
         ORDER BY wk.xp DESC, u.streak_current DESC, u.created_at ASC, u.id ASC
@@ -101,7 +102,7 @@ export default async function handler(req, res) {
         UNION
         SELECT ${user.id}::uuid uid
       )
-      SELECT u.handle, u.display_name, u.avatar_key, u.avatar_frame, u.streak_current,
+      SELECT u.handle, u.display_name, u.avatar_key, u.avatar_frame, u.character_id, u.streak_current,
              COALESCE(wk.xp, 0)::int AS xp
       FROM circle c
       JOIN app_users u ON u.id = c.uid

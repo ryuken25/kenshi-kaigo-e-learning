@@ -7,14 +7,17 @@
    ========================================================================== */
 
 /* ---------- v8 (doc 49): token karakter via [data-char] ----------
-   Di-set ThemeApply (main.jsx) & applyTheme (lib/social.jsx): kitty→momo,
-   sora→sora, matcha→kinako, yozora→kurumi. Triad --btn-* adalah fix temuan
-   kontras v8: warna tombol tiap karakter >= 4.5:1 (angka btnContrast di
-   pack data/characters.json, dihitung ulang manual untuk a11y). */
-:root[data-char="momo"]{--btn-bg:#ff6f9c;--btn-text:#3a2a33;--btn-shadow:#c22a5e}
-:root[data-char="sora"]{--btn-bg:#1f5f9e;--btn-text:#ffffff;--btn-shadow:rgba(0,0,0,.2)}
-:root[data-char="kinako"]{--btn-bg:#d99a16;--btn-text:#3a3122;--btn-shadow:#8a6008}
-:root[data-char="kurumi"]{--btn-bg:#5f42a8;--btn-text:#ffffff;--btn-shadow:rgba(0,0,0,.2)}
+   Di-set applyChar() di lib/social.jsx dari user.characterId (momo default).
+   Warna tombol tiap karakter sudah lolos kontras >= 4.5:1 (btnContrast di
+   pack data/characters.json). applyChar menyalin --char-btn* ke --btn-* via
+   inline style di <html>; nilai di bawah ini sumber kanoniknya. */
+:root{--char-btn:#ff6f9c;--char-btn-shadow:#c22a5e}
+:root[data-char="momo"]{--char-btn:#ff6f9c;--char-btn-shadow:#c22a5e}
+:root[data-char="sora"]{--char-btn:#1f5f9e;--char-btn-shadow:rgba(0,0,0,.2)}
+:root[data-char="kinako"]{--char-btn:#d99a16;--char-btn-shadow:#8a6008}
+:root[data-char="kurumi"]{--char-btn:#5f42a8;--char-btn-shadow:rgba(0,0,0,.2)}
+:root[data-char="nagi"]{--char-btn:#136b58;--char-btn-shadow:rgba(0,0,0,.2)}
+:root[data-char="beni"]{--char-btn:#95300f;--char-btn-shadow:rgba(0,0,0,.2)}
 
 /* ---------- sora: langit biru ---------- */
 :root[data-theme=sora]{

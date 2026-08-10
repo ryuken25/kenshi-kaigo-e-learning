@@ -1,4 +1,4 @@
-import React,{createContext,useContext,useEffect,useMemo,useState} from 'react';
+import React,{createContext,useContext,useEffect,useState} from 'react';
 
 /* ===== Mode bahasa global (kanji / furigana / id) — PERSIST ke localStorage.
    Bug lama: semua useState('kanji') reset ke kanji tiap ganti kartu/soal/navigasi,
@@ -12,18 +12,57 @@ export function useLangMode(initial='kanji'){
   return [mode,pick];
 }
 
-/* ===== Tema — applier murni data-theme + data-char (dipanggil ProfileEditor biar instan).
-   Komponen ThemeApply reaktif ada di main.jsx (butuh AuthProvider). ===== */
-export function applyTheme(t){
+/* ===== v8 (doc 49): sistem karakter orisinal — aset di public/assets/characters/.
+   6 karakter × 6 ekspresi digenerate scripts/gen-characters.mjs (deterministik).
+   Tema tombol ikut karakter via <html data-char>; SANRIO TIDAK DIPAKAI di produk
+   publik (IP pihak ketiga). HARUS sinkron dengan api/_characters.mjs & migrasi 008. ===== */
+export const CHARACTER_IDS=['momo','kurumi','sora','kinako','nagi','beni'];
+export const CHARACTERS={
+  momo:   {name:'Momo',   species:'Kucing putih',  emoji:'🎀', desc:'Hangat & telaten',        btnText:'#3a2a33'},
+  kurumi: {name:'Kurumi', species:'Kelinci malam', emoji:'🌙', desc:'Jenaka & penuh akal',     btnText:'#ffffff'},
+  sora:   {name:'Sora',   species:'Anjing awan',   emoji:'☁️', desc:'Tenang & penyabar',       btnText:'#ffffff'},
+  kinako: {name:'Kinako', species:'Anjing kue',    emoji:'🍮', desc:'Santai & ramah',          btnText:'#3a3122'},
+  nagi:   {name:'Nagi',   species:'Pinguin laut',  emoji:'📋', desc:'Cermat & teliti',         btnText:'#ffffff'},
+  beni:   {name:'Beni',   species:'Rubah senja',   emoji:'🦊', desc:'Penuh semangat',          btnText:'#ffffff'},
+};
+// Pasangan awal onboarding (doc 49): perempuan → Momo+Kurumi, laki-laki →
+// Momo+Sora, lainnya → ketiganya, tidak isi → Momo saja.
+export const GENDER_PAIRS={female:['momo','kurumi'],male:['momo','sora'],other:['momo','kurumi','sora'],prefer_not:['momo']};
+// Pasangan gender SEBELANG — terbuka saat total 5 level completed (api/progress.mjs).
+export const CHAR_COMPLEMENTS={momo:['kurumi','sora'],kurumi:['sora','momo'],sora:['kurumi','momo'],kinako:['momo','kurumi','sora'],nagi:['momo','kurumi','sora'],beni:['momo','kurumi','sora']};
+export const CHAR_EXPRS=['idle','happy','sad','sleepy','surprised','clap'];
+// Nagi & Beni "menyusul" (doc 49): tampil abu tanpa gembok, tidak ada jalur unlock.
+export const COMING_SOON=['nagi','beni'];
+export const charPath=(id,expr='idle')=>`/assets/characters/${CHARACTER_IDS.includes(id)?id:'momo'}/${CHAR_EXPRS.includes(expr)?expr:'idle'}.svg`;
+
+/* Pasang data-char + variabel tombol karakter di <html>. Dipanggil ThemeApply
+   (main.jsx) dari user.characterId DAN on-the-fly oleh useCharExpr (pilih
+   karakter di onboarding langsung ganti skin). */
+export function applyChar(c){
   if(typeof document==='undefined')return;
-  if(t&&t!=='kitty')document.documentElement.setAttribute('data-theme',t);
-  else document.documentElement.removeAttribute('data-theme');
-  document.documentElement.setAttribute('data-char',(CHAR_FOR_THEME[t]??CHAR_FOR_THEME.kitty));
+  const id=CHARACTER_IDS.includes(c)?c:'momo';
+  const r=document.documentElement;
+  r.setAttribute('data-char',id);
+  r.style.setProperty('--btn-bg',getComputedStyle(r).getPropertyValue('--char-btn'));
+  r.style.setProperty('--btn-text',CHARACTERS[id].btnText);
+  r.style.setProperty('--btn-shadow',getComputedStyle(r).getPropertyValue('--char-btn-shadow'));
 }
 
-/* v8 (doc 49): pemetaan tema lama → karakter orisinal. Tema lama tetap jalan di DB
-   (kolom theme), cuma diganti skin-nya ke palet karakter. momo = default pink. */
-export const CHAR_FOR_THEME={kitty:'momo',sora:'sora',matcha:'kinako',yozora:'kurumi'};
+/* Ekspresi karakter aktif yang reaktif terhadap data-char: pasang/bersihkan
+   MutationObserver di ThemeApply. Default 'idle' — komponen bisa minta ekspresi
+   lain (Mascot variant→ekspresi, Result perfect→clap, toast unlock→happy). */
+export function useCharExpr(expr='idle'){
+  const [c,setC]=useState('momo');
+  useEffect(()=>{
+    const r=document.documentElement;
+    const read=()=>setC(CHARACTER_IDS.includes(r.getAttribute('data-char'))?r.getAttribute('data-char'):'momo');
+    read();
+    const mo=new MutationObserver(read);
+    mo.observe(r,{attributes:true,attributeFilter:['data-char']});
+    return ()=>mo.disconnect();
+  },[]);
+  return charPath(c,expr);
+}
 
 /* ===== Konstanta sosial — HARUS sinkron dengan api/profile.mjs & migrasi 006/007.
    Kalau nambah tema/avatar di sini, tambah juga di DB constraint + AVATAR_KEYS server. ===== */
@@ -44,20 +83,40 @@ export const GENDERS = [
   {value:'prefer_not',  label:'Rahasia dong', emoji:'🤫', theme:'kitty'},
 ];
 
-// Key = nilai avatar_key di DB; file = yang BENAR-BENAR ada di public/assets/hellokitty/.
-export const AVATARS = {
-  'kitty-1':             {file:'hk-face-icon.png',        label:'Klasik'},
-  'hk-cute-emoji':       {file:'hk-cute-emoji.png',       label:'Ceria'},
-  'hk-balloons':         {file:'hk-balloons.png',         label:'Balon'},
-  'hk-birthday-camera':  {file:'hk-birthday-camera.png',  label:'Kamera'},
-  'hk-desktop-art':      {file:'hk-desktop-art.png',      label:'Belajar'},
-  'hk-face-icon':        {file:'hk-face-icon.png',        label:'Wajah'},
-  'hk-illustration-1':   {file:'hk-illustration-1.png',   label:'Ilustrasi'},
-  'hk-pink-bow':         {file:'hk-pink-bow.png',         label:'Pita Pink'},
-  'hk-sticker-flower':   {file:'hk-sticker-flower.png',   label:'Bunga'},
-};
+/* Avatar = karakter aktif (doc 49: karakter menentukan tampilan). Key lama
+   avatar_key di DB dibiarkan untuk profil lama; Avatar yang menerima
+   characterId merender SVG idle karakter itu dan mengabaikan avatarKey. */
+export function Avatar({characterId,frame='none',size=44,className=''}){
+  return <span className={`avatarWrap frame-${frame} ${className}`} style={{width:size,height:size}} aria-hidden="true">
+    <img src={charPath(characterId)} alt=""/>
+  </span>;
+}
 
-// Urutan = urutan seed achievements di scripts/007_social_features.sql.
+/* ===== Toast achievement + unlock karakter — dipakai semua halaman pemicu unlock ===== */
+
+const ToastCtx = createContext(()=>{});
+let toastSeq = 0;
+
+export function ToastProvider({children}){
+  const [items,setItems] = useState([]);
+  const push = (list)=>{
+    if(!Array.isArray(list) || !list.length) return;
+    const stamped = list.map(a=>({...a,_k:++toastSeq}));
+    setItems(prev=>[...prev,...stamped]);
+    setTimeout(()=>setItems(prev=>prev.filter(p=>!stamped.includes(p))),4600);
+  };
+  return <ToastCtx.Provider value={push}>
+    {children}
+    <div className="achToastLayer" aria-live="polite">
+      {items.map(a=>a._kind==='char'
+        ? <div className="achToast charToast" key={a._k}><img className="achToastChar" src={charPath(a.id,'happy')} alt=""/><div className="achToastCopy"><small>KARAKTER BARU TERBUKA 🌸</small><b>{CHARACTERS[a.id]?.name||a.id} sekarang bisa dipakai!</b><p>{CHARACTERS[a.id]?.desc||''}</p></div></div>
+        : <div className="achToast" key={a._k}><span className="achToastIcon">{a.icon}</span><div className="achToastCopy"><small>ACHIEVEMENT TERBUKA ✨</small><b>{a.nameId}</b><p>{a.descId}</p></div></div>)}
+    </div>
+  </ToastCtx.Provider>;
+}
+
+export const useAchToast = ()=>useContext(ToastCtx);
+
 export const CATEGORY_META = {
   learning: {label:'Belajar',   emoji:'📚'},
   exam:     {label:'Ujian',     emoji:'📝'},
@@ -91,35 +150,3 @@ export async function friendsAction(action,handle){
   const d = await r.json().catch(()=>({}));
   return {ok:r.ok, status:r.status, data:d};
 }
-
-/* ===== Avatar dengan bingkai achievement ===== */
-
-export function Avatar({avatarKey,frame='none',size=44,className=''}){
-  const a = AVATARS[avatarKey] || AVATARS['kitty-1'];
-  return <span className={`avatarWrap frame-${frame} ${className}`} style={{width:size,height:size}} aria-hidden="true">
-    <img src={`/assets/hellokitty/${a.file}`} alt=""/>
-  </span>;
-}
-
-/* ===== Toast achievement baru — dipakai semua halaman yang memicu unlock ===== */
-
-const ToastCtx = createContext(()=>{});
-let toastSeq = 0;
-
-export function ToastProvider({children}){
-  const [items,setItems] = useState([]);
-  const push = (list)=>{
-    if(!Array.isArray(list) || !list.length) return;
-    const stamped = list.map(a=>({...a,_k:++toastSeq}));
-    setItems(prev=>[...prev,...stamped]);
-    setTimeout(()=>setItems(prev=>prev.filter(p=>!stamped.includes(p))),4600);
-  };
-  return <ToastCtx.Provider value={push}>
-    {children}
-    <div className="achToastLayer" aria-live="polite">
-      {items.map(a=><div className="achToast" key={a._k}><span className="achToastIcon">{a.icon}</span><div className="achToastCopy"><small>ACHIEVEMENT TERBUKA ✨</small><b>{a.nameId}</b><p>{a.descId}</p></div></div>)}
-    </div>
-  </ToastCtx.Provider>;
-}
-
-export const useAchToast = ()=>useContext(ToastCtx);

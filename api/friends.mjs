@@ -19,12 +19,13 @@ import { evaluateAchievements } from './_achievements.mjs';
 const publicUser = (u) => ({
   handle: u.handle, displayName: u.display_name || u.handle,
   avatarKey: u.avatar_key, avatarFrame: u.avatar_frame,
+  characterId: u.character_id || 'momo',
   totalXp: u.total_xp, streak: u.streak_current,
 });
 
 async function resolveByHandle(sql, handle) {
   const rows = await sql`
-    SELECT id, handle, display_name, avatar_key, avatar_frame, total_xp, streak_current
+    SELECT id, handle, display_name, avatar_key, avatar_frame, character_id, total_xp, streak_current
     FROM app_users WHERE handle=${String(handle || '').trim().toLowerCase()}`;
   return rows[0] || null;
 }

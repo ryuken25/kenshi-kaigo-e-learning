@@ -12,6 +12,11 @@ let text = fs.readFileSync(file, 'utf8');
 // Strip BEGIN/COMMIT — neon http driver auto-commits per statement anyway.
 text = text.replace(/^\s*BEGIN;\s*$/gm, '').replace(/^\s*COMMIT;\s*$/gm, '');
 
+// Strip komentar `--` SEBELUM split: titik koma di dalam komentar pernah
+// memotong statement di tengah jalan (008_characters.sql, 2026-08-11) dan
+// paruh statement-nya lolos sebagai "OK" karena isinya cuma komentar.
+text = text.replace(/--.*$/gm, '');
+
 // Split into statements, respecting $$ ... $$ dollar-quoted blocks.
 function splitStatements(sqlText) {
   const stmts = [];

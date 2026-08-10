@@ -7,7 +7,7 @@ import Furigana,{CompareTerm,stripRuby} from './Furigana.jsx';
 import s1l1Content from './content/s1l1.json';
 import s1l1Ja from './content/s1l1-ja.json';
 import glossaryData from './content/glossary.index.json';
-import {Avatar,ToastProvider,useLangMode,CHAR_FOR_THEME} from './lib/social.jsx';
+import {Avatar,ToastProvider,useLangMode,CHARACTERS,charPath,useCharExpr,applyChar,useAchToast} from './lib/social.jsx';
 import {AuthProvider, useAuth} from './context/AuthContext.jsx';
 import {ProgressProvider, useProgress} from './context/ProgressContext.jsx';
 import {dailyQuote} from './data/quotes.js';
@@ -55,29 +55,13 @@ function LangText({ja,id,mode,as='p',className='',variant}){
   return <Furigana field={{ja,id}} mode={mode} as={as} className={className} variant={variant}/>;
 }
 
-const ASSET = p=>`/assets/hellokitty/${p}`;
-const MASCOT_MAP = {
-  home:ASSET('hk-illustration-1.png'),
-  level:ASSET('hk-desktop-art.png'),
-  materi:ASSET('hk-sticker-flower.png'),
-  recap:ASSET('hk-birthday-camera.png'),
-  perfect:ASSET('hk-balloons.png'),
-  good:ASSET('hk-sticker-flower.png'),
-  welcome:ASSET('hk-cute-emoji.png'),
-  profile:ASSET('hk-illustration-1.png'),
-  login:ASSET('hk-cute-emoji.png'),
-  practice:ASSET('hk-cute-emoji.png'),
-};
-
-// Varian WebP (re-encoded lokal, bukan aset baru): hk-balloons 738KB→128KB.
-// PNG tetap jadi fallback <img> buat browser lama.
-const WEBP_MAP = { perfect:ASSET('hk-balloons.webp') };
-
-function Mascot({variant='home',size='md',className='',style}){
-  const src = MASCOT_MAP[variant]||MASCOT_MAP.home;
-  const webp = WEBP_MAP[variant];
-  return <div className={`mascotImg size-${size} ${className}`} style={style} aria-label="Hello Kitty mascot">
-    {webp?<picture><source srcSet={webp} type="image/webp"/><img src={src} alt="Hello Kitty" loading="lazy"/></picture>:<img src={src} alt="Hello Kitty" loading="lazy"/>}
+/* Maskot = karakter orisinal aktif (doc 49). Ekspresi ikut variant; SVG kecil
+   (<3KB) jadi tidak perlu varian WebP/fallback lagi. */
+const MASCOT_EXPR = {home:'idle',level:'idle',materi:'idle',recap:'happy',perfect:'clap',good:'happy',welcome:'idle',profile:'idle',login:'idle',practice:'idle'};
+function CharArt({variant='home',size='md',className='',style}){
+  const src = useCharExpr(MASCOT_EXPR[variant]||'idle');
+  return <div className={`mascotImg size-${size} ${className}`} style={style} aria-label="Maskot Kenshi">
+    <img src={src} alt="Maskot Kenshi" loading="lazy"/>
     <span className="sparkle s1">✨</span>
     <span className="sparkle s2">🎀</span>
   </div>;
@@ -107,6 +91,7 @@ function Shell({children}){
   const loc=useLocation();
   const {isAuthenticated, loading, streakCurrent, totalXp} = useProgress();
   const {status} = useAuth();
+  const brandSrc=useCharExpr('idle');
   const navItems = [
     {to:'/belajar', kind:'learn', label:'Belajar', match:p=>p==='/belajar'},
     {to:'/final', kind:'exam', label:'Ujian', match:p=>p.startsWith('/final')},
@@ -118,7 +103,7 @@ function Shell({children}){
   return <div className="app">
     <ScrollToTop/>
     <header>
-      <Link to="/belajar" className="brand"><div className="kitty"><img src={ASSET('hk-face-icon.png')} alt="Kenshi Kaigo E-Learning"/></div><div><b>kenshi kaigo e-learning</b><small>belajar kaigo</small></div></Link>
+      <Link to="/belajar" className="brand"><div className="kitty"><img src={charPath('momo')} alt="Kenshi Kaigo E-Learning"/></div><div><b>kenshi kaigo e-learning</b><small>belajar kaigo</small></div></Link>
       <div className="topStats">
         <span><Flame size={16} fill="#ff718f"/> {loading && status==='authenticated' ? '…' : streakCurrent}<span className="statLabel">hari</span></span>
         <span className="xpStat"><Heart size={16} fill="#ff718f"/> {loading && status==='authenticated' ? '…' : totalXp}<span className="statLabel">XP</span></span>
@@ -164,7 +149,7 @@ function Home(){
   const today=new Date().toISOString().slice(0,10);
   const quote=dailyQuote(`${today}:${user?.id||'guest'}`);
   if(loading) return <main><KawaiiLoader label="Menyiapkan materi…"/></main>;
-  return <main><section className="welcome"><div><p className="eyebrow">OHAYŌ, KENSHI 🌷</p><h1 className="quoteJa" lang={quote.note?'ja':undefined}>{quote.text}</h1>{quote.note&&<p className="quoteNote">{quote.note}</p>}<p className="muted">13 bab · {totalLevels} level · dikerjakan sedikit demi sedikit.</p></div><Mascot variant="home" size="md"/></section>
+  return <main><section className="welcome"><div><p className="eyebrow">OHAYŌ, KENSHI 🌷</p><h1 className="quoteJa" lang={quote.note?'ja':undefined}>{quote.text}</h1>{quote.note&&<p className="quoteNote">{quote.note}</p>}<p className="muted">13 bab · {totalLevels} level · dikerjakan sedikit demi sedikit.</p></div><CharArt variant="home" size="md"/></section>
     <div className="daily"><div><b>Hari ini</b><p>Satu kartu sekali duduk sudah cukup.</p><div className="progress"><i style={{width:`${Math.min(100,(completedCount/totalLevels)*100)}%`}}/></div></div><span className="badge">{completedCount} selesai</span></div>
     <Link className="finalHomeBanner" to="/final"><div><b>Ujian Akhir</b><span>Soal asli 2021–2026 · 125 butir tiap tahun</span></div><ChevronRight/></Link>
     <div className="sectionHead"><div><h2>Urutan belajar</h2><p>Mulai dari martabat, berakhir di studi kasus</p></div></div>
@@ -218,7 +203,7 @@ function SectionOverview(){
         const isCurrent = i===currentIdx && !previewOnly;
         const offset = ZIGZAG_OFFSETS[i % ZIGZAG_OFFSETS.length];
         return <div className="skillNodeRow" key={l.id}>
-          {i>0 && i%4===0 && <Mascot variant="materi" size="sm" className="pathMascot" style={{['--nodeOffset']:`${offset}px`}}/>}
+          {i>0 && i%4===0 && <CharArt variant="materi" size="sm" className="pathMascot" style={{['--nodeOffset']:`${offset}px`}}/>}
           <div className="skillNodeWrap" style={{marginLeft:offset}}>
             <Link to={`/section/${s.id}/level/${l.id}`}
               className={`skillNode tap ${isMilestone?'milestone':''} ${completed?'completed':''} ${previewOnly?'locked':''} ${isCurrent?'current':''}`}>
@@ -243,7 +228,7 @@ function LevelHub(){
   const lv = sectionInfo?.levels?.find(x=>x.levelId===l.id);
   const levelUnlocked = isAuthenticated ? (lv?.levelUnlocked ?? (l.id===1)) : true;
   return <main className="page"><Link to={`/section/${s.id}`} className="back"><ArrowLeft size={16}/> {s.titleJa}</Link>
-    <div className="levelHero"><Mascot variant="level" size="md"/><div><small>LEVEL {l.id}</small><h1>{l.titleJa}</h1><p>{l.titleId}</p></div></div>
+    <div className="levelHero"><CharArt variant="level" size="md"/><div><small>LEVEL {l.id}</small><h1>{l.titleJa}</h1><p>{l.titleId}</p></div></div>
     {!levelUnlocked && <div className="previewBanner"><Lock size={16}/><span>Level ini belum resmi terbuka. Kamu tetap bisa coba — tapi XP-nya kecil & belum dihitung completed resmi.</span></div>}
     <div className="objective"><Info/><div><b>今日の目標</b><p>{l.objectiveId}</p></div></div>
     <div className="flowButtons"><Link className="primary big tap" to={`/section/${s.id}/level/${l.id}/materi`}><BookOpen/> Baca materi dulu <ChevronRight/></Link><Link className="secondary big tap" to={`/section/${s.id}/level/${l.id}/quiz`}><Star/> Langsung quiz <ChevronRight/></Link></div>
@@ -298,7 +283,7 @@ function Materi(){
     <div className="materiTop"><Link to={`/section/${s.id}/level/${l.id}`} className="back">× Tutup</Link><div className="materiDots" aria-label={`Kartu ${i+1} dari ${cards.length}`}>{cards.map((c,n)=><button type="button" key={c.id||n} className={`${n===i?'active':''} ${n<i?'done':''}`} disabled={n>i} aria-label={`Kartu ${n+1}`} onClick={()=>setI(n)}/>)}</div><LangSwitch mode={mode} setMode={setMode}/></div>
     <article className={`richMateriCard rich-${card.type||'lesson'}`} key={card.id||i}><RichCardBody card={card} mode={mode} glossary={glossaryKanji} onTerm={openTerm}/></article>
     {termSheet&&<div className="termSheetBackdrop" role="presentation" onClick={()=>setTermSheet(null)}><section className="termSheet" role="dialog" aria-modal="true" aria-label={`Istilah ${termSheet.kanji}`} onClick={e=>e.stopPropagation()}><button className="termSheetClose" onClick={()=>setTermSheet(null)} aria-label="Tutup">×</button>{mode==='kanji'?<small>{termSheet.reading} · {kanaToRomaji(termSheet.reading)}</small>:<small>{kanaToRomaji(termSheet.reading)}</small>}<Furigana field={termField(termSheet)} mode={mode} as="h2" variant="xl"/><p className="termSheetShort">{termSheet.id.short}</p><p>{termSheet.id.long}</p><Link className="termSheetMore" to={`/glossary/${termSheet.slug}`}>Buka halaman lengkapnya →</Link></section></div>}
-    {(()=>{const terms=cardGlossaryTerms(card,glossaryData.terms);return terms.length>0&&<section className="materiTerms"><h3>🔎 Istilah di kartu ini</h3><div className="materiTermButtons">{terms.map(t=><button type="button" key={t.slug} onClick={()=>setTermSheet(t)} className="materiTermButton"><small>{t.reading}</small><b>{t.kanji}</b><span>{t.id.short}</span></button>)}</div></section>})()}
+    {(()=>{const terms=cardGlossaryTerms(card,glossaryData.terms);return terms.length>0&&<section className="materiTerms"><h3>🔎 Istilah di kartu ini</h3><div className="materiTermChips">{terms.map(t=><button type="button" key={t.slug} onClick={()=>setTermSheet(t)} className="materiTermChip"><b>{t.kanji}</b><small>{kanaToRomaji(t.reading)}</small></button>)}</div></section>})()}
     <div className="richMateriNav">{i>0&&<button type="button" className="secondary tap" onClick={()=>setI(v=>v-1)}>Kembali</button>}<button type="button" className="primary tap" onClick={()=>i<cards.length-1?setI(i+1):nav(`/section/${s.id}/level/${l.id}/quiz`)}>{i<cards.length-1?'Lanjut':'Mulai quiz'} <ChevronRight/></button></div>
     <button type="button" className="materiSkip" onClick={()=>nav(`/section/${s.id}/level/${l.id}/quiz`)}>Lewati ke quiz</button>
   </main>;
@@ -316,7 +301,7 @@ function JapaneseTerm({term,mode,className='',onTerm}){
 function RichCardBody({card,mode,glossary,onTerm}){
   const heading=card.heading||((card.titleJa||card.titleId)?{ja:card.titleJa||'',id:card.titleId||''}:null);
   const body=card.body||((card.bodyJa||card.bodyId)?{ja:card.bodyJa||'',id:card.bodyId||''}:null);
-  if(card.type==='hook') return <><Mascot variant="materi" size="sm"/><Furigana field={body} mode={mode} className="richBody" glossary={glossary} onTerm={onTerm}/></>;
+  if(card.type==='hook') return <><CharArt variant="materi" size="sm"/><Furigana field={body} mode={mode} className="richBody" glossary={glossary} onTerm={onTerm}/></>;
   if(card.type==='term'){const t=card.term;const rom=t.romaji||(t.reading?kanaToRomaji(t.reading):'');return <div className="richTerm"><JapaneseTerm term={t} mode={mode} onTerm={onTerm}/><div className="termRoman">{rom}{t.meaning?` / ${t.meaning}`:''}</div><div className="termExample">{t.example&&mode==='id'&&<><p lang="ja" className="termExampleJa">{stripRuby(t.example.ja||'')}</p><p>{t.example.id}</p></>}{t.example&&mode!=='id'&&<Furigana field={t.example} mode={mode} glossary={glossary} onTerm={onTerm}/>}</div></div>}
   if(card.type==='explain') return <><Furigana field={heading} mode={mode} as="h2" glossary={glossary} onTerm={onTerm}/><Furigana field={body} mode={mode} className="richBody" glossary={glossary} onTerm={onTerm}/></>;
   if(card.type==='compare') return <><Furigana field={card.heading||heading} mode={mode} as="h2" glossary={glossary} onTerm={onTerm}/><div className="compareGrid">{card.rows.map(r=><div className="compareRow" key={r.term.kanji}><CompareTerm term={r.term} mode={mode} className="compareTerm" glossary={glossary} onTerm={onTerm}/><Furigana field={r.meaning} mode={mode} glossary={glossary} onTerm={onTerm}/><Furigana field={r.when} mode={mode} glossary={glossary} onTerm={onTerm}/></div>)}</div>{(card.note||heading)&&<Furigana field={card.note||heading} mode={mode} className="richNote" glossary={glossary} onTerm={onTerm}/>}</>;
@@ -438,7 +423,7 @@ function Quiz(){
     if(!result?.ok){ setSubmitErr(result?.error==='not_signed_in'?'Sesi kamu habis — masuk lagi dulu biar nilainya tersimpan.':'Gagal menyimpan nilai — cek koneksi lalu coba lagi.'); return; }
     const xpDelta = result?.data?.xpDelta ?? (correctCount*10+30);
     const isPreview = Boolean(result?.data?.isPreview);
-    nav(`/section/${s.id}/level/${l.id}/result`,{state:{score:correctCount,total:totalCount,xpDelta,isPreview}});
+    nav(`/section/${s.id}/level/${l.id}/result`,{state:{score:correctCount,total:totalCount,xpDelta,isPreview,newAchievements:result?.data?.newAchievements||[],newCharacters:result?.data?.newCharacters||[]}});
   };
 
   const isLastInRound = qi===roundQuestions.length-1;
@@ -493,7 +478,7 @@ function Practice(){
   return <main className="page quizPage">
     {popup!==null && <AnswerPopup correct={popup} onClose={()=>setPopup(null)}/>}
     <div className="practiceHero">
-      <Mascot variant="practice" size="sm"/>
+      <CharArt variant="practice" size="sm"/>
       <span className="quizModeBadge"><Shuffle size={12}/> Practice · unlimited</span>
       <p className="muted">Soal acak dari semua section — {answered} dijawab, {correct} benar. XP tidak resmi & tidak memengaruhi unlock.</p>
     </div>
@@ -508,6 +493,9 @@ function Practice(){
 
 function Result(){
   const {sectionId,levelId}=useParams();const {state}=useLocation();const s=getSection(sectionId),l=getLevel(sectionId,levelId);
+  const toast=useAchToast();
+  // Unlock karakter + achievement dari submit ini — tampil toast di Result.
+  useEffect(()=>{toast([...(state?.newCharacters||[]).map(id=>({_kind:'char',id})),...(state?.newAchievements||[])])},[]);
   // Guard wajib: baris flowButtons di bawah deref s.levelCount & s.id tanpa optional chaining,
   // jadi /section/99/level/99/result (atau param non-numerik) bikin TypeError -> layar putih.
   // Lima komponen ber-param lain sudah pakai pola yang sama; Result ketinggalan.
@@ -519,7 +507,7 @@ function Result(){
   const isPreview = Boolean(state?.isPreview);
   return <main className="page result">
     {isPerfect && !isPreview && <Confetti/>}
-    <Mascot variant={isPerfect?'perfect':'good'} size="lg"/>
+    <CharArt variant={isPerfect?'perfect':'good'} size="lg"/>
     <p className="eyebrow">{isPreview?'PREVIEW ATTEMPT':'LEVEL COMPLETE ✨'}</p>
     <h1>{state?.score||0} / {state?.total||5}</h1>
     <p className="muted">{isPreview?'Latihan preview — belum resmi completed sampai prasyarat sebelumnya selesai.':(isPerfect?'完璧！Perfect!':'Bagus, terus latihan sedikit lagi.')}</p>
@@ -528,7 +516,7 @@ function Result(){
   </main>;
 }
 
-function Recap(){const {sectionId}=useParams(),s=getSection(sectionId);if(!s)return <Navigate to="/belajar"/>;return <main className="page result"><div className="sectionHero"><span>{s.icon}</span><div><small>RECAP</small><h1>{s.titleJa}</h1><p>Section review · {s.titleId}</p></div></div><Mascot variant="recap" size="md"/><h2>Siap diuji?</h2><p className="muted">Soal campuran dari semua level di section ini.</p><Link className="primary big tap" to={`/section/${s.id}/level/1/quiz`}>Mulai recap <Star/></Link></main>;}
+function Recap(){const {sectionId}=useParams(),s=getSection(sectionId);if(!s)return <Navigate to="/belajar"/>;return <main className="page result"><div className="sectionHero"><span>{s.icon}</span><div><small>RECAP</small><h1>{s.titleJa}</h1><p>Section review · {s.titleId}</p></div></div><CharArt variant="recap" size="md"/><h2>Siap diuji?</h2><p className="muted">Soal campuran dari semua level di section ini.</p><Link className="primary big tap" to={`/section/${s.id}/level/1/quiz`}>Mulai recap <Star/></Link></main>;}
 
 function Glossary(){return <GlossaryPage/>;}
 
@@ -544,7 +532,7 @@ function Profile(){
   if(loading) return <main className="page profile"><KawaiiLoader label="Memuat profil…"/></main>;
   return <main className="page profile">
     <div className="profileCard">
-      {isAuthenticated ? <Avatar avatarKey={user?.avatarKey} frame={user?.avatarFrame} size={84}/> : <Mascot variant="profile" size="md"/>}
+      {isAuthenticated ? <Avatar characterId={user?.characterId} frame={user?.avatarFrame} size={84}/> : <CharArt variant="profile" size="md"/>}
       <h1>{isAuthenticated ? `Halo, ${user?.displayName || user?.name || user?.email}` : "Kenshi's care journey"}</h1>
       {isAuthenticated && user?.handle && <span className="handleChip">@{user.handle}</span>}
       <p className="muted">{isAuthenticated ? 'Progress kamu tersimpan otomatis di akun.' : 'Login biar progress kamu tersimpan permanen.'}</p>
@@ -570,15 +558,16 @@ function Profile(){
   </main>;
 }
 
-/* Terapkan tema pilihan user ke root. Keluar/di-logout → atribut dicabut (kitty default). */
+/* Terapkan karakter + tema pilihan user ke root (doc 49: karakter menentukan
+   skin). Keluar/di-logout → atribut dicabut (momo default). */
 function ThemeApply(){
   const {user} = useAuth();
   useEffect(()=>{
     const t = user?.theme;
     if(t && t!=='kitty') document.documentElement.setAttribute('data-theme',t);
     else document.documentElement.removeAttribute('data-theme');
-    document.documentElement.setAttribute('data-char',(CHAR_FOR_THEME[t]??CHAR_FOR_THEME.kitty));
-  },[user?.theme]);
+    applyChar(user?.characterId||'momo');
+  },[user?.theme,user?.characterId]);
   return null;
 }
 
@@ -598,7 +587,7 @@ function Landing(){
   const {status}=useAuth();
   if(status==='authenticated')return <Navigate to="/belajar" replace/>;
   return <main className="page landingPage"><div className="landingCard">
-    <Mascot variant="home" size="md"/>
+    <CharArt variant="home" size="md"/>
     <p className="eyebrow">KENSHI KAIGO E-LEARNING</p>
     <h1>Belajar 介護福祉士<br/>dengan bahasa Indonesia</h1>
     <ul className="landingPoints">

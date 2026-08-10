@@ -2,7 +2,8 @@ import React,{useState} from 'react';
 import {Link} from 'react-router-dom';
 import {ChevronRight,Check,Heart,Trophy,Users,Sparkles} from 'lucide-react';
 import {useAuth} from './context/AuthContext.jsx';
-function Mascot(){return <div className="mascotImg size-md"><img src="/assets/hellokitty/hk-cute-emoji.png" alt="Hello Kitty"/></div>}
+import {useCharExpr} from './lib/social.jsx';
+function Mascot(){const src=useCharExpr('idle');return <div className="mascotImg size-md"><img src={src} alt="Maskot Kenshi"/></div>}
 /* Login revamp (v7): tetap magic-link tanpa password, tapi jelaskan apa yang didapat
    setelah login — streak permanen, teman, papan peringkat, achievement, tema.
    Redirect ke /onboarding ditangani halaman /profile (Profile cek onboarded_step). */

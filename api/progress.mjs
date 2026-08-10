@@ -2,6 +2,7 @@ import { db } from './_db.mjs';
 import { requireUser, computeXpCandidate, computeStars, PREVIEW_XP_FLAT, recomputeAllXp } from './_auth.mjs';
 import { evaluateAchievements } from './_achievements.mjs';
 import { SECTION_COUNT, levelsInSection, meetsSectionGate, sectionPercent } from './_sections.mjs';
+import { LEVEL_UNLOCKS } from './_characters.mjs';
 
 function todayInTz(tz) {
   try {
@@ -271,6 +272,20 @@ export default async function handler(req, res) {
         `;
       }
 
+      // ===== Unlock karakter (doc 49/008): completion resmi menambah hitungan;
+      // pasangan gender lain terbuka di 5 level, kinako di 15. Idempoten —
+      // karakter yang sudah punya tidak pernah dobel. =====
+      let newCharacters = [];
+      if (isCompleted) {
+        const cnt = await sql`SELECT COUNT(*)::int n FROM level_progress WHERE user_id=${user.id} AND status='completed'`;
+        const done = cnt[0].n;
+        const ownedRows = await sql`SELECT characters_unlocked FROM app_users WHERE id=${user.id}`;
+        const owned = new Set(ownedRows[0]?.characters_unlocked || []);
+        newCharacters = LEVEL_UNLOCKS.filter(u => done >= u.completed && !owned.has(u.id)).map(u => u.id);
+        if (newCharacters.length)
+          await sql`UPDATE app_users SET characters_unlocked=${[...owned, ...newCharacters]}, updated_at=now() WHERE id=${user.id}`;
+      }
+
       // Achievement dievaluasi SETELAH semua stats (xp/streak/daily) tertulis
       // supaya engine melihat state final. Skipped kalau attempt gagal.
       // Hasil ikut ter-cache di level_attempts bersama responseBody — replay
@@ -292,6 +307,7 @@ export default async function handler(req, res) {
         },
         isNewCompletion: isCompleted && !wasAlreadyCompleted,
         newAchievements,
+        newCharacters,
       };
 
       await sql`INSERT INTO level_attempts(attempt_id, user_id, section_id, level_id, response) VALUES (${attemptId}, ${user.id}, ${sectionId}, ${levelId}, ${JSON.stringify(responseBody)})`;

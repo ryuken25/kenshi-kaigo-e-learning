@@ -1,0 +1,61 @@
+{
+ "chars": {
+  "momo": {
+   "idle": "/assets/characters/momo/idle.svg",
+   "happy": "/assets/characters/momo/happy.svg",
+   "sad": "/assets/characters/momo/sad.svg",
+   "sleepy": "/assets/characters/momo/sleepy.svg",
+   "surprised": "/assets/characters/momo/surprised.svg",
+   "clap": "/assets/characters/momo/clap.svg"
+  },
+  "kurumi": {
+   "idle": "/assets/characters/kurumi/idle.svg",
+   "happy": "/assets/characters/kurumi/happy.svg",
+   "sad": "/assets/characters/kurumi/sad.svg",
+   "sleepy": "/assets/characters/kurumi/sleepy.svg",
+   "surprised": "/assets/characters/kurumi/surprised.svg",
+   "clap": "/assets/characters/kurumi/clap.svg"
+  },
+  "sora": {
+   "idle": "/assets/characters/sora/idle.svg",
+   "happy": "/assets/characters/sora/happy.svg",
+   "sad": "/assets/characters/sora/sad.svg",
+   "sleepy": "/assets/characters/sora/sleepy.svg",
+   "surprised": "/assets/characters/sora/surprised.svg",
+   "clap": "/assets/characters/sora/clap.svg"
+  },
+  "kinako": {
+   "idle": "/assets/characters/kinako/idle.svg",
+   "happy": "/assets/characters/kinako/happy.svg",
+   "sad": "/assets/characters/kinako/sad.svg",
+   "sleepy": "/assets/characters/kinako/sleepy.svg",
+   "surprised": "/assets/characters/kinako/surprised.svg",
+   "clap": "/assets/characters/kinako/clap.svg"
+  },
+  "nagi": {
+   "idle": "/assets/characters/nagi/idle.svg",
+   "happy": "/assets/characters/nagi/happy.svg",
+   "sad": "/assets/characters/nagi/sad.svg",
+   "sleepy": "/assets/characters/nagi/sleepy.svg",
+   "surprised": "/assets/characters/nagi/surprised.svg",
+   "clap": "/assets/characters/nagi/clap.svg"
+  },
+  "beni": {
+   "idle": "/assets/characters/beni/idle.svg",
+   "happy": "/assets/characters/beni/happy.svg",
+   "sad": "/assets/characters/beni/sad.svg",
+   "sleepy": "/assets/characters/beni/sleepy.svg",
+   "surprised": "/assets/characters/beni/surprised.svg",
+   "clap": "/assets/characters/beni/clap.svg"
+  }
+ },
+ "exprs": [
+  "idle",
+  "happy",
+  "sad",
+  "sleepy",
+  "surprised",
+  "clap"
+ ],
+ "note": "Digenerate scripts/gen-characters.mjs — deterministik, jangan edit manual."
+}
