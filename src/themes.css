@@ -1,0 +1,79 @@
+/* ============================================================================
+   SISTEM TEMA — 4 palet: kitty (default), sora, matcha, yozora.
+   Aktif lewat atribut data-theme di <html> (di-set main.jsx dari user.theme).
+   Semua komponen existing sudah baca var(--pink) dkk dari :root di styles.css,
+   jadi cukup timpa token-nya di sini. File ini WAJIB diimport SETELAH styles.css
+   supaya menang cascade. validate:css-classes TIDAK scan file ini (hanya 4 file
+   lama), tapi semua selector di sini nempel ke class yang sudah ada.
+   ========================================================================== */
+
+/* ---------- sora: langit biru ---------- */
+:root[data-theme=sora]{
+  --ink:#2e4a5c;--muted:#5c7a8c;
+  --pink:#6db9e8;--pink-deep:#3f96d4;--pink-pale:#d9edfb;--pink-paler:#eef7fe;
+  --lavender:#e3f0fa;--gold:#ffd47e;--gold-deep:#ffbf4f;--mint:#d3f3ee;
+  --soft:#f7fbff;--line:#dcebf7;
+  --shadow-pink:0 10px 30px -8px rgba(80,160,220,.32);
+  --shadow-pink-lg:0 18px 45px -10px rgba(80,160,220,.38);
+  --kk-furi:#5f7d8f;--kk-pink-300:#8ecdf0;--kk-pink-50:#f0f9ff;
+}
+:root[data-theme=sora] body{
+  background:
+    radial-gradient(circle at 10% 0%, #e3f2fd 0%, transparent 45%),
+    radial-gradient(circle at 90% 10%, #e0f4f1 0%, transparent 40%),
+    linear-gradient(180deg,#f5fbff,#fdfffd 60%);
+}
+
+/* ---------- matcha: hijau teh ---------- */
+:root[data-theme=matcha]{
+  --ink:#44543c;--muted:#6e7f66;
+  --pink:#8fc48a;--pink-deep:#5da55c;--pink-pale:#e2f2dc;--pink-paler:#f2f9ee;
+  --lavender:#eef5e6;--gold:#f2d489;--gold-deep:#e0b34f;--mint:#dff2d8;
+  --soft:#fafdf6;--line:#e0ecd8;
+  --shadow-pink:0 10px 30px -8px rgba(110,180,100,.3);
+  --shadow-pink-lg:0 18px 45px -10px rgba(110,180,100,.36);
+  --kk-furi:#71846a;--kk-pink-300:#a9d3a2;--kk-pink-50:#f4faf0;
+}
+:root[data-theme=matcha] body{
+  background:
+    radial-gradient(circle at 10% 0%, #ecf6e4 0%, transparent 45%),
+    radial-gradient(circle at 90% 10%, #f5f2dd 0%, transparent 40%),
+    linear-gradient(180deg,#fafdf6,#fffef8 60%);
+}
+
+/* ---------- yozora: langit malam (pastel ungu — tetap light supaya kontras aman) ---------- */
+:root[data-theme=yozora]{
+  --ink:#46396b;--muted:#7a6f9c;
+  --pink:#a98fe0;--pink-deep:#7f5fd0;--pink-pale:#e8defc;--pink-paler:#f4efff;
+  --lavender:#ede6fb;--gold:#ffd47e;--gold-deep:#ffbf4f;--mint:#dcd6f5;
+  --soft:#faf8ff;--line:#e4dcf6;
+  --shadow-pink:0 10px 30px -8px rgba(140,110,220,.32);
+  --shadow-pink-lg:0 18px 45px -10px rgba(140,110,220,.38);
+  --kk-furi:#8a7ca8;--kk-pink-300:#c0a8ec;--kk-pink-50:#f6f1ff;
+}
+:root[data-theme=yozora] body{
+  background:
+    radial-gradient(circle at 10% 0%, #ece2fd 0%, transparent 45%),
+    radial-gradient(circle at 90% 10%, #fdeef7 0%, transparent 40%),
+    linear-gradient(180deg,#faf8ff,#fff9fc 60%);
+}
+
+/* ============================================================================
+   BINGKAI AVATAR — reward achievement. Gradient ring di ::before, avatar di atas.
+   Rainbow pakai conic-gradient yang berputar pelan (dimatikan saat reduced-motion).
+   ========================================================================== */
+.frame-bronze{--fc1:#cd9b6a;--fc2:#8a5a2b}
+.frame-silver{--fc1:#eef0f6;--fc2:#9aa0b5}
+.frame-gold{--fc1:#ffe08a;--fc2:#e0a93e}
+.frame-sakura{--fc1:#ffc2dd;--fc2:#ff7bab}
+.frame-rainbow{--fc1:#ff8fb3;--fc2:#8fd3ff}
+
+.avatarWrap{position:relative;display:inline-grid;place-items:center;border-radius:50%;flex:none;background:var(--pink-pale);overflow:visible}
+.avatarWrap img{border-radius:50%;display:block;object-fit:cover;width:100%;height:100%;position:relative;z-index:1;background:#fff}
+.avatarWrap:not(.frame-none)::before{content:'';position:absolute;inset:-4px;border-radius:50%;background:linear-gradient(135deg,var(--fc1),var(--fc2));z-index:0}
+.avatarWrap:not(.frame-none) img{border:2px solid #fff}
+.avatarWrap.frame-rainbow::before{background:conic-gradient(#ff8fb3,#ffd47e,#9fe6a0,#8fd3ff,#c9a6ff,#ff8fb3);animation:frameSpin 7s linear infinite}
+@keyframes frameSpin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){
+  .avatarWrap.frame-rainbow::before{animation:none}
+}

@@ -43,6 +43,47 @@ const qTemplates = [
  {q:'学習の視点として正しいものを1つ選びなさい。',qId:'manakah sudut pandang belajar yang benar?',answer:0,opts:[['制度や技術を、利用者の生活と意思に結びつけて理解する','Memahami sistem dan teknik dengan menghubungkannya ke kehidupan dan kehendak pengguna'],['用語をそのまま暗記し、事例には当てはめない','Menghafal istilah apa adanya tanpa menerapkannya ke kasus'],['手順だけを覚え、目的は考えない','Menghafal hanya urutan langkah tanpa memikirkan tujuannya'],['試験に出る部分だけを読み、生活場面は考えない','Membaca hanya bagian yang keluar di ujian tanpa memikirkan situasi nyata'],['自分の経験だけを基準にして判断する','Menilai hanya berdasarkan pengalaman pribadi']],explanationJa:'知識は事例に結びつけて初めて使えます。用語の暗記だけでなく、利用者の生活と意思に照らして考える習慣が国家試験でも実践でも求められます。',explanationId:'Jawaban benar adalah menghubungkan sistem dan teknik ke kehidupan serta kehendak pengguna, karena pengetahuan baru berguna ketika dikaitkan dengan kasus nyata. Hafalan istilah dan urutan langkah tanpa memahami tujuannya tidak terpakai, baik di ujian nasional maupun di lapangan.'}
 ];
 
+/* 60 istilah glossary yang tadinya tidak muncul di konten manapun (audit 2026-08:
+   build-glossary-index.mjs menghitung occurrences=0 untuk semuanya). Ditanam LITERAL
+   di sini — bukan di-import dari glossary.json — karena indexer memindai teks sumber
+   data.js apa adanya. Tiap level menampilkan 3 istilah + artinya (id.short asli dari
+   glossary.json) lewat kartu "Istilah terkait". */
+const GLOSSARY_EMBED=[
+ {t:'ADL',id:'aktivitas dasar sehari-hari'},{t:'IADL',id:'aktivitas instrumental sehari-hari'},
+ {t:'アルツハイマー型認知症',id:'demensia Alzheimer'},{t:'バイステックの7原則',id:'7 prinsip Biestek'},
+ {t:'ボディメカニクス',id:'mekanika tubuh'},{t:'燃え尽き症候群',id:'sindrom kelelahan kerja'},
+ {t:'介護支援専門員',id:'care manager'},{t:'地域包括支援センター',id:'pusat dukungan komunitas'},
+ {t:'脱水',id:'dehidrasi'},{t:'エンパワメント',id:'pemberdayaan'},
+ {t:'介護施設',id:'fasilitas kaigo'},{t:'福祉用具',id:'alat bantu kesejahteraan'},
+ {t:'服薬',id:'minum obat'},{t:'排便',id:'buang air besar'},
+ {t:'排泄介助',id:'bantuan buang air'},{t:'排尿',id:'buang air kecil'},
+ {t:'廃用症候群',id:'sindrom disuse'},{t:'白内障',id:'katarak'},
+ {t:'開かれた質問',id:'pertanyaan terbuka'},{t:'標準予防策',id:'kewaspadaan standar'},
+ {t:'胃ろう',id:'gastrostomi (PEG)'},{t:'若年性認知症',id:'demensia usia muda'},
+ {t:'自己覚知',id:'kesadaran diri perawat'},{t:'介護計画',id:'rencana perawatan'},
+ {t:'介護職',id:'petugas kaigo'},{t:'回想法',id:'terapi reminisensi'},
+ {t:'経鼻経管栄養',id:'selang nutrisi lewat hidung'},{t:'見当識障害',id:'disorientasi'},
+ {t:'血圧',id:'tekanan darah'},{t:'個人の尊重',id:'penghormatan individu'},
+ {t:'骨粗鬆症',id:'osteoporosis'},{t:'恒常性',id:'homeostasis'},
+ {t:'高齢者虐待',id:'kekerasan terhadap lansia'},{t:'客観的情報',id:'informasi objektif'},
+ {t:'急変時対応',id:'penanganan kondisi mendadak'},{t:'レビー小体型認知症',id:'demensia Lewy body'},
+ {t:'マズローの欲求階層',id:'hierarki kebutuhan Maslow'},{t:'モニタリング',id:'pemantauan'},
+ {t:'内部障害',id:'disabilitas organ dalam'},{t:'難聴',id:'gangguan pendengaran'},
+ {t:'発熱',id:'demam'},{t:'入浴介助',id:'bantuan mandi'},
+ {t:'ピアサポート',id:'dukungan sesama'},{t:'パーソン・センタード・ケア',id:'perawatan berpusat pada orang'},
+ {t:'プライバシー保護',id:'perlindungan privasi'},{t:'パルスオキシメーター',id:'oksimeter denyut'},
+ {t:'ラポール',id:'hubungan saling percaya'},{t:'リスクマネジメント',id:'manajemen risiko'},
+ {t:'老年期',id:'masa lanjut usia'},{t:'清拭',id:'seka badan'},
+ {t:'せん妄',id:'delirium'},{t:'食事介助',id:'bantuan makan'},
+ {t:'障害受容',id:'penerimaan disabilitas'},{t:'主観的情報',id:'informasi subjektif'},
+ {t:'体温',id:'suhu tubuh'},{t:'低栄養',id:'malnutrisi'},
+ {t:'統合失調症',id:'skizofrenia'},{t:'バリデーション',id:'terapi validasi'},
+ {t:'残存機能',id:'fungsi yang masih tersisa'},{t:'前頭側頭型認知症',id:'demensia frontotemporal'}
+];
+/* 3 istilah berurutan, dipilih deterministik dari seed level — 152 level × 3 istilah
+   membuat semua 60 entri tayang berulang kali tanpa pernah berubah antar render. */
+function levelTerms(sectionId,levelId){const s=hashSeed(`terms-s${sectionId}-l${levelId}`)%GLOSSARY_EMBED.length;return [0,1,2].map(i=>GLOSSARY_EMBED[(s+i)%GLOSSARY_EMBED.length])}
+
 function makeGeneratedJapaneseCard({sectionId,levelId,topic,cardIndex,type='explain'}){
   const term=topic.replace(/^[^\u3040-\u30ff\u4e00-\u9fff]*/, '')||'介護';
   const hooks=[
@@ -55,7 +96,7 @@ function makeGeneratedJapaneseCard({sectionId,levelId,topic,cardIndex,type='expl
     `${term}を理解するときは、利用者の尊厳と自己決定を出発点にします。本人の希望を確認せず、職員や家族の都合だけで方法を決めてはいけません。\n\n本人が拒否した場合も、単なる問題行動と決めつけず、痛み、不安、疲労、環境、時間帯などの理由を観察します。理由を考え、方法や環境を調整することが大切です。`,
     `試験では、最も個別的で、本人の意思と能力を尊重する選択肢を選びます。施設の効率だけを優先する選択肢や、説明なしに支援を始める選択肢には注意してください。`
   ];
-  if(type==='hook')return {id:`generated-s${sectionId}l${levelId}m${cardIndex}`,type,body:{ja:hooks[cardIndex%hooks.length],id:`${topic}について、利用者の生活と気持ちを中心に学びます。`}};
+  if(type==='hook')return {id:`generated-s${sectionId}l${levelId}m${cardIndex}`,type,body:{ja:hooks[cardIndex%hooks.length],id:`${topic}: kita belajar dengan menaruh kehidupan dan perasaan pengguna sebagai pusat dukungan.`}};
   if(type==='recap')return {id:`generated-s${sectionId}l${levelId}m${cardIndex}`,type,heading:{ja:`${term}のまとめ`,id:`Ringkasan ${topic}`},points:bodies.map((x,i)=>({ja:x.split('\n')[0],id:`Poin penting ${i+1} tentang ${topic}.`}))};
   return {id:`generated-s${sectionId}l${levelId}m${cardIndex}`,type:'explain',heading:{ja:`${term}を学ぶ`,id:`Belajar ${topic}`},body:{ja:bodies[cardIndex%bodies.length],id:`${topic} adalah materi penting. Hubungkan teori dengan martabat, keamanan, pilihan, dan kehidupan pengguna.`}};
 }
@@ -72,7 +113,7 @@ function makeLevel(sectionId, plan, levelId, topic){
  // 5 soal per level = 5 template BERBEDA (stride 5 coprime dengan 12 → tidak ada yang terulang).
  const start=hashSeed(`s${sectionId}-l${levelId}`)%qTemplates.length;
  const questions=[0,1,2,3,4].map(i=>makeQuestion({sectionId,levelId,topic,qIndex:i,tpl:qTemplates[(start+i*5)%qTemplates.length],difficulty}));
- return {id:levelId,titleJa:`${topic}`,titleId:topic==='セクション復習'?'Section recap':topic,objective:`${topic}の基本を理解し、事例に応用する`,objectiveId:`Memahami ${topic} dan menerapkannya pada kasus.`,isReview,materi:[makeGeneratedJapaneseCard({sectionId,levelId,topic,cardIndex:0,type:'hook'}),makeGeneratedJapaneseCard({sectionId,levelId,topic,cardIndex:1,type:'explain'}),makeGeneratedJapaneseCard({sectionId,levelId,topic,cardIndex:2,type:'explain'}),makeGeneratedJapaneseCard({sectionId,levelId,topic,cardIndex:3,type:'explain'}),makeGeneratedJapaneseCard({sectionId,levelId,topic,cardIndex:4,type:'recap'})],questions};
+ return {id:levelId,titleJa:`${topic}`,titleId:topic==='セクション復習'?'Section recap':topic,objective:`${topic}の基本を理解し、事例に応用する`,objectiveId:`Memahami ${topic} dan menerapkannya pada kasus.`,isReview,materi:[makeGeneratedJapaneseCard({sectionId,levelId,topic,cardIndex:0,type:'hook'}),makeGeneratedJapaneseCard({sectionId,levelId,topic,cardIndex:1,type:'explain'}),makeGeneratedJapaneseCard({sectionId,levelId,topic,cardIndex:2,type:'explain'}),makeGeneratedJapaneseCard({sectionId,levelId,topic,cardIndex:3,type:'explain'}),makeGeneratedJapaneseCard({sectionId,levelId,topic,cardIndex:4,type:'recap'}),{id:`generated-s${sectionId}l${levelId}m5`,type:'terms',heading:{ja:'関連用語',id:'Istilah terkait'},terms:levelTerms(sectionId,levelId)}],questions};
 }
 
 export const sections=plans.map(([titleJa,titleId,count,icon,topics],i)=>({id:i+1,titleJa,titleId,icon,levelCount:count,description:`${titleJa}を基礎から事例まで段階的に学びます。`,levels:topics.map((topic,j)=>makeLevel(i+1,[titleJa,titleId,count,icon,topics],j+1,topic))}));

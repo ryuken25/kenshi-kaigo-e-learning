@@ -19,6 +19,16 @@ export default async function handler(req, res) {
           totalXp: user.total_xp,
           streak: { current: user.streak_current, longest: user.streak_longest },
           lastActiveDate: user.last_active_date,
+          // Field sosial (006/007) — client pakai ini untuk onboarding & tema.
+          handle: user.handle,
+          displayName: user.display_name,
+          avatarKey: user.avatar_key,
+          theme: user.theme,
+          gender: user.gender,
+          onboardedStep: user.onboarded_step,
+          visibility: user.visibility,
+          avatarFrame: user.avatar_frame,
+          handleChangedAt: user.handle_changed_at,
         },
       });
     }

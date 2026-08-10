@@ -10,11 +10,12 @@ npm run dev                  # Vite dev server (frontend only — /api/* returns
 npm run build                # build-glossary-index.mjs, then vite build
 npm run preview
 
-npm run validate             # runs all six gates below in order; use this before pushing
+npm run validate             # runs all seven gates below in order; use this before pushing
 npm run validate:glossary    # slug/kanji uniqueness, reading is pure hiragana, related-slug refs resolve
 npm run validate:final       # asserts 6 years × 125 questions, 5 options, answer ∈ 1..5, 5 parts of 25
 npm run validate:sections    # src/data.js level counts == SECTION_LEVELS in api/_sections.mjs (+ the 005 migration)
 npm run validate:jsx         # every <Capitalized/> in JSX is declared in that file (see below — a bare one blanks the app)
+npm run validate:css-classes # every className in JSX has a matching rule in the four CSS files (see below)
 npm run validate:ruby        # static gate: no leaked bracket annotations (3 classes, see below)
 npm run validate:furigana    # furigana layout: postcss CSS analysis (layer 1)
 npm run validate:furigana:measure   # + real glyph measurement in headless Chrome at 320/360/402/444/768/1280/1920px (layer 2)
@@ -22,9 +23,11 @@ npm run validate:overflow    # non-ruby horizontal overflow + touch targets <44p
 npm run validate:browsers    # WebKit (Safari engine) + Firefox + Chromium against production via Playwright
 ```
 
-There is no test runner, linter, or formatter. The `validate:*` scripts are the only automated checks — treat them as the test suite. `npm run validate` chains six of them and is what you want after touching content, CSS, or `api/_sections.mjs`. `validate:overflow` and `validate:browsers` are deliberately **not** in that chain: the first needs a browser, the second needs a live deployment.
+There is no test runner, linter, or formatter. The `validate:*` scripts are the only automated checks — treat them as the test suite. `npm run validate` chains seven of them and is what you want after touching content, CSS, or `api/_sections.mjs`. `validate:overflow` and `validate:browsers` are deliberately **not** in that chain: the first needs a browser, the second needs a live deployment.
 
-A third gate exists because of an outage: `validate:jsx`. `main.jsx` once used `<UnlimitedFinal/>` without importing it, and **every route rendered blank** — `element={<Foo/>}` dereferences the identifier while React builds the `<Routes>` children array, so the `ReferenceError` fires before any path is matched, and with no error boundary in `src/` React unmounts the whole tree. `npm run build` exits 0 on this: a bare identifier in JSX is syntactically valid (it could be a global), so the bundler emits it verbatim. The build was green the entire time production was a white screen.
+Two gates exist because of outages. `validate:jsx`: `main.jsx` once used `<UnlimitedFinal/>` without importing it, and **every route rendered blank** — `element={<Foo/>}` dereferences the identifier while React builds the `<Routes>` children array, so the `ReferenceError` fires before any path is matched, and with no error boundary in `src/` React unmounts the whole tree. `npm run build` exits 0 on this: a bare identifier in JSX is syntactically valid (it could be a global), so the bundler emits it verbatim. The build was green the entire time production was a white screen.
+
+`validate:css-classes` is the other outage-born gate: a class used in JSX with **no matching rule in any of the four CSS files** falls back to `display:inline`, so `<b>`/`<span>`/`<small>` fuse into one line of text (this actually shipped as "Ujian AkhirSimulasi 2021-2026…", and the same class of bug hit `.termSheetBackdrop`, `.sr-only`, `.finalHomeBanner`). The build never fails on this — an unstyled class is perfectly valid CSS-wise. The script scrapes class selectors from `styles.css`/`routing.css`/`translation.css`/`auth.css` and cross-checks every `className=` in `src/*.jsx`, with a boundary-anchored regex so `.finalHomeBannerXX` can't satisfy a lookup for `finalHomeBanner`, and an allowlist for template-literal fragments (`variantClass`, `size-${x}`, …) and intentionally unstyled page-scope markers (`finalPage`, `materiPage`, …).
 
 Two traps when reading their results:
 - **Never pipe them** (`… | tail`) to check success. The shell reports the *last* command's exit code, so a real failure reads as `EXIT=0`. Run them bare.
@@ -43,7 +46,7 @@ node scripts/verify-consistency.mjs                   # app_users.total_xp vs SU
 node scripts/backup-db.mjs out.json                   # dump 4 tables to JSON
 node scripts/e2e-make-token.mjs [email]               # mint a magic token, prints raw token for /api/auth/verify?token=
 node scripts/cleanup-e2e-test.mjs                     # delete the e2e-smoke-test@kaigokitty.internal user
-node scripts/gen-furigana.mjs                         # regenerate src/furigana.generated.js (see caveat below)
+node scripts/gen-furigana.mjs                         # regenerate src/furigana.generated.js (emits bracket notation, never HTML ruby — regenerating is safe)
 ```
 
 Migrations are idempotent and additive (`IF NOT EXISTS`, `ADD COLUMN IF NOT EXISTS`, `DO $$ ... EXCEPTION WHEN duplicate_object`), designed to be safely re-run. `run-migration.mjs` strips `BEGIN`/`COMMIT` and splits on `;` while respecting `$$`-quoted blocks, because the Neon HTTP driver auto-commits per statement — so a migration is **not** atomic when applied this way; a mid-file failure leaves partial state. `scripts/drop-legacy.mjs` DROPs the four core tables CASCADE — destructive, never run it casually.
@@ -110,7 +113,9 @@ Kept as history because the fixes are load-bearing and easy to undo by accident.
 
 **2. `LEVELS_PER_SECTION = 17` — fixed.** The constant is gone. `api/_sections.mjs` is now the single server-side source of truth (`SECTION_LEVELS = [10,10,15,13,10,12,12,9,12,10,17,10,12]`, plus `levelsInSection` / `meetsSectionGate` / `sectionPercent`), re-exported by `api/_auth.mjs` and imported by `api/progress.mjs`. The 80% gate uses integer math (`completed*5 >= total*4`), not rounded percentages, and `useSectionUnlockMap()` in `main.jsx` mirrors that exact expression for guests — verified in agreement across all 61,836 progression states. `npm run validate:sections` asserts `src/data.js` and `SECTION_LEVELS` still match; it will fail if a section's level count changes on only one side.
 
-`scripts/005_section_level_ranges.sql` tightens the DB-side `level_progress` CHECK to the real per-section ranges. **It is written but not applied** — applying it needs `DATABASE_URL`. Note the explicit `section_id BETWEEN 1 AND 13`: without it an out-of-range subscript yields NULL, and a CHECK evaluating to NULL is treated as *satisfied*, so the guard is what makes the constraint real.
+`scripts/005_section_level_ranges.sql` tightens the DB-side `level_progress` CHECK to the real per-section ranges and **is applied**. Note the explicit `section_id BETWEEN 1 AND 13`: without it an out-of-range subscript yields NULL, and a CHECK evaluating to NULL is treated as *satisfied*, so the guard is what makes the constraint real.
+
+`scripts/006_profile_theme_friends.sql` adds user handles (lowercase, 4–14 chars, unique via partial index), profile fields (`display_name`, `avatar_key`, `theme`, `gender`, `onboarded_step`), and a `friendships` table (pending/accepted/blocked, directional rows, no self-friending), plus a `total_xp DESC` index for the leaderboard. **Provisioned but unwired** — no `api/` route and no `src/` component reads or writes any of it yet, the same state `final_progress` is in. Building profile/friends features means writing both sides from scratch against this schema, not "fixing" existing code.
 
 ## Conventions
 

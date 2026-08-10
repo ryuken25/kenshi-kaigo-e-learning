@@ -1,5 +1,6 @@
 import { db } from './_db.mjs';
 import { requireUser, computeXpCandidate, computeStars, PREVIEW_XP_FLAT } from './_auth.mjs';
+import { evaluateAchievements } from './_achievements.mjs';
 import { SECTION_COUNT, levelsInSection, meetsSectionGate, sectionPercent } from './_sections.mjs';
 
 function todayInTz(tz) {
@@ -270,6 +271,12 @@ export default async function handler(req, res) {
         `;
       }
 
+      // Achievement dievaluasi SETELAH semua stats (xp/streak/daily) tertulis
+      // supaya engine melihat state final. Skipped kalau attempt gagal.
+      // Hasil ikut ter-cache di level_attempts bersama responseBody — replay
+      // attemptId yang sama tidak pernah mengevaluasi (apalagi mendobel) lagi.
+      const newAchievements = isCompleted ? await evaluateAchievements(sql, user.id) : [];
+
       const nextLevelId = levelId < levelsInSection(sectionId) ? levelId + 1 : null;
       const responseBody = {
         level: {
@@ -284,6 +291,7 @@ export default async function handler(req, res) {
           nextSection: nextLevelId ? null : (sectionId < SECTION_COUNT ? { sectionId: sectionId + 1 } : null),
         },
         isNewCompletion: isCompleted && !wasAlreadyCompleted,
+        newAchievements,
       };
 
       await sql`INSERT INTO level_attempts(attempt_id, user_id, section_id, level_id, response) VALUES (${attemptId}, ${user.id}, ${sectionId}, ${levelId}, ${JSON.stringify(responseBody)})`;
@@ -296,7 +304,11 @@ export default async function handler(req, res) {
       if (confirm !== 'RESET') return res.status(400).json({ error: 'invalid_input', message: 'confirm: "RESET" required' });
       await sql`DELETE FROM level_progress WHERE user_id = ${user.id}`;
       await sql`DELETE FROM daily_activity WHERE user_id = ${user.id}`;
-      await sql`UPDATE app_users SET total_xp = 0, streak_current = 0, streak_longest = 0, last_active_date = NULL WHERE id = ${user.id}`;
+      // Reset harus total: achievement, bingkai avatar, & peringkat mingguan
+      // ikut hilang — statistik yang di-reset tidak boleh terus memunculkan badge.
+      await sql`DELETE FROM user_achievements WHERE user_id = ${user.id}`;
+      await sql`DELETE FROM leaderboard_seen WHERE user_id = ${user.id}`;
+      await sql`UPDATE app_users SET total_xp = 0, streak_current = 0, streak_longest = 0, last_active_date = NULL, avatar_frame = 'none' WHERE id = ${user.id}`;
       return res.status(200).json({ ok: true });
     }
 

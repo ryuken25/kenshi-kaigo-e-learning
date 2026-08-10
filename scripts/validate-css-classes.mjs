@@ -7,7 +7,7 @@
 // Build tidak pernah gagal karena ini: class yang tidak punya rule itu sah-sah saja di CSS.
 import fs from 'node:fs';
 
-const cssText = ['src/styles.css','src/routing.css','src/translation.css','src/auth.css']
+const cssText = ['src/styles.css','src/routing.css','src/translation.css','src/auth.css','src/themes.css','src/social.css']
   .filter(f=>fs.existsSync(f)).map(f=>fs.readFileSync(f,'utf8')).join('\n');
 
 // Kumpulkan semua selector class yang benar-benar dideklarasikan.
@@ -37,7 +37,7 @@ for (const f of fs.readdirSync('src').filter(x=>/\.jsx$/.test(x))) {
 // tingkat halaman yang memang sengaja tanpa style (cuma penanda buat scoping).
 const ABAIKAN = new Set([
   'variantClass','className','size','size-','rich-','clickable','isMilestone','previewOnly',
-  'isCurrent','correct','lesson',
+  'isCurrent','correct','lesson','themeDotClass',
   // wrapper halaman: dipakai sebagai penanda/scoping, styling-nya lewat .page
   'finalPage','finalQuiz','unlimitedFinal','glossaryPage','materiPage','profile',
 ]);

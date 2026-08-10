@@ -3,6 +3,7 @@ import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { buildIndex, searchGlossary, topTerms, highlight, getBySlug } from './lib/glossarySearch.js';
 import glossaryData from './content/glossary.index.json';
 import Furigana from './Furigana.jsx';
+import {useLangMode} from './lib/social.jsx';
 
 const PAGE=24, STATE_KEY='kk_glossary_state';
 buildIndex(glossaryData.terms);
@@ -18,7 +19,7 @@ const termField=t=>KANJI_ONLY.test(t.kanji)?{ja:`${t.kanji}[${t.reading}]`,id:t.
 
 export function GlossaryPage(){
  const [params,setParams]=useSearchParams(),q=params.get('q')||'',section=params.get('section')?Number(params.get('section')):null;
- const [input,setInput]=useState(q),[loaded,setLoaded]=useState(PAGE),[lang,setLang]=useState('kanji');const newItemRef=useRef(null),restored=useRef(false);
+ const [input,setInput]=useState(q),[loaded,setLoaded]=useState(PAGE),[lang,setLang]=useLangMode();const newItemRef=useRef(null),restored=useRef(false);
  useEffect(()=>{setInput(q)},[q]);
  useEffect(()=>{const t=setTimeout(()=>{if(input===q)return;const n=new URLSearchParams(params);input?n.set('q',input):n.delete('q');setParams(n,{replace:true});setLoaded(PAGE)},150);return()=>clearTimeout(t)},[input,q,params,setParams]);
  const {results,total}=useMemo(()=>searchGlossary(q,{limit:loaded,section}),[q,loaded,section]),top=useMemo(()=>topTerms(10),[]);
@@ -36,7 +37,7 @@ export function GlossaryPage(){
 }
 
 export function GlossaryDetail(){
- const {slug}=useParams();const term=getBySlug(slug);const [lang,setLang]=useState('furigana');
+ const {slug}=useParams();const term=getBySlug(slug);const [lang,setLang]=useLangMode('furigana');
  // "Cek istilah lain": bagian jelajah yang SELALU ada di halaman detail. Field `related` di
  // glossary.json kosong untuk 114/114 istilah, jadi bagian "Istilah terkait" tidak pernah tampil sama
  // sekali dan halaman ini jadi jalan buntu. Di sini tetangganya dihitung dari data yang MEMANG

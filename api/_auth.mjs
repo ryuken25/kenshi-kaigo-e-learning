@@ -22,7 +22,9 @@ export async function requireUser(sql, req) {
   if (!raw) return null;
   const rows = await sql`
     SELECT u.id, u.email, u.name, u.avatar_seed, u.timezone,
-           u.total_xp, u.streak_current, u.streak_longest, u.last_active_date
+           u.total_xp, u.streak_current, u.streak_longest, u.last_active_date,
+           u.handle, u.display_name, u.avatar_key, u.theme, u.gender,
+           u.onboarded_step, u.visibility, u.avatar_frame, u.handle_changed_at
     FROM app_sessions s
     JOIN app_users u ON u.id = s.user_id
     WHERE s.token_hash = ${hash(raw)} AND s.expires_at > now() AND s.revoked_at IS NULL

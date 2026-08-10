@@ -1,7 +1,7 @@
 import React,{useEffect,useMemo,useState} from 'react';
 import {createRoot} from 'react-dom/client';
 import {BrowserRouter,Routes,Route,Link,useNavigate,useParams,useLocation,Navigate} from 'react-router-dom';
-import {Heart,Lock,ChevronRight,BookOpen,Flame,UserRound,Star,Check,X,Volume2,Info,Menu,Home as HomeIcon,Languages,ArrowLeft,SkipForward,RotateCcw,Shuffle,Sparkles} from 'lucide-react';
+import {Heart,Lock,ChevronRight,BookOpen,Flame,UserRound,Star,Check,X,Volume2,Info,Menu,Home as HomeIcon,Languages,ArrowLeft,SkipForward,RotateCcw,Shuffle,Sparkles,Users,Trophy,Medal} from 'lucide-react';
 import {sections,getSection,getLevel,glossary,allQuestions,randomQuestion} from './data.js';
 import Furigana,{CompareTerm} from './Furigana.jsx';
 import s1l1Content from './content/s1l1.json';
@@ -10,9 +10,11 @@ import glossaryData from './content/glossary.index.json';
 import {GlossaryPage,GlossaryDetail} from './GlossaryPage.jsx';
 import {FinalHome,FinalYear,FinalQuiz,FinalResult,UnlimitedFinal} from './FinalTest.jsx';
 import Login from './Login.jsx';
+import {FriendsPage,LeaderboardPage,AchievementsPage,OnboardingWizard,ProfileEditor} from './Social.jsx';
+import {Avatar,ToastProvider,applyTheme,useLangMode} from './lib/social.jsx';
 import {AuthProvider, useAuth} from './context/AuthContext.jsx';
 import {ProgressProvider, useProgress, readGuestProgress} from './context/ProgressContext.jsx';
-import './styles.css';import './translation.css';import './routing.css';import './auth.css';
+import './styles.css';import './translation.css';import './routing.css';import './auth.css';import './themes.css';import './social.css';
 
 /* ---------- 3-mode language switch: 漢字(kanji) / ふりがな(furigana) / ID (Indonesia) ----------
    Icon-button kecil di pojok kanan atas tiap card (soal, choice, explanation, materi paragraf).
@@ -76,7 +78,7 @@ function ScrollToTop(){
 }
 
 function NavIcon({kind}){
-  const paths={learn:<><path d="M3 10.5 12 4l9 6.5"/><path d="M5.5 9.5V20h13V9.5"/><path d="M9 20v-6h6v6"/></>,exam:<><path d="M6 3h12v18H6z"/><path d="M9 7h6M9 11h6M9 15h3"/><path d="m16 18 1.5 1.5L21 16"/></>,terms:<><path d="M5 4h10a4 4 0 0 1 4 4v12H9a4 4 0 0 1-4-4z"/><path d="M9 4v16"/><path d="M12 9h4M12 12h4"/></>,profile:<><circle cx="12" cy="8" r="3"/><path d="M5 20c.8-3.2 3.1-5 7-5s6.2 1.8 7 5"/></>};
+  const paths={learn:<><path d="M3 10.5 12 4l9 6.5"/><path d="M5.5 9.5V20h13V9.5"/><path d="M9 20v-6h6v6"/></>,exam:<><path d="M6 3h12v18H6z"/><path d="M9 7h6M9 11h6M9 15h3"/><path d="m16 18 1.5 1.5L21 16"/></>,terms:<><path d="M5 4h10a4 4 0 0 1 4 4v12H9a4 4 0 0 1-4-4z"/><path d="M9 4v16"/><path d="M12 9h4M12 12h4"/></>,friends:<><circle cx="9" cy="8" r="3"/><path d="M3.5 19c.7-2.8 2.9-4.5 5.5-4.5s4.8 1.7 5.5 4.5"/><circle cx="17" cy="9" r="2.4"/><path d="M15.6 14.6c2.6.2 4.3 1.7 4.9 4.4"/></>,rank:<><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4a2 2 0 0 0 2 4h1"/><path d="M17 6h3a2 2 0 0 1-2 4h-1"/></>,profile:<><circle cx="12" cy="8" r="3"/><path d="M5 20c.8-3.2 3.1-5 7-5s6.2 1.8 7 5"/></>};
   return <svg className="navSvg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{paths[kind]}</svg>;
 }
 
@@ -88,6 +90,8 @@ function Shell({children}){
     {to:'/', kind:'learn', label:'Belajar', match:p=>p==='/'},
     {to:'/final', kind:'exam', label:'Ujian', match:p=>p.startsWith('/final')},
     {to:'/glossary', kind:'terms', label:'Istilah', match:p=>p.startsWith('/glossary')},
+    {to:'/friends', kind:'friends', label:'Teman', match:p=>p.startsWith('/friends')},
+    {to:'/leaderboard', kind:'rank', label:'Peringkat', match:p=>p.startsWith('/leaderboard')},
     {to:'/profile', kind:'profile', label:'Profil', match:p=>p==='/profile'||p==='/login'},
   ];
   return <div className="app">
@@ -257,9 +261,10 @@ function Materi(){
   const cards = rich?.materi ? rich.materi.map(mergeJapaneseCard) : l?.materi || [];
   const storeKey=`kk_materi_pos_${sectionId}_${levelId}`;
   const [i,setI]=useState(()=>{try{const n=Number(sessionStorage.getItem(storeKey));return Number.isInteger(n)&&n>=0&&n<cards.length?n:0}catch{return 0}});
-  const [mode,setMode]=useState('kanji');
+  // Mode bahasa di-persist (useLangMode) & TIDAK di-reset tiap ganti kartu —
+  // bug lama: pilihan ID user balik ke kanji setiap geser kartu.
+  const [mode,setMode]=useLangMode();
   useEffect(()=>{try{sessionStorage.setItem(storeKey,String(i))}catch{}},[i,storeKey]);
-  useEffect(()=>{setMode('kanji')},[i]);
   useEffect(()=>{const onKey=e=>{if(e.key==='ArrowRight'||e.key==='Enter'){e.preventDefault();i<cards.length-1?setI(i+1):nav(`/section/${s.id}/level/${l.id}/quiz`)}if(e.key==='ArrowLeft'){e.preventDefault();setI(v=>Math.max(0,v-1))}if(e.key==='Escape')nav(`/section/${s.id}/level/${l.id}`)};window.addEventListener('keydown',onKey);return()=>window.removeEventListener('keydown',onKey)},[i,cards.length,nav,s?.id,l?.id]);
   if(!s||!l||!cards.length)return <Navigate to="/"/>;
   const card=cards[i];
@@ -289,13 +294,16 @@ function RichCardBody({card,mode,glossary,onTerm}){
   if(card.type==='case') return <><span className="richTag">Kasus lapangan</span><F field={heading} as="h2"/><F field={card.scenario} className="richBody"/><F field={card.prompt} className="richPrompt"/><F field={card.reveal} className="richReveal"/></>;
   if(card.type==='exam-tip') return <><span className="richTag">Sudut pandang ujian</span><F field={heading} as="h2"/><F field={body} className="richBody"/></>;
   if(card.type==='recap') return <><F field={heading} as="h2"/><ul className="richRecap">{card.points.map((p,n)=><li key={n}><F field={p}/></li>)}</ul></>;
+  // Kartu istilah terkait — 60 istilah glossary yang dulu tak pernah muncul di konten
+  // (audit 2026-08). Term tampil apa adanya (kanji/katakana), artinya selalu Indonesia.
+  if(card.type==='terms') return <><F field={heading} as="h2"/><div className="richTermList">{card.terms.map(t=><div key={t.t} className="richTermItem"><b>{t.t}</b><span>{t.id}</span></div>)}</div></>;
   return <><F field={heading} as="h2"/><F field={body} className="richBody"/> </>;
 }
 
 /* ---------- shared quiz pieces (dipakai Quiz level & Practice) ---------- */
 
 function QuestionFlipCard({q,mode='kanji',setMode}){
-  const [localMode,setLocalMode]=useState('kanji');
+  const [localMode,setLocalMode]=useLangMode();
   const activeMode = setMode ? mode : localMode;
   const changeMode = setMode || setLocalMode;
   return <div className="qCard" key={q.id}>
@@ -308,7 +316,7 @@ function QuestionFlipCard({q,mode='kanji',setMode}){
 }
 
 function ChoiceCard({choice,choiceId,index,selected,correctIndex,onAnswer,mode,setMode}){
-  const [localMode,setLocalMode]=useState('kanji');
+  const [localMode,setLocalMode]=useLangMode();
   const activeMode = setMode ? mode : localMode;
   const answered = selected!==null;
   const isCorrect = answered && index===correctIndex;
@@ -324,7 +332,7 @@ function ChoiceCard({choice,choiceId,index,selected,correctIndex,onAnswer,mode,s
 }
 
 function ExplanationBox({q}){
-  const [mode,setMode]=useState('kanji');
+  const [mode,setMode]=useLangMode();
   return <div className="explainBox">
     <div className="explainHead"><Info size={16}/> <span>Kenapa jawaban ini benar?</span><LangSwitch mode={mode} setMode={setMode} className="mini"/></div>
     <LangText as="p" ja={q.explanationJa} id={q.explanationId} mode={mode} className={mode==='kanji'?'ja':''}/>
@@ -362,7 +370,7 @@ function Quiz(){
   const [retryRound,setRetryRound]=useState(0);
   const [saving,setSaving]=useState(false);
   const [popup,setPopup]=useState(null);
-  const [quizMode,setQuizMode]=useState('kanji');
+  const [quizMode,setQuizMode]=useLangMode();
   const nav=useNavigate();
   const {submitAttempt} = useProgress();
   const [startedAt] = useState(()=>Date.now());
@@ -431,7 +439,7 @@ function Practice(){
   const [answered,setAnswered]=useState(0);
   const [correct,setCorrect]=useState(0);
   const [popup,setPopup]=useState(null);
-  const [quizMode,setQuizMode]=useState('kanji');
+  const [quizMode,setQuizMode]=useLangMode();
   const answer=(i)=>{
     if(selected!==null) return;
     setSelected(i);
@@ -440,7 +448,7 @@ function Practice(){
     setPopup(isCorrect);
     if(isCorrect) setCorrect(c=>c+1);
   };
-  const nextQuestion=()=>{ setQ(randomQuestion(q.id)); setSelected(null); setQuizMode('kanji'); };
+  const nextQuestion=()=>{ setQ(randomQuestion(q.id)); setSelected(null); };
   return <main className="page quizPage">
     {popup!==null && <AnswerPopup correct={popup} onClose={()=>setPopup(null)}/>}
     <div className="practiceHero">
@@ -482,14 +490,19 @@ function Glossary(){return <GlossaryPage/>;}
 
 function Profile(){
   const {user, isAuthenticated, logout} = useAuth();
-  const {serverProgress, guestProgress, totalXp, streakCurrent, completedCount, loading} = useProgress();
+  const {totalXp, streakCurrent, completedCount, loading} = useProgress();
   const nav = useNavigate();
+  // User baru (belum menyelesaikan onboarding) diarahkan ke wizard, sekali saja.
+  // Guard-nya cek gender+handle, bukan hanya onboarded_step, supaya user lama yang
+  // memang sudah lengkap tidak pernah diseret ke wizard.
+  if(isAuthenticated && user && user.onboardedStep!=='done' && (!user.gender || !user.handle)) return <Navigate to="/onboarding" replace/>;
   const doLogout = async ()=>{ await logout(); nav('/'); };
   if(loading) return <main className="page profile"><KawaiiLoader label="Memuat profil…"/></main>;
   return <main className="page profile">
     <div className="profileCard">
-      <Mascot variant="profile" size="md"/>
-      <h1>{isAuthenticated ? `Halo, ${user?.name || user?.email}` : "Kenshi's care journey"}</h1>
+      {isAuthenticated ? <Avatar avatarKey={user?.avatarKey} frame={user?.avatarFrame} size={84}/> : <Mascot variant="profile" size="md"/>}
+      <h1>{isAuthenticated ? `Halo, ${user?.displayName || user?.name || user?.email}` : "Kenshi's care journey"}</h1>
+      {isAuthenticated && user?.handle && <span className="handleChip">@{user.handle}</span>}
       <p className="muted">{isAuthenticated ? 'Progress kamu tersimpan otomatis di akun.' : 'Login biar progress kamu tersimpan permanen.'}</p>
       <div className="stats">
         <div><b>{totalXp}</b><small>total XP</small></div>
@@ -497,19 +510,41 @@ function Profile(){
         <div><b>{completedCount}</b><small>levels</small></div>
       </div>
     </div>
-    <div className="tip"><Star fill="#ffb73b"/> <span><b>Pelan saja</b><br/>Tidak harus sempurna. Yang penting jalan terus.</span></div>
-    {isAuthenticated ? (
+    {isAuthenticated ? <>
+      <div className="socialLinks">
+        <Link className="tap" to="/friends"><Users size={21}/> Teman</Link>
+        <Link className="tap" to="/leaderboard"><Trophy size={21}/> Peringkat</Link>
+        <Link className="tap" to="/achievements"><Medal size={21}/> Achievement</Link>
+      </div>
+      <ProfileEditor/>
+      <div className="tip" style={{marginTop:16}}><Star fill="#ffb73b"/> <span><b>Pelan saja</b><br/>Tidak harus sempurna. Yang penting jalan terus.</span></div>
       <button className="secondary big tap" style={{marginTop:16}} onClick={doLogout}>Logout</button>
-    ) : (
+    </> : <>
+      <div className="tip"><Star fill="#ffb73b"/> <span><b>Pelan saja</b><br/>Tidak harus sempurna. Yang penting jalan terus.</span></div>
       <Link className="primary big tap" style={{marginTop:16}} to="/login">Login dengan email</Link>
-    )}
+    </>}
   </main>;
 }
 
+/* Terapkan tema pilihan user ke root. Keluar/di-logout → atribut dicabut (kitty default). */
+function ThemeApply(){
+  const {user} = useAuth();
+  useEffect(()=>{
+    const t = user?.theme;
+    if(t && t!=='kitty') document.documentElement.setAttribute('data-theme',t);
+    else document.documentElement.removeAttribute('data-theme');
+  },[user?.theme]);
+  return null;
+}
+
 function AppShell(){
-  return <BrowserRouter><Shell><Routes>
+  return <BrowserRouter><ThemeApply/><Shell><Routes>
     <Route path="/" element={<Home/>}/>
     <Route path="/login" element={<Login/>}/>
+    <Route path="/onboarding" element={<OnboardingWizard/>}/>
+    <Route path="/friends" element={<FriendsPage/>}/>
+    <Route path="/leaderboard" element={<LeaderboardPage/>}/>
+    <Route path="/achievements" element={<AchievementsPage/>}/>
     <Route path="/profile" element={<Profile/>}/>
     <Route path="/glossary" element={<Glossary/>}/>
     <Route path="/glossary/:slug" element={<GlossaryDetail/>}/>
@@ -533,7 +568,7 @@ function AppShell(){
 }
 
 function App(){
-  return <AuthProvider><ProgressProvider><AppShell/></ProgressProvider></AuthProvider>;
+  return <ToastProvider><AuthProvider><ProgressProvider><AppShell/></ProgressProvider></AuthProvider></ToastProvider>;
 }
 
 createRoot(document.getElementById('root')).render(<App/>);
