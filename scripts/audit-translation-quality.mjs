@@ -113,6 +113,16 @@ function checkField(field, where, { skeleton = true } = {}) {
     if (low.includes(f)) { add('filler_phrase', `mengandung frasa cetakan: "${f}"`); break; }
   }
 
+  // 4b. Kalimat hilang (pack v8 doc 51): hitung kalimat sumber vs terjemahan.
+  // Satu kalimat Jepang boleh jadi dua kalimat Indonesia (wajar), tapi tidak boleh nol.
+  const sJa = (ja.match(/[。！？]/g) ?? []).length;
+  const sId = (id.match(/[.!?](?=\s|$)/g) ?? []).length;
+  if (sJa > 0 && sId === 0) {
+    add('sentence_loss', `sumber ${sJa} kalimat, terjemahan nol kalimat`);
+  } else if (sJa > sId && sJa - sId >= 2) {
+    add('sentence_loss', `sumber ${sJa} kalimat → terjemahan ${sId} — ada kalimat yang hilang`);
+  }
+
   // 5. Kumpulkan skeleton untuk deteksi template
   if (skeleton) {
     const sk = skeletonize(id);

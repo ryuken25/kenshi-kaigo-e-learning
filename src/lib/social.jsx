@@ -12,13 +12,18 @@ export function useLangMode(initial='kanji'){
   return [mode,pick];
 }
 
-/* ===== Tema — applier murni data-theme (dipanggil ProfileEditor biar instan).
+/* ===== Tema — applier murni data-theme + data-char (dipanggil ProfileEditor biar instan).
    Komponen ThemeApply reaktif ada di main.jsx (butuh AuthProvider). ===== */
 export function applyTheme(t){
   if(typeof document==='undefined')return;
   if(t&&t!=='kitty')document.documentElement.setAttribute('data-theme',t);
   else document.documentElement.removeAttribute('data-theme');
+  document.documentElement.setAttribute('data-char',(CHAR_FOR_THEME[t]??CHAR_FOR_THEME.kitty));
 }
+
+/* v8 (doc 49): pemetaan tema lama → karakter orisinal. Tema lama tetap jalan di DB
+   (kolom theme), cuma diganti skin-nya ke palet karakter. momo = default pink. */
+export const CHAR_FOR_THEME={kitty:'momo',sora:'sora',matcha:'kinako',yozora:'kurumi'};
 
 /* ===== Konstanta sosial — HARUS sinkron dengan api/profile.mjs & migrasi 006/007.
    Kalau nambah tema/avatar di sini, tambah juga di DB constraint + AVATAR_KEYS server. ===== */

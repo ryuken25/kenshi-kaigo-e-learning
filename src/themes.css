@@ -3,9 +3,18 @@
    Aktif lewat atribut data-theme di <html> (di-set main.jsx dari user.theme).
    Semua komponen existing sudah baca var(--pink) dkk dari :root di styles.css,
    jadi cukup timpa token-nya di sini. File ini WAJIB diimport SETELAH styles.css
-   supaya menang cascade. validate:css-classes TIDAK scan file ini (hanya 4 file
-   lama), tapi semua selector di sini nempel ke class yang sudah ada.
+   supaya menang cascade. validate:css-classes juga scan file ini (masuk 6 file).
    ========================================================================== */
+
+/* ---------- v8 (doc 49): token karakter via [data-char] ----------
+   Di-set ThemeApply (main.jsx) & applyTheme (lib/social.jsx): kitty→momo,
+   sora→sora, matcha→kinako, yozora→kurumi. Triad --btn-* adalah fix temuan
+   kontras v8: warna tombol tiap karakter >= 4.5:1 (angka btnContrast di
+   pack data/characters.json, dihitung ulang manual untuk a11y). */
+:root[data-char="momo"]{--btn-bg:#ff6f9c;--btn-text:#3a2a33;--btn-shadow:#c22a5e}
+:root[data-char="sora"]{--btn-bg:#1f5f9e;--btn-text:#ffffff;--btn-shadow:rgba(0,0,0,.2)}
+:root[data-char="kinako"]{--btn-bg:#d99a16;--btn-text:#3a3122;--btn-shadow:#8a6008}
+:root[data-char="kurumi"]{--btn-bg:#5f42a8;--btn-text:#ffffff;--btn-shadow:rgba(0,0,0,.2)}
 
 /* ---------- sora: langit biru ---------- */
 :root[data-theme=sora]{

@@ -1,9 +1,9 @@
 import React,{useEffect,useMemo,useState} from 'react';
 import {createRoot} from 'react-dom/client';
-import {BrowserRouter,Routes,Route,Link,useNavigate,useParams,useLocation,Navigate} from 'react-router-dom';
-import {Heart,Lock,ChevronRight,BookOpen,Flame,UserRound,Star,Check,X,Volume2,Info,Menu,Home as HomeIcon,Languages,ArrowLeft,SkipForward,RotateCcw,Shuffle,Sparkles,Users,Trophy,Medal} from 'lucide-react';
-import {sections,getSection,getLevel,glossary,allQuestions,randomQuestion} from './data.js';
-import Furigana,{CompareTerm} from './Furigana.jsx';
+import {BrowserRouter,Routes,Route,Link,useNavigate,useParams,useLocation,Navigate,Outlet} from 'react-router-dom';
+import {Heart,Lock,ChevronRight,BookOpen,Flame,Star,Check,X,Volume2,Info,Menu,Home as HomeIcon,ArrowLeft,RotateCcw,Shuffle,Users,Trophy,Medal} from 'lucide-react';
+import {sections,getSection,getLevel,glossary,allQuestions,randomQuestion,hashSeed} from './data.js';
+import Furigana,{CompareTerm,stripRuby} from './Furigana.jsx';
 import s1l1Content from './content/s1l1.json';
 import s1l1Ja from './content/s1l1-ja.json';
 import glossaryData from './content/glossary.index.json';
@@ -11,9 +11,12 @@ import {GlossaryPage,GlossaryDetail} from './GlossaryPage.jsx';
 import {FinalHome,FinalYear,FinalQuiz,FinalResult,UnlimitedFinal} from './FinalTest.jsx';
 import Login from './Login.jsx';
 import {FriendsPage,LeaderboardPage,AchievementsPage,OnboardingWizard,ProfileEditor} from './Social.jsx';
-import {Avatar,ToastProvider,applyTheme,useLangMode} from './lib/social.jsx';
+import {Avatar,ToastProvider,applyTheme,useLangMode,CHAR_FOR_THEME} from './lib/social.jsx';
 import {AuthProvider, useAuth} from './context/AuthContext.jsx';
-import {ProgressProvider, useProgress, readGuestProgress} from './context/ProgressContext.jsx';
+import {ProgressProvider, useProgress} from './context/ProgressContext.jsx';
+import {dailyQuote} from './data/quotes.js';
+import {useTTS,toKana} from './lib/tts.js';
+import {kanaToRomaji,romajiDisplay} from './lib/kana.js';
 import './styles.css';import './translation.css';import './routing.css';import './auth.css';import './themes.css';import './social.css';
 
 /* ---------- 3-mode language switch: 漢字(kanji) / ふりがな(furigana) / ID (Indonesia) ----------
@@ -87,7 +90,7 @@ function Shell({children}){
   const {isAuthenticated, loading, streakCurrent, totalXp} = useProgress();
   const {status} = useAuth();
   const navItems = [
-    {to:'/', kind:'learn', label:'Belajar', match:p=>p==='/'},
+    {to:'/belajar', kind:'learn', label:'Belajar', match:p=>p==='/belajar'},
     {to:'/final', kind:'exam', label:'Ujian', match:p=>p.startsWith('/final')},
     {to:'/glossary', kind:'terms', label:'Istilah', match:p=>p.startsWith('/glossary')},
     {to:'/friends', kind:'friends', label:'Teman', cls:'navFriends', match:p=>p.startsWith('/friends')},
@@ -97,7 +100,7 @@ function Shell({children}){
   return <div className="app">
     <ScrollToTop/>
     <header>
-      <Link to="/" className="brand"><div className="kitty"><img src={ASSET('hk-face-icon.png')} alt="Kaigo Kitty"/></div><div><b>kaigo kitty</b><small>belajar kaigo</small></div></Link>
+      <Link to="/belajar" className="brand"><div className="kitty"><img src={ASSET('hk-face-icon.png')} alt="Kaigo Kitty"/></div><div><b>kaigo kitty</b><small>belajar kaigo</small></div></Link>
       <div className="topStats">
         <span><Flame size={16} fill="#ff718f"/> {loading && status==='authenticated' ? '…' : streakCurrent}<span className="statLabel">hari</span></span>
         <span className="xpStat"><Heart size={16} fill="#ff718f"/> {loading && status==='authenticated' ? '…' : totalXp}<span className="statLabel">XP</span></span>
@@ -134,13 +137,17 @@ function useSectionUnlockMap(){
 }
 
 function Home(){
-  const {isAuthenticated, guestProgress, totalXp, completedCount, loading} = useProgress();
+  const {completedCount, loading} = useProgress();
+  const {user} = useAuth();
   const unlockMap = useSectionUnlockMap();
   const totalLevels = sections.reduce((a,s)=>a+s.levelCount,0);
+  // v8: kutipan harian deterministik (tanggal+user) ganti slogan statis "Belajar merawat
+  // dengan hati". Hash lokal, bukan Math.random() — satu user lihat kutipan sama seharian.
+  const today=new Date().toISOString().slice(0,10);
+  const quote=dailyQuote(`${today}:${user?.id||'guest'}`);
   if(loading) return <main><KawaiiLoader label="Menyiapkan materi…"/></main>;
-  return <main><section className="welcome"><div><p className="eyebrow">OHAYŌ, KENSHI 🌷</p><h1>Belajar merawat<br/><em>dengan hati.</em></h1><p className="muted">13 bab · {totalLevels} level · dikerjakan sedikit demi sedikit.</p></div><Mascot variant="home" size="md"/></section>
+  return <main><section className="welcome"><div><p className="eyebrow">OHAYŌ, KENSHI 🌷</p><h1 className="quoteJa" lang={quote.note?'ja':undefined}>{quote.text}</h1>{quote.note&&<p className="quoteNote">{quote.note}</p>}<p className="muted">13 bab · {totalLevels} level · dikerjakan sedikit demi sedikit.</p></div><Mascot variant="home" size="md"/></section>
     <div className="daily"><div><b>Hari ini</b><p>Satu kartu sekali duduk sudah cukup.</p><div className="progress"><i style={{width:`${Math.min(100,(completedCount/totalLevels)*100)}%`}}/></div></div><span className="badge">{completedCount} selesai</span></div>
-    {!isAuthenticated && <div className="objective" style={{marginBottom:12}}><Info/><div><b>Progress kamu belum tersimpan permanen</b><p>Login pakai email biar XP & streak-nya kesimpen selamanya. <Link to="/login">Login sekarang</Link></p></div></div>}
     <Link className="finalHomeBanner" to="/final"><div><b>Ujian Akhir</b><span>Soal asli 2021–2026 · 125 butir tiap tahun</span></div><ChevronRight/></Link>
     <div className="sectionHead"><div><h2>Urutan belajar</h2><p>Mulai dari martabat, berakhir di studi kasus</p></div><button className="round"><Menu size={19}/></button></div>
     <div className="sectionGrid">{sections.map((s)=><SectionCard key={s.id} section={s} official={unlockMap[s.id]?.official ?? (s.id===1)} completedLevels={unlockMap[s.id]?.completedLevels||0}/>)}</div>
@@ -151,7 +158,7 @@ function SectionCard({section,official,completedLevels}){
   return <Link to={`/section/${section.id}`} className={`sectionCard tap ${!official?'preview-only':''}`}>
     {!official && <span className="previewPill"><Lock size={10}/> preview</span>}
     <div className="sectionIcon">{section.icon}</div>
-    <div className="sectionCopy"><small>SECTION {String(section.id).padStart(2,'0')}</small><b>{section.titleJa}</b><span>{section.titleId}</span><div className="miniProgress"><i style={{width:`${completedLevels/section.levelCount*100}%`}}/></div><em>{completedLevels}/{section.levelCount} level selesai</em></div>
+    <div className="sectionCopy"><small>BAB {String(section.id).padStart(2,'0')}</small><b>{section.titleJa}</b><span>{section.titleId}</span><em className="sectionDesc">{section.descriptionId}</em><div className="miniProgress"><i style={{width:`${completedLevels/section.levelCount*100}%`}}/></div><em>{completedLevels}/{section.levelCount} level selesai</em></div>
     <ChevronRight/>
   </Link>;
 }
@@ -162,7 +169,7 @@ function SectionOverview(){
   const {sectionId}=useParams();const s=getSection(sectionId);
   const {isAuthenticated, guestProgress} = useProgress();
   const unlockMap = useSectionUnlockMap();
-  if(!s)return <Navigate to="/"/>;
+  if(!s)return <Navigate to="/belajar"/>;
   const sectionInfo = unlockMap[s.id];
   const serverLevels = sectionInfo?.levels;
   const sectionOfficial = sectionInfo?.official ?? (s.id===1);
@@ -183,8 +190,8 @@ function SectionOverview(){
   });
   const currentIdx = levelStates.findIndex(x=>!x.completed);
 
-  return <main className="page skillPage"><Link to="/" className="back"><ArrowLeft size={16}/> Urutan belajar</Link>
-    <div className="sectionHero"><span>{s.icon}</span><div><small>SECTION {s.id}</small><h1>{s.titleJa}</h1><p>{s.titleId}</p></div></div>
+  return <main className="page skillPage"><Link to="/belajar" className="back"><ArrowLeft size={16}/> Urutan belajar</Link>
+    <div className="sectionHero"><span>{s.icon}</span><div><small>BAB {s.id}</small><h1>{s.titleJa}</h1><p>{s.titleId}</p></div></div>
     <p className="muted">{s.descriptionId||s.description}</p>
     {!sectionOfficial && <div className="previewBanner"><Lock size={16}/><span>Section ini belum resmi terbuka — kamu tetap bisa preview materi & coba quiz, tapi progress tidak dihitung completed sampai section sebelumnya selesai.</span></div>}
     <div className="skillPath">
@@ -213,7 +220,7 @@ function LevelHub(){
   const {sectionId,levelId}=useParams();const s=getSection(sectionId),l=getLevel(sectionId,levelId);
   const unlockMap = useSectionUnlockMap();
   const {isAuthenticated} = useProgress();
-  if(!s||!l)return <Navigate to="/"/>;
+  if(!s||!l)return <Navigate to="/belajar"/>;
   const sectionInfo = unlockMap[s.id];
   const lv = sectionInfo?.levels?.find(x=>x.levelId===l.id);
   const levelUnlocked = isAuthenticated ? (lv?.levelUnlocked ?? (l.id===1)) : true;
@@ -266,12 +273,12 @@ function Materi(){
   const [mode,setMode]=useLangMode();
   useEffect(()=>{try{sessionStorage.setItem(storeKey,String(i))}catch{}},[i,storeKey]);
   useEffect(()=>{const onKey=e=>{if(e.key==='ArrowRight'||e.key==='Enter'){e.preventDefault();i<cards.length-1?setI(i+1):nav(`/section/${s.id}/level/${l.id}/quiz`)}if(e.key==='ArrowLeft'){e.preventDefault();setI(v=>Math.max(0,v-1))}if(e.key==='Escape')nav(`/section/${s.id}/level/${l.id}`)};window.addEventListener('keydown',onKey);return()=>window.removeEventListener('keydown',onKey)},[i,cards.length,nav,s?.id,l?.id]);
-  if(!s||!l||!cards.length)return <Navigate to="/"/>;
+  if(!s||!l||!cards.length)return <Navigate to="/belajar"/>;
   const card=cards[i];
   return <main className="page materiPage richMateriPage">
     <div className="materiTop"><Link to={`/section/${s.id}/level/${l.id}`} className="back">× Tutup</Link><div className="materiDots" aria-label={`Kartu ${i+1} dari ${cards.length}`}>{cards.map((c,n)=><button type="button" key={c.id||n} className={`${n===i?'active':''} ${n<i?'done':''}`} disabled={n>i} aria-label={`Kartu ${n+1}`} onClick={()=>setI(n)}/>)}</div><LangSwitch mode={mode} setMode={setMode}/></div>
     <article className={`richMateriCard rich-${card.type||'lesson'}`} key={card.id||i}><RichCardBody card={card} mode={mode} glossary={glossaryKanji} onTerm={openTerm}/></article>
-    {termSheet&&<div className="termSheetBackdrop" role="presentation" onClick={()=>setTermSheet(null)}><section className="termSheet" role="dialog" aria-modal="true" aria-label={`Istilah ${termSheet.kanji}`} onClick={e=>e.stopPropagation()}><button className="termSheetClose" onClick={()=>setTermSheet(null)} aria-label="Tutup">×</button>{mode==='kanji'&&<small>{termSheet.reading}</small>}<Furigana field={termField(termSheet)} mode={mode} as="h2" variant="xl"/><p className="termSheetShort">{termSheet.id.short}</p><p>{termSheet.id.long}</p><Link className="termSheetMore" to={`/glossary/${termSheet.slug}`}>Buka halaman lengkapnya →</Link></section></div>}
+    {termSheet&&<div className="termSheetBackdrop" role="presentation" onClick={()=>setTermSheet(null)}><section className="termSheet" role="dialog" aria-modal="true" aria-label={`Istilah ${termSheet.kanji}`} onClick={e=>e.stopPropagation()}><button className="termSheetClose" onClick={()=>setTermSheet(null)} aria-label="Tutup">×</button>{mode==='kanji'?<small>{termSheet.reading} · {kanaToRomaji(termSheet.reading)}</small>:<small>{kanaToRomaji(termSheet.reading)}</small>}<Furigana field={termField(termSheet)} mode={mode} as="h2" variant="xl"/><p className="termSheetShort">{termSheet.id.short}</p><p>{termSheet.id.long}</p><Link className="termSheetMore" to={`/glossary/${termSheet.slug}`}>Buka halaman lengkapnya →</Link></section></div>}
     {cardGlossaryTerms(card,glossaryData.terms).length>0&&<section className="materiTerms"><h3>🔎 Istilah di kartu ini</h3><div className="materiTermButtons">{cardGlossaryTerms(card,glossaryData.terms).map(t=><button type="button" key={t.slug} onClick={()=>setTermSheet(t)} className="materiTermButton"><small>{t.reading}</small><b>{t.kanji}</b><span>{t.id.short}</span></button>)}</div></section>}
     <div className="richMateriNav">{i>0&&<button type="button" className="secondary tap" onClick={()=>setI(v=>v-1)}>Kembali</button>}<button type="button" className="primary tap" onClick={()=>i<cards.length-1?setI(i+1):nav(`/section/${s.id}/level/${l.id}/quiz`)}>{i<cards.length-1?'Lanjut':'Mulai quiz'} <ChevronRight/></button></div>
     <button type="button" className="materiSkip" onClick={()=>nav(`/section/${s.id}/level/${l.id}/quiz`)}>Lewati ke quiz</button>
@@ -287,7 +294,7 @@ function RichCardBody({card,mode,glossary,onTerm}){
   const heading=card.heading||((card.titleJa||card.titleId)?{ja:card.titleJa||'',id:card.titleId||''}:null);
   const body=card.body||((card.bodyJa||card.bodyId)?{ja:card.bodyJa||'',id:card.bodyId||''}:null);
   if(card.type==='hook') return <><Mascot variant="materi" size="sm"/><F field={body} className="richBody"/></>;
-  if(card.type==='term'){const t=card.term;return <div className="richTerm"><JapaneseTerm term={t} mode={mode} onTerm={onTerm}/><div className="termRoman">{mode==='id'?t.meaning:`${t.romaji} / ${t.meaning}`}</div><div className="termExample">{t.example&&mode==='id'?<p>{t.example.id}</p>:t.example&&<F field={t.example}/>}</div></div>}
+  if(card.type==='term'){const t=card.term;const rom=t.romaji||(t.reading?kanaToRomaji(t.reading):'');return <div className="richTerm"><JapaneseTerm term={t} mode={mode} onTerm={onTerm}/><div className="termRoman">{rom}{t.meaning?` / ${t.meaning}`:''}</div><div className="termExample">{t.example&&mode==='id'&&<><p lang="ja" className="termExampleJa">{stripRuby(t.example.ja||'')}</p><p>{t.example.id}</p></>}{t.example&&mode!=='id'&&<F field={t.example}/>}</div></div>}
   if(card.type==='explain') return <><F field={heading} as="h2"/><F field={body} className="richBody"/> </>;
   if(card.type==='compare') return <><F field={card.heading||heading} as="h2"/><div className="compareGrid">{card.rows.map(r=><div className="compareRow" key={r.term.kanji}><CompareTerm term={r.term} mode={mode} className="compareTerm" glossary={glossary} onTerm={onTerm}/><F field={r.meaning}/><F field={r.when}/></div>)}</div>{(card.note||heading)&&<F field={card.note||heading} className="richNote"/>}</>;
   if(card.type==='checkpoint') return <><span className="richTag">Cek cepat · tidak dinilai</span><F field={card.question?.prompt} className="richQuestion"/><div className="checkpointOpts">{card.question.options.map(o=><div key={o.key} className="checkpointOption"><F field={o.text}/></div>)}</div><p className="richNote">Jawabannya akan dibahas setelah kamu lanjut membaca materi.</p></>;
@@ -308,7 +315,8 @@ function QuestionFlipCard({q,mode='kanji',setMode}){
   const changeMode = setMode || setLocalMode;
   return <div className="qCard" key={q.id}>
     <div className="qCardHead">
-      <p className="source">{q.sourceYear} · {q.difficulty}</p>
+      {/* v8: label sourceYear/difficulty itu internal (official-style/syllabus-based/easy
+          tidak bermakna buat user) — dulu bocor ke UI. Dicabut, bukan diterjemahkan. */}
       <LangSwitch mode={activeMode} setMode={changeMode}/>
     </div>
     <LangText as="h1" ja={q.questionJa} id={q.questionId} mode={activeMode}/>
@@ -372,10 +380,11 @@ function Quiz(){
   const [popup,setPopup]=useState(null);
   const [quizMode,setQuizMode]=useLangMode();
   const nav=useNavigate();
+  const {available,speaking,play}=useTTS();
   const {submitAttempt} = useProgress();
   const [startedAt] = useState(()=>Date.now());
   const [attemptId] = useState(()=>crypto.randomUUID ? crypto.randomUUID() : `a-${Date.now()}-${Math.random().toString(16).slice(2)}`);
-  if(!s||!l)return <Navigate to="/"/>;
+  if(!s||!l)return <Navigate to="/belajar"/>;
   const totalCount = l.questions.length;
   const q = roundQuestions[qi];
   if(!q) return <KawaiiLoader/>;
@@ -424,7 +433,7 @@ function Quiz(){
     <div className="quizProgress"><i style={{width:`${(qi+1)/roundQuestions.length*100}%`}}/></div>
     {phase==='retry' && <div className="retryBanner"><RotateCcw/><div><b>Yuk ulangi soal yang belum tepat!</b><span>Ronde retry #{retryRound} · {roundQuestions.length} soal tersisa</span></div><div className="retryDots">{roundQuestions.map((rq,idx)=><i key={rq.id+idx} className={idx<qi?'done':''}/>)}</div></div>}
     <QuestionFlipCard q={q} mode={quizMode} setMode={setQuizMode} key={`qc-${q.id}-${phase}-${qi}`}/>
-    <button className="listen tap" type="button"><Volume2 size={17}/> 用語を聞く · Dengarkan istilah</button>
+    {available&&<button className="listen tap" type="button" onClick={()=>play(toKana(q.questionJa))}><Volume2 size={17}/> {speaking?'止める · Berhenti':'聞く · Dengarkan soal'}</button>}
     <div className="choices">{q.choices.map((c,i)=><ChoiceCard key={`${q.id}-${i}-${phase}-${qi}`} choice={c} choiceId={q.choiceIds?.[i]||''} index={i} selected={selected} correctIndex={q.correctIndex} onAnswer={answer} mode={quizMode} setMode={setQuizMode}/>)}</div>
     {selected!==null && <ExplanationBox q={q}/>}
     <div className="quizFooter"><button className="primary big tap" disabled={selected===null||saving} onClick={next}>{nextLabel} <ChevronRight/></button></div>
@@ -440,6 +449,7 @@ function Practice(){
   const [correct,setCorrect]=useState(0);
   const [popup,setPopup]=useState(null);
   const [quizMode,setQuizMode]=useLangMode();
+  const {available,speaking,play}=useTTS();
   const answer=(i)=>{
     if(selected!==null) return;
     setSelected(i);
@@ -458,6 +468,7 @@ function Practice(){
     </div>
     <div className="quizTop"><span>{q.sectionTitleId} · {q.levelTitleId}</span></div>
     <QuestionFlipCard q={q} mode={quizMode} setMode={setQuizMode} key={`pq-${q.id}`}/>
+    {available&&<button className="listen tap" type="button" onClick={()=>play(toKana(q.questionJa))}><Volume2 size={17}/> {speaking?'止める · Berhenti':'聞く · Dengarkan soal'}</button>}
     <div className="choices">{q.choices.map((c,i)=><ChoiceCard key={`${q.id}-${i}`} choice={c} choiceId={q.choiceIds?.[i]||''} index={i} selected={selected} correctIndex={q.correctIndex} onAnswer={answer} mode={quizMode} setMode={setQuizMode}/>)}</div>
     {selected!==null && <ExplanationBox q={q}/>}
     <div className="quizFooter"><button className="primary big tap" type="button" disabled={selected===null} onClick={nextQuestion}>Soal berikutnya <ChevronRight/></button></div>
@@ -469,7 +480,7 @@ function Result(){
   // Guard wajib: baris flowButtons di bawah deref s.levelCount & s.id tanpa optional chaining,
   // jadi /section/99/level/99/result (atau param non-numerik) bikin TypeError -> layar putih.
   // Lima komponen ber-param lain sudah pakai pola yang sama; Result ketinggalan.
-  if(!s||!l)return <Navigate to="/"/>;
+  if(!s||!l)return <Navigate to="/belajar"/>;
   const xp = state?.xpDelta ?? ((state?.score||0)*10+30);
   const isPerfect = state?.score===state?.total;
   const isPreview = Boolean(state?.isPreview);
@@ -484,7 +495,7 @@ function Result(){
   </main>;
 }
 
-function Recap(){const {sectionId}=useParams(),s=getSection(sectionId);if(!s)return <Navigate to="/"/>;return <main className="page result"><div className="sectionHero"><span>{s.icon}</span><div><small>RECAP</small><h1>{s.titleJa}</h1><p>Section review · {s.titleId}</p></div></div><Mascot variant="recap" size="md"/><h2>Siap diuji?</h2><p className="muted">Soal campuran dari semua level di section ini.</p><Link className="primary big tap" to={`/section/${s.id}/level/1/quiz`}>Mulai recap <Star/></Link></main>;}
+function Recap(){const {sectionId}=useParams(),s=getSection(sectionId);if(!s)return <Navigate to="/belajar"/>;return <main className="page result"><div className="sectionHero"><span>{s.icon}</span><div><small>RECAP</small><h1>{s.titleJa}</h1><p>Section review · {s.titleId}</p></div></div><Mascot variant="recap" size="md"/><h2>Siap diuji?</h2><p className="muted">Soal campuran dari semua level di section ini.</p><Link className="primary big tap" to={`/section/${s.id}/level/1/quiz`}>Mulai recap <Star/></Link></main>;}
 
 function Glossary(){return <GlossaryPage/>;}
 
@@ -533,36 +544,69 @@ function ThemeApply(){
     const t = user?.theme;
     if(t && t!=='kitty') document.documentElement.setAttribute('data-theme',t);
     else document.documentElement.removeAttribute('data-theme');
+    document.documentElement.setAttribute('data-char',(CHAR_FOR_THEME[t]??CHAR_FOR_THEME.kitty));
   },[user?.theme]);
   return null;
 }
 
+/* v8 (doc 50): gerbang sesi. Semua route belajar dibungkus sini; kalau belum login
+   lempar ke /login?next=<tujuan> supaya magic-link balikin user ke halaman yang sama. */
+function RequireAuth(){
+  const {status}=useAuth();
+  const loc=useLocation();
+  if(status==='loading')return <main><KawaiiLoader label="Memeriksa sesi…"/></main>;
+  if(status!=='authenticated')return <Navigate to={`/login?next=${encodeURIComponent(loc.pathname+loc.search)}`} replace/>;
+  return <Outlet/>;
+}
+
+/* Landing — halaman terbuka satu-satunya selain /login. Karena mode tamu dihapus,
+   ini pintu masuk; harus jelas dalam 5 detik apa isinya dan kenapa perlu email. */
+function Landing(){
+  const {status}=useAuth();
+  if(status==='authenticated')return <Navigate to="/belajar" replace/>;
+  return <main className="page landingPage"><div className="landingCard">
+    <Mascot variant="home" size="md"/>
+    <p className="eyebrow">KAIGO KITTY</p>
+    <h1>Belajar 介護福祉士<br/>dengan bahasa Indonesia</h1>
+    <ul className="landingPoints">
+      <li>13 bab · 152 level</li>
+      <li>Soal ujian asli 2021–2026</li>
+      <li>Furigana, romaji, terjemahan</li>
+      <li>Gratis</li>
+    </ul>
+    <Link className="primary big tap" to="/login">Masuk dengan email</Link>
+    <p className="landingNote">Tanpa password — kami kirim tautan sekali pakai ke email kamu.</p>
+  </div></main>;
+}
+
 function AppShell(){
   return <BrowserRouter><ThemeApply/><Shell><Routes>
-    <Route path="/" element={<Home/>}/>
+    <Route path="/" element={<Landing/>}/>
     <Route path="/login" element={<Login/>}/>
-    <Route path="/onboarding" element={<OnboardingWizard/>}/>
-    <Route path="/friends" element={<FriendsPage/>}/>
-    <Route path="/leaderboard" element={<LeaderboardPage/>}/>
-    <Route path="/achievements" element={<AchievementsPage/>}/>
-    <Route path="/profile" element={<Profile/>}/>
-    <Route path="/glossary" element={<Glossary/>}/>
-    <Route path="/glossary/:slug" element={<GlossaryDetail/>}/>
-    <Route path="/final" element={<FinalHome/>}/>
-    <Route path="/final/unlimited" element={<UnlimitedFinal/>}/>
-    <Route path="/final/:year" element={<FinalYear/>}/>
-    <Route path="/final/:year/part/:part" element={<FinalQuiz/>}/>
-    <Route path="/final/:year/part/:part/result" element={<FinalResult/>}/>
-    {/* /final/:year/result dihapus: FinalResult butuh :part, jadi route itu selalu nampilin
-        hasil kosong yang menyesatkan, dan nol Link/navigate yang ngarah ke sana. Kalau nanti
-        mau ada ringkasan per-tahun, itu komponen baru — bukan FinalResult tanpa :part. */}
-    <Route path="/practice" element={<Practice/>}/>
-    <Route path="/section/:sectionId" element={<SectionOverview/>}/>
-    <Route path="/section/:sectionId/recap" element={<Recap/>}/>
-    <Route path="/section/:sectionId/level/:levelId" element={<LevelHub/>}/>
-    <Route path="/section/:sectionId/level/:levelId/materi" element={<Materi/>}/>
-    <Route path="/section/:sectionId/level/:levelId/quiz" element={<Quiz/>}/>
-    <Route path="/section/:sectionId/level/:levelId/result" element={<Result/>}/>
+    {/* v8 (doc 50): WAJIB LOGIN. Semua route belajar butuh sesi; tamu diarahkan ke
+        /login?next=<tujuan> dan magic-link mengembalikan mereka ke tujuan itu. */}
+    <Route element={<RequireAuth/>}>
+      <Route path="/belajar" element={<Home/>}/>
+      <Route path="/onboarding" element={<OnboardingWizard/>}/>
+      <Route path="/friends" element={<FriendsPage/>}/>
+      <Route path="/leaderboard" element={<LeaderboardPage/>}/>
+      <Route path="/achievements" element={<AchievementsPage/>}/>
+      <Route path="/profile" element={<Profile/>}/>
+      <Route path="/glossary" element={<Glossary/>}/>
+      <Route path="/glossary/:slug" element={<GlossaryDetail/>}/>
+      <Route path="/final" element={<FinalHome/>}/>
+      <Route path="/final/unlimited" element={<UnlimitedFinal/>}/>
+      <Route path="/final/:year" element={<FinalYear/>}/>
+      <Route path="/final/:year/part/:part" element={<FinalQuiz/>}/>
+      <Route path="/final/:year/part/:part/result" element={<FinalResult/>}/>
+      <Route path="/practice" element={<Practice/>}/>
+      <Route path="/section/:sectionId" element={<SectionOverview/>}/>
+      <Route path="/section/:sectionId/recap" element={<Recap/>}/>
+      <Route path="/section/:sectionId/level/:levelId" element={<LevelHub/>}/>
+      <Route path="/section/:sectionId/level/:levelId/materi" element={<Materi/>}/>
+      <Route path="/section/:sectionId/level/:levelId/quiz" element={<Quiz/>}/>
+      <Route path="/section/:sectionId/level/:levelId/result" element={<Result/>}/>
+    </Route>
     <Route path="*" element={<Navigate to="/"/>}/>
   </Routes></Shell></BrowserRouter>;
 }

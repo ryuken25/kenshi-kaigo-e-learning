@@ -23,6 +23,7 @@ const plans = [
 // PRNG deterministik (FNV-1a hash + mulberry32). Konten dibangun ulang tiap import —
 // di server, di client, dan tiap build — jadi urutan pilihan TIDAK BOLEH pakai Math.random().
 const hashSeed=(s)=>{let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0};
+export {hashSeed}; // dipakai kutipan harian (data/quotes.js) — satu sumber determinisme
 const rngFrom=(k)=>{let a=hashSeed(k);return ()=>{a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return ((t^t>>>14)>>>0)/4294967296}};
 // Fisher-Yates dengan seed dari key stabil. Pilihan JA+ID diacak sebagai pasangan supaya tidak pernah geser.
 const shuffleSeeded=(arr,k)=>{const r=rngFrom(k),a=arr.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1)),t=a[i];a[i]=a[j];a[j]=t}return a};

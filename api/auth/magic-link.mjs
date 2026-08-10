@@ -12,12 +12,17 @@ export default async function handler(req, res) {
     const email = String(req.body?.email || '').trim().toLowerCase();
     if (!emailRe.test(email)) return json(res, { error: 'Valid email required' }, 400);
 
+    // v8: tujuan asal (dari /login?next=...) dibawa lewat link. Hanya terima path
+    // relatif internal — tolak apapun yang bisa jadi open redirect (//host, skema).
+    let next = String(req.body?.next || '');
+    if (!next.startsWith('/') || next.startsWith('//') || next.includes('\\')) next = '';
+
     const sql = db();
     const raw = crypto.randomBytes(32).toString('base64url');
     await sql`INSERT INTO magic_tokens(email, token_hash, expires_at) VALUES(${email}, ${hash(raw)}, now() + interval '20 minutes')`;
 
     const base = process.env.APP_URL || `https://${req.headers.host}`;
-    const link = `${base}/api/auth/verify?token=${encodeURIComponent(raw)}`;
+    const link = `${base}/api/auth/verify?token=${encodeURIComponent(raw)}${next ? `&next=${encodeURIComponent(next)}` : ''}`;
 
     const transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST,

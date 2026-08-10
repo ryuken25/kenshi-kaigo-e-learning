@@ -13,6 +13,10 @@
    Karena mode 漢字 menyembunyikan bacaan pakai visibility (bukan display:none), ruang ini
    tetap ada di kedua mode, jadi toggle 漢字⇄ふり tidak bikin teks melompat. */
 .fg[lang="ja"]{font-family:var(--font-jp);line-height:2.35;word-break:normal;overflow-wrap:normal;line-break:strict}
+/* v8: kinsoku shori untuk SEMUA elemen lang="ja" (heading h1/h2 LangText & quote
+   beranda juga) — 、。」 tidak boleh jadi karakter pertama baris baru. Aman karena
+   .fg sudah overflow-wrap:normal; tidak ada kata yang bisa dipatahkan di tengah. */
+[lang="ja"]{line-break:strict;overflow-wrap:normal}
 /* vertical-align:text-bottom — JANGAN diganti ke baseline.
    .fg-ruby itu flex arah COLUMN (column-reverse), dan di arah column baseline kontainer
    diambil dari item flex PERTAMA — yaitu .fg-rt (bacaan), yang visualnya di atas. Akibatnya
@@ -327,6 +331,8 @@
 .compareRow>*{min-width:0;overflow-wrap:anywhere}
 @media(max-width:460px){.compareRow{grid-template-columns:minmax(0,1fr);gap:6px}}
 .termExample{padding:16px 18px;background:var(--pink-paler);border-radius:16px;text-align:left}
+/* v8: contoh kalimat mode ID — teks Jepang tampil di atas terjemahan, ukuran kecil. */
+.termExampleJa{font-family:var(--font-jp);font-size:13px;line-height:1.8;color:var(--ink);margin:0 0 6px;opacity:.92}
 
 /* halaman Ujian Akhir — semua class di FinalTest.jsx ini belum pernah punya rule sama sekali,
    jadi kartu tampil sebagai display:inline (satu baris teks 21px) dan tombol tanpa bentuk. */

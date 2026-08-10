@@ -72,7 +72,8 @@ npm run validate      # runs the eight gates below, in order — use before push
 | `validate:jsx` | Every `<Capitalized/>` used in JSX is declared in that file |
 | `validate:css-classes` | Every `className` in JSX has a matching rule in the six CSS files |
 | `validate:ruby` | No leaked bracket annotations (three failure classes, documented in the script) |
-| `validate:translation` | Indonesian translation quality — no boilerplate skeletons, no kanji leaks into ID fields, length/paragraph parity; also runs as a `prebuild` hook |
+| `validate:romaji` | Glossary romaji fields agree with `kanaToRomaji(reading)` — hand-typed romaji is banned (pack v8 found `shicchoushou` vs the correct `shitchoushou`); fix with `node scripts/regen-glossary-romaji.mjs --write` |
+| `validate:translation` | Indonesian translation quality — no boilerplate skeletons, no kanji leaks into ID fields, length/paragraph/sentence parity; also runs as a `prebuild` hook |
 | `validate:furigana` | Ruby layout contract — static CSS analysis via postcss |
 
 Three further gates are not in the chain, because each needs something the others don't:
@@ -187,8 +188,10 @@ parts are open from the start.
 
 | Path | Screen |
 | --- | --- |
-| `/` | Section list / home |
-| `/login` | Magic-link sign-in |
+| `/` | Public landing page |
+| `/login` | Magic-link sign-in (supports `?next=` deep-link) |
+| `/belajar` | Section list / home (session required) |
+| `/onboarding` | First-run profile wizard (session required) |
 | `/profile` | Profile and stats |
 | `/friends` | Friend list, requests, and handle lookup |
 | `/leaderboard` | Global public ranking and friends ranking |

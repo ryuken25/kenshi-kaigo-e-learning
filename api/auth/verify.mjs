@@ -34,8 +34,14 @@ export default async function handler(req, res) {
       VALUES(${userId}, ${hash(session)}, now() + interval '30 days', ${userAgent}, ${ipHash})
     `;
 
+    // v8: kembalikan user ke tujuan asal (?next=). Tanpa next tetap /profile —
+    // itu titik yang memicu onboarding wizard untuk user baru.
+    // Sanitisasi sama seperti magic-link: hanya path relatif internal.
+    let next = String(req.query?.next || '');
+    if (!next.startsWith('/') || next.startsWith('//') || next.includes('\\')) next = '/profile';
+
     res.setHeader('Set-Cookie', cookieHeader('kaigo_session', session, 60 * 60 * 24 * 30));
-    res.setHeader('Location', process.env.APP_URL ? `${process.env.APP_URL}/profile` : '/profile');
+    res.setHeader('Location', process.env.APP_URL ? `${process.env.APP_URL}${next}` : next);
     return res.status(302).send('Signed in. Redirecting…');
   } catch (e) {
     console.error(e);

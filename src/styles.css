@@ -5,6 +5,11 @@
   --muted:#7a5f6c;
   --pink:#ff7bab;
   --pink-deep:#ff5c9a;
+  /* v8: token tombol — ditimpa per karakter di themes.css ([data-char]).
+     Default = momo. Nilai dipilih supaya kontras tombol >= 4.5:1 (temuan audit). */
+  --btn-bg:#ff6f9c;
+  --btn-text:#3a2a33;
+  --btn-shadow:#c22a5e;
   --pink-pale:#ffe3ef;
   --pink-paler:#fff2f8;
   --lavender:#efe3ff;
@@ -93,6 +98,11 @@ header{
 }
 .eyebrow{font-size:11px;letter-spacing:1.6px;color:var(--pink);font-weight:700;margin:0 0 10px;text-transform:uppercase}
 .welcome h1{font:600 38px/1.1 Fredoka;margin:0;letter-spacing:-1px}
+/* v8: h1 beranda sekarang kutipan harian — sering full-kanji, jadi pakai font JP
+   & ukuran lebih kecil dari slogan Fredoka. Spec 0-2-0 sengaja mengalahkan
+   `.welcome h1` (0-1-1) tanpa !important. */
+.welcome .quoteJa{font-family:var(--font-jp);font-size:clamp(21px,4.5vw,28px);line-height:1.55;font-weight:700;letter-spacing:0}
+.quoteNote{font-size:12.5px;color:var(--muted);margin:0 0 8px;font-style:italic}
 .welcome em{font-style:normal;color:var(--pink-deep)}
 .muted{color:var(--muted);font-size:13px;line-height:1.55}
 
@@ -121,7 +131,7 @@ header{
 .round{background:#fff;border:1px solid var(--line);width:38px;height:38px;border-radius:13px;display:grid;place-items:center;color:var(--pink-deep);box-shadow:0 4px 12px -4px rgba(255,120,170,.4)}
 
 /* ---------- section grid / cards ---------- */
-.sectionGrid{padding:2px 20px 30px;display:grid;gap:13px;grid-template-columns:minmax(0,1fr)}
+.sectionGrid{padding:2px 20px 30px;display:grid;gap:13px;grid-template-columns:minmax(0,1fr);grid-auto-rows:1fr}
 .sectionCard{
   display:flex;align-items:center;gap:13px;padding:16px;border:1px solid var(--line);
   background:#fff;border-radius:var(--radius-lg);box-shadow:var(--shadow-pink);
@@ -138,6 +148,9 @@ header{
 .sectionCopy b{font:600 17px Fredoka;margin:2px 0}
 .sectionCopy span{font-size:11.5px;color:#7a5f6c;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .sectionCopy em{font-size:10px;color:#c39cac;font-style:normal;margin-top:5px}
+/* v8: deskripsi penuh bab di kartu section. Line-clamp 2 (bukan ellipsis 1 baris)
+   karena grid-auto-rows:1fr sudah menyamakan tinggi kartu. */
+.sectionCopy em.sectionDesc{white-space:normal;overflow:visible;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;line-height:1.5;margin-top:2px}
 .miniProgress{height:6px;background:var(--pink-pale);border-radius:6px;margin-top:8px;overflow:hidden}
 .miniProgress i{display:block;height:100%;background:linear-gradient(90deg,var(--pink),var(--gold));border-radius:6px}
 .sectionCard>svg{color:#d0bbc5;flex:none}
@@ -168,7 +181,7 @@ header{
   padding:14px 20px;border-radius:16px;font:700 14px 'DM Sans';text-decoration:none;
   transition:transform .15s cubic-bezier(.34,1.56,.64,1), box-shadow .2s ease, filter .2s ease;
 }
-.primary{background:linear-gradient(135deg,var(--pink),var(--pink-deep));color:#fff;box-shadow:0 10px 24px -8px rgba(255,90,150,.6)}
+.primary{background:var(--btn-bg);color:var(--btn-text);box-shadow:0 10px 24px -8px var(--btn-shadow)}
 .primary:hover{filter:brightness(1.06);box-shadow:0 12px 28px -6px rgba(255,90,150,.7);transform:translateY(-1px)}
 .primary:active{transform:scale(.96) translateY(0);filter:brightness(.98)}
 .primary:disabled{opacity:.55;box-shadow:none;cursor:not-allowed;transform:none}

@@ -14,3 +14,12 @@
 .authForm button{width:100%;margin-top:16px}
 .authError{display:block;color:#df5879;padding-top:10px;font-size:12px;font-weight:600}
 .authNote{font-size:11px;color:#b39aa8}
+/* v8 (doc 50): landing publik — pintu masuk satu-satunya setelah mode tamu dihapus.
+   Harus jelas dalam 5 detik: apa isinya, kenapa perlu email. */
+.landingPage{min-height:70vh;min-height:calc(100dvh - 130px);display:flex;align-items:center;justify-content:center;padding:30px 20px 44px}
+.landingCard{background:#fff;border-radius:22px;padding:26px 22px 24px;max-width:420px;width:100%;text-align:center;box-shadow:var(--shadow-pink)}
+.landingCard h1{font:600 26px/1.25 Fredoka;margin:8px 0 14px;color:var(--ink)}
+.landingPoints{list-style:none;padding:0;margin:0 0 18px;display:grid;gap:7px;text-align:left;font-size:13px;color:var(--muted)}
+.landingPoints li{padding-left:22px;position:relative}
+.landingPoints li:before{content:'🌸';position:absolute;left:0}
+.landingNote{font-size:11px;color:#b39aa8;margin-top:12px}

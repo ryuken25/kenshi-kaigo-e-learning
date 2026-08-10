@@ -97,6 +97,6 @@ export function CompareTerm({term,mode,className='',glossary,onTerm}){
   const field={ja:`${term.kanji}[${term.reading}]`,id:term.meaningId??term.kanji};
   return <span className={`compare-term ${className}`}>
     <Furigana field={field} mode={mode} variant="lg" glossary={glossary} onTerm={onTerm}/>
-    {mode!=='id'&&term.romaji&&<span className="compare-term__romaji">{term.romaji}</span>}
+    {term.romaji&&<span className="compare-term__romaji">{term.romaji}</span>}
   </span>;
 }
