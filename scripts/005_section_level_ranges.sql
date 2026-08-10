@@ -1,7 +1,9 @@
 -- 005_section_level_ranges.sql
 --
--- ⚠️ STATUS: REVIEWED-BUT-UNAPPLIED. File ini BELUM pernah dijalankan ke database manapun
---    (prod maupun staging). Jangan anggap skema prod sudah seperti ini.
+-- ✅ STATUS: APPLIED — constraint per-section ARRAY[10,10,15,13,10,12,12,9,12,10,17,10,12]
+--    terverifikasi aktif di DB produksi via scripts/verify-schema.mjs (2026-08-11).
+--    Header lama sempat bilang "REVIEWED-BUT-UNAPPLIED" — itu stale, jangan dipercaya.
+--    Migrasi idempotent: aman dijalankan ulang.
 --
 -- TUJUAN
 -- Constraint lama `level_progress_ids_range` (scripts/001_init.sql:119-120) berbunyi:

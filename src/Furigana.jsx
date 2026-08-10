@@ -6,6 +6,7 @@
 // jadi bacaan tidak bisa tumpang tindih & hasilnya sama di Safari maupun Chrome.
 import React,{memo,useMemo} from 'react';
 import {furigana} from './furigana.generated.js';
+import {kanaToRomaji} from './lib/kana.js';
 
 const RUBY_RE=/([一-鿿々〆ヶ]+)\[([ぁ-ゟァ-ーー]+)\]/g;
 const KANJI_RE=/[一-鿿々〆ヶ]/;
@@ -95,8 +96,11 @@ export default memo(Furigana);
    ditumpuk sebagai dua elemen teks terpisah (itu bug lama: mode 漢字 & ふり identik). */
 export function CompareTerm({term,mode,className='',glossary,onTerm}){
   const field={ja:`${term.kanji}[${term.reading}]`,id:term.meaningId??term.kanji};
+  // Romaji tampil di semua mode. Compare card generated tidak punya field romaji —
+  // fallback turunkan dari reading (pola sama dengan RichCardBody), jangan diketik manual.
+  const rom=term.romaji||(term.reading?kanaToRomaji(term.reading):'');
   return <span className={`compare-term ${className}`}>
     <Furigana field={field} mode={mode} variant="lg" glossary={glossary} onTerm={onTerm}/>
-    {term.romaji&&<span className="compare-term__romaji">{term.romaji}</span>}
+    {rom&&<span className="compare-term__romaji">{rom}</span>}
   </span>;
 }

@@ -1,23 +1,36 @@
-import React,{useEffect,useMemo,useState} from 'react';
+import React,{useEffect,useMemo,useState,Suspense} from 'react';
 import {createRoot} from 'react-dom/client';
 import {BrowserRouter,Routes,Route,Link,useNavigate,useParams,useLocation,Navigate,Outlet} from 'react-router-dom';
-import {Heart,Lock,ChevronRight,BookOpen,Flame,Star,Check,X,Volume2,Info,Menu,Home as HomeIcon,ArrowLeft,RotateCcw,Shuffle,Users,Trophy,Medal} from 'lucide-react';
+import {Heart,Lock,ChevronRight,BookOpen,Flame,Star,Check,X,Volume2,Info,Home as HomeIcon,ArrowLeft,RotateCcw,Shuffle,Users,Trophy,Medal} from 'lucide-react';
 import {sections,getSection,getLevel,glossary,allQuestions,randomQuestion,hashSeed} from './data.js';
 import Furigana,{CompareTerm,stripRuby} from './Furigana.jsx';
 import s1l1Content from './content/s1l1.json';
 import s1l1Ja from './content/s1l1-ja.json';
 import glossaryData from './content/glossary.index.json';
-import {GlossaryPage,GlossaryDetail} from './GlossaryPage.jsx';
-import {FinalHome,FinalYear,FinalQuiz,FinalResult,UnlimitedFinal} from './FinalTest.jsx';
-import Login from './Login.jsx';
-import {FriendsPage,LeaderboardPage,AchievementsPage,OnboardingWizard,ProfileEditor} from './Social.jsx';
-import {Avatar,ToastProvider,applyTheme,useLangMode,CHAR_FOR_THEME} from './lib/social.jsx';
+import {Avatar,ToastProvider,useLangMode,CHAR_FOR_THEME} from './lib/social.jsx';
 import {AuthProvider, useAuth} from './context/AuthContext.jsx';
 import {ProgressProvider, useProgress} from './context/ProgressContext.jsx';
 import {dailyQuote} from './data/quotes.js';
 import {useTTS,toKana} from './lib/tts.js';
-import {kanaToRomaji,romajiDisplay} from './lib/kana.js';
+import {kanaToRomaji} from './lib/kana.js';
 import './styles.css';import './translation.css';import './routing.css';import './auth.css';import './themes.css';import './social.css';
+// Route-level code-splitting: FinalTest, Glossary, Social, Login di-lazy supaya chunk
+// utama (data.js + furigana.generated.js ~1MB source) tidak memuat halaman yang jarang
+// dibuka di load pertama. Wrapper komponen (bukan .then m=>({default:m.X})) supaya
+// validate:jsx tetap melihat deklarasi <FinalHome/> dkk di file ini.
+const Login=React.lazy(()=>import('./Login.jsx'));
+const FinalHome=React.lazy(()=>import('./FinalTest.jsx').then(m=>({default:m.FinalHome})));
+const FinalYear=React.lazy(()=>import('./FinalTest.jsx').then(m=>({default:m.FinalYear})));
+const FinalQuiz=React.lazy(()=>import('./FinalTest.jsx').then(m=>({default:m.FinalQuiz})));
+const FinalResult=React.lazy(()=>import('./FinalTest.jsx').then(m=>({default:m.FinalResult})));
+const UnlimitedFinal=React.lazy(()=>import('./FinalTest.jsx').then(m=>({default:m.UnlimitedFinal})));
+const GlossaryPage=React.lazy(()=>import('./GlossaryPage.jsx').then(m=>({default:m.GlossaryPage})));
+const GlossaryDetail=React.lazy(()=>import('./GlossaryPage.jsx').then(m=>({default:m.GlossaryDetail})));
+const FriendsPage=React.lazy(()=>import('./Social.jsx').then(m=>({default:m.FriendsPage})));
+const LeaderboardPage=React.lazy(()=>import('./Social.jsx').then(m=>({default:m.LeaderboardPage})));
+const AchievementsPage=React.lazy(()=>import('./Social.jsx').then(m=>({default:m.AchievementsPage})));
+const OnboardingWizard=React.lazy(()=>import('./Social.jsx').then(m=>({default:m.OnboardingWizard})));
+const ProfileEditor=React.lazy(()=>import('./Social.jsx').then(m=>({default:m.ProfileEditor})));
 
 /* ---------- 3-mode language switch: 漢字(kanji) / ふりがな(furigana) / ID (Indonesia) ----------
    Icon-button kecil di pojok kanan atas tiap card (soal, choice, explanation, materi paragraf).
@@ -56,10 +69,15 @@ const MASCOT_MAP = {
   practice:ASSET('hk-cute-emoji.png'),
 };
 
+// Varian WebP (re-encoded lokal, bukan aset baru): hk-balloons 738KB→128KB.
+// PNG tetap jadi fallback <img> buat browser lama.
+const WEBP_MAP = { perfect:ASSET('hk-balloons.webp') };
+
 function Mascot({variant='home',size='md',className='',style}){
   const src = MASCOT_MAP[variant]||MASCOT_MAP.home;
+  const webp = WEBP_MAP[variant];
   return <div className={`mascotImg size-${size} ${className}`} style={style} aria-label="Hello Kitty mascot">
-    <img src={src} alt="Hello Kitty" loading="lazy"/>
+    {webp?<picture><source srcSet={webp} type="image/webp"/><img src={src} alt="Hello Kitty" loading="lazy"/></picture>:<img src={src} alt="Hello Kitty" loading="lazy"/>}
     <span className="sparkle s1">✨</span>
     <span className="sparkle s2">🎀</span>
   </div>;
@@ -149,7 +167,7 @@ function Home(){
   return <main><section className="welcome"><div><p className="eyebrow">OHAYŌ, KENSHI 🌷</p><h1 className="quoteJa" lang={quote.note?'ja':undefined}>{quote.text}</h1>{quote.note&&<p className="quoteNote">{quote.note}</p>}<p className="muted">13 bab · {totalLevels} level · dikerjakan sedikit demi sedikit.</p></div><Mascot variant="home" size="md"/></section>
     <div className="daily"><div><b>Hari ini</b><p>Satu kartu sekali duduk sudah cukup.</p><div className="progress"><i style={{width:`${Math.min(100,(completedCount/totalLevels)*100)}%`}}/></div></div><span className="badge">{completedCount} selesai</span></div>
     <Link className="finalHomeBanner" to="/final"><div><b>Ujian Akhir</b><span>Soal asli 2021–2026 · 125 butir tiap tahun</span></div><ChevronRight/></Link>
-    <div className="sectionHead"><div><h2>Urutan belajar</h2><p>Mulai dari martabat, berakhir di studi kasus</p></div><button className="round"><Menu size={19}/></button></div>
+    <div className="sectionHead"><div><h2>Urutan belajar</h2><p>Mulai dari martabat, berakhir di studi kasus</p></div></div>
     <div className="sectionGrid">{sections.map((s)=><SectionCard key={s.id} section={s} official={unlockMap[s.id]?.official ?? (s.id===1)} completedLevels={unlockMap[s.id]?.completedLevels||0}/>)}</div>
   </main>;
 }
@@ -262,7 +280,8 @@ const termField=(t)=>PURE_KANJI.test(t.kanji)?{ja:`${t.kanji}[${t.reading}]`,id:
 function Materi(){
   const {sectionId,levelId}=useParams();const s=getSection(sectionId),l=getLevel(sectionId,levelId);const nav=useNavigate();
   const [termSheet,setTermSheet]=useState(null);
-  const glossaryKanji=new Set(glossaryData.terms.map(t=>t.kanji));
+  // useMemo: Set baru tiap render bikin prop tak-stabil menembus memo(Furigana).
+  const glossaryKanji=useMemo(()=>new Set(glossaryData.terms.map(t=>t.kanji)),[]);
   const openTerm=(kanji)=>{const term=glossaryData.terms.find(t=>t.kanji===kanji);if(term)setTermSheet(term)};
   const rich = Number(sectionId)===1 && Number(levelId)===1 ? s1l1Content : null;
   const cards = rich?.materi ? rich.materi.map(mergeJapaneseCard) : l?.materi || [];
@@ -279,32 +298,36 @@ function Materi(){
     <div className="materiTop"><Link to={`/section/${s.id}/level/${l.id}`} className="back">× Tutup</Link><div className="materiDots" aria-label={`Kartu ${i+1} dari ${cards.length}`}>{cards.map((c,n)=><button type="button" key={c.id||n} className={`${n===i?'active':''} ${n<i?'done':''}`} disabled={n>i} aria-label={`Kartu ${n+1}`} onClick={()=>setI(n)}/>)}</div><LangSwitch mode={mode} setMode={setMode}/></div>
     <article className={`richMateriCard rich-${card.type||'lesson'}`} key={card.id||i}><RichCardBody card={card} mode={mode} glossary={glossaryKanji} onTerm={openTerm}/></article>
     {termSheet&&<div className="termSheetBackdrop" role="presentation" onClick={()=>setTermSheet(null)}><section className="termSheet" role="dialog" aria-modal="true" aria-label={`Istilah ${termSheet.kanji}`} onClick={e=>e.stopPropagation()}><button className="termSheetClose" onClick={()=>setTermSheet(null)} aria-label="Tutup">×</button>{mode==='kanji'?<small>{termSheet.reading} · {kanaToRomaji(termSheet.reading)}</small>:<small>{kanaToRomaji(termSheet.reading)}</small>}<Furigana field={termField(termSheet)} mode={mode} as="h2" variant="xl"/><p className="termSheetShort">{termSheet.id.short}</p><p>{termSheet.id.long}</p><Link className="termSheetMore" to={`/glossary/${termSheet.slug}`}>Buka halaman lengkapnya →</Link></section></div>}
-    {cardGlossaryTerms(card,glossaryData.terms).length>0&&<section className="materiTerms"><h3>🔎 Istilah di kartu ini</h3><div className="materiTermButtons">{cardGlossaryTerms(card,glossaryData.terms).map(t=><button type="button" key={t.slug} onClick={()=>setTermSheet(t)} className="materiTermButton"><small>{t.reading}</small><b>{t.kanji}</b><span>{t.id.short}</span></button>)}</div></section>}
+    {(()=>{const terms=cardGlossaryTerms(card,glossaryData.terms);return terms.length>0&&<section className="materiTerms"><h3>🔎 Istilah di kartu ini</h3><div className="materiTermButtons">{terms.map(t=><button type="button" key={t.slug} onClick={()=>setTermSheet(t)} className="materiTermButton"><small>{t.reading}</small><b>{t.kanji}</b><span>{t.id.short}</span></button>)}</div></section>})()}
     <div className="richMateriNav">{i>0&&<button type="button" className="secondary tap" onClick={()=>setI(v=>v-1)}>Kembali</button>}<button type="button" className="primary tap" onClick={()=>i<cards.length-1?setI(i+1):nav(`/section/${s.id}/level/${l.id}/quiz`)}>{i<cards.length-1?'Lanjut':'Mulai quiz'} <ChevronRight/></button></div>
     <button type="button" className="materiSkip" onClick={()=>nav(`/section/${s.id}/level/${l.id}/quiz`)}>Lewati ke quiz</button>
   </main>;
 }
 
 function JapaneseTerm({term,mode,className='',onTerm}){
-  return <Furigana field={termField(term)} mode={mode} as="span" variant="xl" className={`japaneseTerm ${className}`} glossary={new Set([term.kanji])} onTerm={onTerm}/>;
+  // Set di-memoize per term: new Set() tiap render bikin prop tak-stabil menembus memo(Furigana).
+  const g=useMemo(()=>new Set([term.kanji]),[term.kanji]);
+  return <Furigana field={termField(term)} mode={mode} as="span" variant="xl" className={`japaneseTerm ${className}`} glossary={g} onTerm={onTerm}/>;
 }
 
+/* Body kartu materi. Dulu wrapper F dideklarasikan DI DALAM render lalu dipakai sebagai
+   elemen JSX — identitas komponen baru tiap render, React unmount/remount seluruh subtree
+   ruby tiap parent re-render (swipe kartu, toggle mode). Sekarang panggil Furigana langsung. */
 function RichCardBody({card,mode,glossary,onTerm}){
-  const F=({field,as='p',className='',variant})=><Furigana field={field} mode={mode} as={as} variant={variant} className={className} glossary={glossary} onTerm={onTerm}/>;
   const heading=card.heading||((card.titleJa||card.titleId)?{ja:card.titleJa||'',id:card.titleId||''}:null);
   const body=card.body||((card.bodyJa||card.bodyId)?{ja:card.bodyJa||'',id:card.bodyId||''}:null);
-  if(card.type==='hook') return <><Mascot variant="materi" size="sm"/><F field={body} className="richBody"/></>;
-  if(card.type==='term'){const t=card.term;const rom=t.romaji||(t.reading?kanaToRomaji(t.reading):'');return <div className="richTerm"><JapaneseTerm term={t} mode={mode} onTerm={onTerm}/><div className="termRoman">{rom}{t.meaning?` / ${t.meaning}`:''}</div><div className="termExample">{t.example&&mode==='id'&&<><p lang="ja" className="termExampleJa">{stripRuby(t.example.ja||'')}</p><p>{t.example.id}</p></>}{t.example&&mode!=='id'&&<F field={t.example}/>}</div></div>}
-  if(card.type==='explain') return <><F field={heading} as="h2"/><F field={body} className="richBody"/> </>;
-  if(card.type==='compare') return <><F field={card.heading||heading} as="h2"/><div className="compareGrid">{card.rows.map(r=><div className="compareRow" key={r.term.kanji}><CompareTerm term={r.term} mode={mode} className="compareTerm" glossary={glossary} onTerm={onTerm}/><F field={r.meaning}/><F field={r.when}/></div>)}</div>{(card.note||heading)&&<F field={card.note||heading} className="richNote"/>}</>;
-  if(card.type==='checkpoint') return <><span className="richTag">Cek cepat · tidak dinilai</span><F field={card.question?.prompt} className="richQuestion"/><div className="checkpointOpts">{card.question.options.map(o=><div key={o.key} className="checkpointOption"><F field={o.text}/></div>)}</div><p className="richNote">Jawabannya akan dibahas setelah kamu lanjut membaca materi.</p></>;
-  if(card.type==='case') return <><span className="richTag">Kasus lapangan</span><F field={heading} as="h2"/><F field={card.scenario} className="richBody"/><F field={card.prompt} className="richPrompt"/><F field={card.reveal} className="richReveal"/></>;
-  if(card.type==='exam-tip') return <><span className="richTag">Sudut pandang ujian</span><F field={heading} as="h2"/><F field={body} className="richBody"/></>;
-  if(card.type==='recap') return <><F field={heading} as="h2"/><ul className="richRecap">{card.points.map((p,n)=><li key={n}><F field={p}/></li>)}</ul></>;
+  if(card.type==='hook') return <><Mascot variant="materi" size="sm"/><Furigana field={body} mode={mode} className="richBody" glossary={glossary} onTerm={onTerm}/></>;
+  if(card.type==='term'){const t=card.term;const rom=t.romaji||(t.reading?kanaToRomaji(t.reading):'');return <div className="richTerm"><JapaneseTerm term={t} mode={mode} onTerm={onTerm}/><div className="termRoman">{rom}{t.meaning?` / ${t.meaning}`:''}</div><div className="termExample">{t.example&&mode==='id'&&<><p lang="ja" className="termExampleJa">{stripRuby(t.example.ja||'')}</p><p>{t.example.id}</p></>}{t.example&&mode!=='id'&&<Furigana field={t.example} mode={mode} glossary={glossary} onTerm={onTerm}/>}</div></div>}
+  if(card.type==='explain') return <><Furigana field={heading} mode={mode} as="h2" glossary={glossary} onTerm={onTerm}/><Furigana field={body} mode={mode} className="richBody" glossary={glossary} onTerm={onTerm}/></>;
+  if(card.type==='compare') return <><Furigana field={card.heading||heading} mode={mode} as="h2" glossary={glossary} onTerm={onTerm}/><div className="compareGrid">{card.rows.map(r=><div className="compareRow" key={r.term.kanji}><CompareTerm term={r.term} mode={mode} className="compareTerm" glossary={glossary} onTerm={onTerm}/><Furigana field={r.meaning} mode={mode} glossary={glossary} onTerm={onTerm}/><Furigana field={r.when} mode={mode} glossary={glossary} onTerm={onTerm}/></div>)}</div>{(card.note||heading)&&<Furigana field={card.note||heading} mode={mode} className="richNote" glossary={glossary} onTerm={onTerm}/>}</>;
+  if(card.type==='checkpoint') return <><span className="richTag">Cek cepat · tidak dinilai</span><Furigana field={card.question?.prompt} mode={mode} className="richQuestion" glossary={glossary} onTerm={onTerm}/><div className="checkpointOpts">{card.question.options.map(o=><div key={o.key} className="checkpointOption"><Furigana field={o.text} mode={mode} glossary={glossary} onTerm={onTerm}/></div>)}</div><p className="richNote">Jawabannya akan dibahas setelah kamu lanjut membaca materi.</p></>;
+  if(card.type==='case') return <><span className="richTag">Kasus lapangan</span><Furigana field={heading} mode={mode} as="h2" glossary={glossary} onTerm={onTerm}/><Furigana field={card.scenario} mode={mode} className="richBody" glossary={glossary} onTerm={onTerm}/><Furigana field={card.prompt} mode={mode} className="richPrompt" glossary={glossary} onTerm={onTerm}/><Furigana field={card.reveal} mode={mode} className="richReveal" glossary={glossary} onTerm={onTerm}/></>;
+  if(card.type==='exam-tip') return <><span className="richTag">Sudut pandang ujian</span><Furigana field={heading} mode={mode} as="h2" glossary={glossary} onTerm={onTerm}/><Furigana field={body} mode={mode} className="richBody" glossary={glossary} onTerm={onTerm}/></>;
+  if(card.type==='recap') return <><Furigana field={heading} mode={mode} as="h2" glossary={glossary} onTerm={onTerm}/><ul className="richRecap">{card.points.map((p,n)=><li key={n}><Furigana field={p} mode={mode} glossary={glossary} onTerm={onTerm}/></li>)}</ul></>;
   // Kartu istilah terkait — 60 istilah glossary yang dulu tak pernah muncul di konten
   // (audit 2026-08). Term tampil apa adanya (kanji/katakana), artinya selalu Indonesia.
-  if(card.type==='terms') return <><F field={heading} as="h2"/><div className="richTermList">{card.terms.map(t=><div key={t.t} className="richTermItem"><b>{t.t}</b><span>{t.id}</span></div>)}</div></>;
-  return <><F field={heading} as="h2"/><F field={body} className="richBody"/> </>;
+  if(card.type==='terms') return <><Furigana field={heading} mode={mode} as="h2" glossary={glossary} onTerm={onTerm}/><div className="richTermList">{card.terms.map(t=><div key={t.t} className="richTermItem"><b>{t.t}</b><span>{t.id}</span></div>)}</div></>;
+  return <><Furigana field={heading} mode={mode} as="h2" glossary={glossary} onTerm={onTerm}/><Furigana field={body} mode={mode} className="richBody" glossary={glossary} onTerm={onTerm}/></>;
 }
 
 /* ---------- shared quiz pieces (dipakai Quiz level & Practice) ---------- */
@@ -377,13 +400,15 @@ function Quiz(){
   const [wrongThisRound,setWrongThisRound]=useState([]);
   const [retryRound,setRetryRound]=useState(0);
   const [saving,setSaving]=useState(false);
+  const [submitErr,setSubmitErr]=useState(null);
   const [popup,setPopup]=useState(null);
   const [quizMode,setQuizMode]=useLangMode();
   const nav=useNavigate();
   const {available,speaking,play}=useTTS();
   const {submitAttempt} = useProgress();
   const [startedAt] = useState(()=>Date.now());
-  const [attemptId] = useState(()=>crypto.randomUUID ? crypto.randomUUID() : `a-${Date.now()}-${Math.random().toString(16).slice(2)}`);
+  // attemptId wajib UUID valid — server menolak format lain (validasi idempotency).
+  const [attemptId] = useState(()=>crypto.randomUUID?crypto.randomUUID():([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g,c=>(c^crypto.getRandomValues(new Uint8Array(1))[0]&15>>c/4).toString(16)));
   if(!s||!l)return <Navigate to="/belajar"/>;
   const totalCount = l.questions.length;
   const q = roundQuestions[qi];
@@ -400,11 +425,17 @@ function Quiz(){
 
   const doSubmit = async ()=>{
     setSaving(true);
+    setSubmitErr(null);
     const correctCount = correctFirstTry.size;
     const scorePercent = Math.round((correctCount/totalCount)*100);
     const durationMs = Date.now()-startedAt;
     const result = await submitAttempt({sectionId:s.id, levelId:l.id, correctCount, totalCount, score:scorePercent, durationMs, attemptId});
     setSaving(false);
+    // Gagal submit (401 sesi habis / network / 4xx) JANGAN lanjut ke Result: dulu tetap
+    // nav dengan XP fallback palsu sementara attempt cuma nyangkut di pending localStorage
+    // tanpa feedback = success screen bohong + data hilang diam-diam. attemptId stabil
+    // (useState) jadi retry aman idempoten di server.
+    if(!result?.ok){ setSubmitErr(result?.error==='not_signed_in'?'Sesi kamu habis — masuk lagi dulu biar nilainya tersimpan.':'Gagal menyimpan nilai — cek koneksi lalu coba lagi.'); return; }
     const xpDelta = result?.data?.xpDelta ?? (correctCount*10+30);
     const isPreview = Boolean(result?.data?.isPreview);
     nav(`/section/${s.id}/level/${l.id}/result`,{state:{score:correctCount,total:totalCount,xpDelta,isPreview}});
@@ -436,7 +467,7 @@ function Quiz(){
     {available&&<button className="listen tap" type="button" onClick={()=>play(toKana(q.questionJa))}><Volume2 size={17}/> {speaking?'止める · Berhenti':'聞く · Dengarkan soal'}</button>}
     <div className="choices">{q.choices.map((c,i)=><ChoiceCard key={`${q.id}-${i}-${phase}-${qi}`} choice={c} choiceId={q.choiceIds?.[i]||''} index={i} selected={selected} correctIndex={q.correctIndex} onAnswer={answer} mode={quizMode} setMode={setQuizMode}/>)}</div>
     {selected!==null && <ExplanationBox q={q}/>}
-    <div className="quizFooter"><button className="primary big tap" disabled={selected===null||saving} onClick={next}>{nextLabel} <ChevronRight/></button></div>
+    <div className="quizFooter">{submitErr&&<div className="submitError" role="alert">{submitErr}</div>}<button className="primary big tap" disabled={selected===null||saving} onClick={next}>{nextLabel} <ChevronRight/></button></div>
   </main>;
 }
 
@@ -481,6 +512,8 @@ function Result(){
   // jadi /section/99/level/99/result (atau param non-numerik) bikin TypeError -> layar putih.
   // Lima komponen ber-param lain sudah pakai pola yang sama; Result ketinggalan.
   if(!s||!l)return <Navigate to="/belajar"/>;
+  // state null (refresh / hard-nav) dulu render "LEVEL COMPLETE 0/5" + XP palsu.
+  if(state===null)return <Navigate to={`/section/${s.id}/level/${levelId}`} replace/>;
   const xp = state?.xpDelta ?? ((state?.score||0)*10+30);
   const isPerfect = state?.score===state?.total;
   const isPreview = Boolean(state?.isPreview);
@@ -580,7 +613,7 @@ function Landing(){
 }
 
 function AppShell(){
-  return <BrowserRouter><ThemeApply/><Shell><Routes>
+  return <BrowserRouter><ThemeApply/><Shell><Suspense fallback={<main className="page"><KawaiiLoader/></main>}><Routes>
     <Route path="/" element={<Landing/>}/>
     <Route path="/login" element={<Login/>}/>
     {/* v8 (doc 50): WAJIB LOGIN. Semua route belajar butuh sesi; tamu diarahkan ke
@@ -608,7 +641,7 @@ function AppShell(){
       <Route path="/section/:sectionId/level/:levelId/result" element={<Result/>}/>
     </Route>
     <Route path="*" element={<Navigate to="/"/>}/>
-  </Routes></Shell></BrowserRouter>;
+  </Routes></Suspense></Shell></BrowserRouter>;
 }
 
 function App(){

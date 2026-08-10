@@ -6,11 +6,29 @@ import { hash } from '../_auth.mjs';
 const json = (res, b, s = 200) => res.status(s).setHeader('Cache-Control', 'no-store').json(b);
 const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+// Rate-limit in-memory per email + per IP: tanpa ini endpoint bisa dipakai untuk
+// email-bombing satu alamat. Instanceless (tiap serverless instance punya Map sendiri),
+// jadi limit efektif = batas × jumlah instance aktif — tetap memotong bulk abuse.
+const rlMap = new Map();
+const rlTake = (key, max, windowMs) => {
+  const now = Date.now();
+  const e = rlMap.get(key);
+  if (!e || now - e.start > windowMs) { rlMap.set(key, { start: now, n: 1 }); return true; }
+  if (e.n >= max) return false;
+  e.n += 1; return true;
+};
+if (rlMap.size > 10000) rlMap.clear(); // buang entri lama saat map membengkak
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') return json(res, { error: 'Method not allowed' }, 405);
   try {
     const email = String(req.body?.email || '').trim().toLowerCase();
     if (!emailRe.test(email)) return json(res, { error: 'Valid email required' }, 400);
+
+    const ip = String(req.headers['x-forwarded-for'] || req.socket?.remoteAddress || '').split(',')[0].trim() || 'unknown';
+    if (!rlTake(`e:${email}`, 3, 10 * 60 * 1000) || !rlTake(`i:${ip}`, 20, 10 * 60 * 1000)) {
+      return json(res, { error: 'Too many sign-in requests. Try again in a few minutes.' }, 429);
+    }
 
     // v8: tujuan asal (dari /login?next=...) dibawa lewat link. Hanya terima path
     // relatif internal — tolak apapun yang bisa jadi open redirect (//host, skema).

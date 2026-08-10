@@ -244,6 +244,8 @@
 .explainBox .fg-rt{color:#b8934a;font-weight:700}
 
 .quizFooter{display:flex;flex-direction:column;gap:10px}
+/* Banner gagal submit quiz (doSubmit gagal network/401) — kontras aman ≥4.5:1 */
+.submitError{background:#fff1f3;border:1px solid #f4849b;color:#8a3049;font-size:13px;line-height:1.5;padding:10px 12px;border-radius:12px;text-align:left}
 
 /* answer feedback popup — Yeayy!/Zannen... */
 .answerPopup{

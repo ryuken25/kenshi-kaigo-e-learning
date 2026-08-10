@@ -8,9 +8,13 @@ export default async function handler(req, res) {
     if (!token) return res.status(400).send('Missing sign-in token');
 
     const sql = db();
+    // Single-use atomik: satu UPDATE ... RETURNING menandai token terpakai SEKALIGUS
+    // mengambil email. Pola lama (SELECT lalu UPDATE terpisah) membiarkan dua verify
+    // paralel sama-sama lolos. UPDATE hanya match baris used_at IS NULL & belum expired.
     const rows = await sql`
-      SELECT token_hash, email FROM magic_tokens
+      UPDATE magic_tokens SET used_at = now()
       WHERE token_hash = ${hash(token)} AND used_at IS NULL AND expires_at > now()
+      RETURNING email
     `;
     if (!rows[0]) return res.status(400).send('This sign-in link is invalid or expired. Request a new one.');
 
@@ -22,9 +26,6 @@ export default async function handler(req, res) {
       RETURNING id
     `;
     const userId = users[0].id;
-
-    // mark token used (single-use) — do this before issuing session
-    await sql`UPDATE magic_tokens SET used_at = now() WHERE token_hash = ${hash(token)}`;
 
     const session = crypto.randomBytes(32).toString('base64url');
     const userAgent = String(req.headers['user-agent'] || '').slice(0, 255);

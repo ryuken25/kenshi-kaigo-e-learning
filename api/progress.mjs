@@ -139,21 +139,21 @@ export default async function handler(req, res) {
       if (!Number.isInteger(levelId) || levelId < 1 || levelId > levelsInSection(sectionId))
         return res.status(400).json({ error: 'invalid_input', message: 'levelId out of range' });
       if (!attemptId) return res.status(400).json({ error: 'invalid_input', message: 'attemptId required' });
+      // UUID wajib: tanpa ini attemptId sampah bikin PK error (500), bukan 400.
+      if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(attemptId))
+        return res.status(400).json({ error: 'invalid_input', message: 'attemptId must be a UUID' });
 
-      // recompute score server-side from correct/total when provided
-      let score = scoreClient;
-      if (Number.isFinite(correctCount) && Number.isFinite(totalCount) && totalCount > 0) {
-        const serverScore = Math.round((correctCount / totalCount) * 100);
-        if (Number.isFinite(scoreClient) && Math.abs(serverScore - scoreClient) > 1) {
-          return res.status(400).json({ error: 'invalid_input', message: 'score mismatch' });
-        }
-        score = serverScore;
-      }
-      if (!Number.isFinite(score) || score < 0 || score > 100)
-        return res.status(400).json({ error: 'invalid_input', message: 'score out of range' });
+      // Score selalu direkomputasi server-side dari correct/total — kedua field WAJIB.
+      // Celah lama: omit keduanya dan scoreClient lolos mentah (klaim 100 tanpa bukti).
+      if (!Number.isInteger(correctCount) || !Number.isInteger(totalCount) || correctCount < 0 || totalCount <= 0 || correctCount > totalCount)
+        return res.status(400).json({ error: 'invalid_input', message: 'correctCount/totalCount required' });
+      const score = Math.round((correctCount / totalCount) * 100);
+      if (Number.isFinite(scoreClient) && Math.abs(score - scoreClient) > 1)
+        return res.status(400).json({ error: 'invalid_input', message: 'score mismatch' });
 
-      // idempotency: same attemptId returns cached response, writes nothing again
-      const existingAttempt = await sql`SELECT response FROM level_attempts WHERE attempt_id = ${attemptId}`;
+      // Idempotency per attemptId, di-scope ke user: tanpa AND user_id, replay attemptId
+      // user lain mengembalikan response mereka (bocor totalXp/streak orang lain).
+      const existingAttempt = await sql`SELECT response FROM level_attempts WHERE attempt_id = ${attemptId} AND user_id = ${user.id}`;
       if (existingAttempt[0]) {
         return res.status(200).json(existingAttempt[0].response);
       }
