@@ -38,11 +38,11 @@ const rowJson = (r, i, myHandle) => ({
 export default async function handler(req, res) {
   try {
     const sql = db();
-    const user = await requireUser(sql, req);
-    if (!user) return res.status(401).json({ error: 'Not signed in' });
     if (req.method !== 'GET') { res.setHeader('Allow', 'GET'); return res.status(405).json({ error: 'Method not allowed' }); }
-
     const scope = req.query?.scope === 'global' ? 'global' : 'friends';
+    // Global boleh dilihat GUEST (cache publik); friends butuh login.
+    const user = await requireUser(sql, req);
+    if (!user && scope !== 'global') return res.status(401).json({ error: 'Not signed in' });
     const weekStart = weekStartTokyo();
     const resetsAt = `${weekStart}T00:00:00+09:00`;
 
@@ -60,9 +60,9 @@ export default async function handler(req, res) {
         ORDER BY wk.xp DESC, u.streak_current DESC, u.created_at ASC, u.id ASC
         LIMIT 100`;
 
-      // Posisi sendiri — hanya kalau memenuhi syarat tampil (public + punya handle).
+      // Posisi sendiri — hanya kalau login + memenuhi syarat tampil (public + punya handle).
       let me = null, delta = null;
-      const eligible = Boolean(user.handle) && user.visibility === 'public';
+      const eligible = Boolean(user && user.handle) && user.visibility === 'public';
       if (eligible) {
         const my = await sql`SELECT COALESCE(SUM(xp_gained),0)::int xp FROM daily_activity WHERE user_id=${user.id} AND activity_date >= ${weekStart}::date`;
         const above = await sql`
@@ -83,7 +83,7 @@ export default async function handler(req, res) {
       const newAchievements = me ? await evaluateLeaderboardAchievements(sql, user.id, me.rank) : [];
       return res.status(200).json({
         scope, weekStart, resetsAt,
-        rows: rows.map((r, i) => rowJson(r, i, user.handle)),
+        rows: rows.map((r, i) => rowJson(r, i, user ? user.handle : null)),
         me: me ? { ...me, delta } : null,
         newAchievements,
       });
