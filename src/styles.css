@@ -55,6 +55,13 @@
   --lav-ink:#7d6a9a;--lav-strong:#9b7ae0;--lav-link:#9b5fd6;--lav-line:#e4d3ff;--lav-badge:#8354c9;
   --tint-underline:#ff78a3;--tint-listen:#ff7393;--tint-listen-line:#f5dbe4;--tint-listen-bg:#fff7fa;
   --info:#3f7fb0;--info-bg:#e3f0fa;--neutral-bg:#f0f0f2;--neutral-ink:#8a8a94;
+  /* Aksen SEBAGAI TEKS. --pink-deep (#ff5c9a) di atas putih cuma 2,90:1 dan di
+     atas --pink-pale 2,41:1 — jauh di bawah ambang 4,5:1 yang dipakai produk.
+     Warna itu tetap dipakai untuk isian, garis, dan ikon (di sana kontras teks
+     tidak berlaku); yang berpindah ke token ini HANYA `color:` pada teks.
+     Nilai dipilih dari yang paling terang yang masih lolos di ketiga latar:
+     putih 5,49 · pink-pale 4,58 · pink-paler 5,05. Emas 1,72:1 -> #9a6a08 (4,73). */
+  --pink-text:#c81e63;--gold-text:#9a6a08;
   --pagoda:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 180'%3E%3Cg fill='%23000'%3E%3Cpath d='M110 4 150 26H70Z'/%3E%3Crect x='96' y='26' width='28' height='14'/%3E%3Cpath d='M60 44h100l16 12H44Z'/%3E%3Crect x='86' y='56' width='48' height='20'/%3E%3Cpath d='M46 80h128l20 13H26Z'/%3E%3Crect x='78' y='93' width='64' height='26'/%3E%3Cpath d='M32 123h156l22 14H10Z'/%3E%3Crect x='66' y='137' width='88' height='43'/%3E%3C/g%3E%3C/svg%3E");
 }
 
@@ -102,7 +109,7 @@ header{
   transform:rotate(-4deg);overflow:hidden;flex:none;
 }
 .kitty img{width:100%;height:100%;object-fit:contain;padding:4px}
-.topStats{display:flex;align-items:center;gap:8px;color:var(--pink-deep);font-weight:700;font-size:12.5px;flex:none}
+.topStats{display:flex;align-items:center;gap:8px;color:var(--pink-text);font-weight:700;font-size:12.5px;flex:none}
 .topStats span{display:flex;align-items:center;gap:4px;background:var(--pink-pale);padding:6px 9px;border-radius:999px;white-space:nowrap}
 .topStats .statLabel{font-size:9px;font-weight:600;opacity:.6;letter-spacing:.03em}
 .topStats .xpStat{display:none}
@@ -138,7 +145,7 @@ header{
    `.welcome h1` (0-1-1) tanpa !important. */
 .welcome .quoteJa{font-family:var(--font-jp);font-size:clamp(21px,4.5vw,28px);line-height:1.55;font-weight:700;letter-spacing:0}
 .quoteNote{font-size:12.5px;color:var(--muted);margin:0 0 8px;font-style:italic}
-.welcome em{font-style:normal;color:var(--pink-deep)}
+.welcome em{font-style:normal;color:var(--pink-text)}
 .muted{color:var(--muted);font-size:13px;line-height:1.55}
 
 .daily{
@@ -163,7 +170,7 @@ header{
 .sectionHead{display:flex;justify-content:space-between;align-items:center;padding:2px 20px 14px}
 .sectionHead h2{display:flex;align-items:center;gap:9px;font:600 22px Fredoka;margin:0}
 .sectionHead p{margin:2px 0 0;font-size:12px;color:var(--muted)}
-.round{background:var(--card);border:1px solid var(--line);width:38px;height:38px;border-radius:13px;display:grid;place-items:center;color:var(--pink-deep);box-shadow:0 4px 12px -4px rgba(255,120,170,.4)}
+.round{background:var(--card);border:1px solid var(--line);width:38px;height:38px;border-radius:13px;display:grid;place-items:center;color:var(--pink-text);box-shadow:0 4px 12px -4px rgba(255,120,170,.4)}
 
 /* ---------- section grid / cards ----------
    Tiap kartu membawa --accent sendiri lewat inline style (SECTION_ACCENT di
@@ -219,10 +226,10 @@ header{
 
 /* ---------- profile ---------- */
 .profileCard{text-align:center;background:linear-gradient(160deg,var(--card),var(--pink-paler));border:1px solid var(--line);border-radius:var(--radius-lg);padding:28px 20px;margin:20px 0;box-shadow:var(--shadow-pink)}
-.profileCard h1{font:600 24px Fredoka;margin:12px 0 4px}
+.profileCard h1{font:600 24px Fredoka;font-size:clamp(19px,6vw,24px);margin:12px 0 4px;overflow-wrap:anywhere}
 .stats{display:flex;justify-content:center;gap:26px;margin-top:18px}
 .stats div{display:flex;flex-direction:column;align-items:center}
-.stats b{font:700 22px Fredoka;color:var(--pink-deep)}
+.stats b{font:700 22px Fredoka;color:var(--pink-text)}
 .stats small{font-size:10px;color:var(--muted);letter-spacing:.5px}
 .tip{display:flex;gap:10px;background:var(--amber-1);border:1px solid var(--amber-line);border-radius:var(--radius-md);padding:14px 16px;margin-top:16px}
 .tip svg{flex:none}
@@ -237,7 +244,7 @@ header{
 .primary:hover{filter:brightness(1.06);box-shadow:0 12px 28px -6px rgba(255,90,150,.7);transform:translateY(-1px)}
 .primary:active{transform:scale(.96) translateY(0);filter:brightness(.98)}
 .primary:disabled{opacity:.55;box-shadow:none;cursor:not-allowed;transform:none}
-.secondary{background:var(--card);color:var(--pink-deep);border:1.5px solid var(--pink-pale);box-shadow:0 4px 14px -6px rgba(255,120,170,.3)}
+.secondary{background:var(--card);color:var(--pink-text);border:1.5px solid var(--pink-pale);box-shadow:0 4px 14px -6px rgba(255,120,170,.3)}
 .secondary:hover{background:var(--pink-paler);border-color:var(--pink);transform:translateY(-1px)}
 .secondary:active{transform:scale(.96) translateY(0)}
 .big{width:100%;padding:16px}
@@ -271,7 +278,7 @@ nav a{background:none;color:var(--muted);display:flex;flex-direction:column;gap:
 .navEmoji{width:34px;height:34px;display:grid;place-items:center;font-size:18px;border-radius:12px;background:transparent;transition:transform .2s cubic-bezier(.34,1.56,.64,1), background .2s ease}
 nav a:active .navEmoji{transform:scale(.82)}
 nav a.active .navEmoji{background:var(--pink-pale);transform:translateY(-2px);box-shadow:0 4px 10px -3px rgba(255,120,170,.5);animation:bounceIn .4s ease}
-nav a.active{color:var(--pink-deep)}
+nav a.active{color:var(--pink-text)}
 /* Mobile (<1024px) nav cuma 4 item: Teman & Peringkat disembunyikan, tetap bisa lewat
    kartu di halaman profil & sidebar desktop. nav a flex:1, jadi 4 item sisa tetap rata — tanpa gap. */
 @media (max-width:1023.98px){nav a.navFriends,nav a.navRank{display:none}}
@@ -362,7 +369,7 @@ nav a.active{color:var(--pink-deep)}
 /* Pill runtun disembunyikan di mobile: di sana header sudah membawa angka yang
    sama, dan kanvas mobile (Main) memang tidak punya pill ini di badan halaman. */
 .homeTop{display:none;justify-content:flex-end;margin:0 20px 6px}
-.streakPill{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:999px;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow-pink);font:700 13.5px 'DM Sans';color:var(--pink-deep)}
+.streakPill{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:999px;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow-pink);font:700 13.5px 'DM Sans';color:var(--pink-text)}
 :root[data-mode=dark] .streakPill{border-color:color-mix(in srgb,var(--pink) 35%,transparent);box-shadow:0 0 26px -8px var(--pink)}
 .homeHeroArt{flex:none;display:block;filter:drop-shadow(0 14px 18px color-mix(in srgb,var(--pink) 45%,transparent))}
 .homeHeroArt img{display:block;width:clamp(92px,25vw,240px);height:auto}
@@ -380,16 +387,16 @@ a.homeCard .homeCardArt{background:var(--lavender)}
 .homeCardBody p{margin:3px 0 0;font-size:13px;color:var(--muted);line-height:1.45}
 .homeBar{flex:1;height:9px;border-radius:999px;background:var(--pink-pale);overflow:hidden}
 .homeBar i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--pink),var(--pink-deep));transition:width .5s cubic-bezier(.34,1.4,.6,1)}
-.homeBarPct{flex:none;font:700 13px 'DM Sans';color:var(--pink-deep)}
-.homeCardBadge{display:flex;flex-direction:column;align-items:center;gap:3px;flex:none;margin-left:auto;padding:12px 16px;border-radius:18px;background:color-mix(in srgb,var(--gold) 33%,transparent);color:var(--gold-deep)}
-.homeCardBadge b{font:700 12.5px Fredoka;color:var(--gold-deep);white-space:nowrap}
+.homeBarPct{flex:none;font:700 13px 'DM Sans';color:var(--pink-text)}
+.homeCardBadge{display:flex;flex-direction:column;align-items:center;gap:3px;flex:none;margin-left:auto;padding:12px 16px;border-radius:18px;background:color-mix(in srgb,var(--gold) 33%,transparent);color:var(--gold-text)}
+.homeCardBadge b{font:700 12.5px Fredoka;color:var(--gold-text);white-space:nowrap}
 :root[data-mode=dark] .homeCardBadge{background:color-mix(in srgb,var(--gold) 12%,transparent);border:1px solid color-mix(in srgb,var(--gold) 40%,transparent);box-shadow:0 0 22px -8px var(--gold)}
-.homeCardGo{width:34px;height:34px;flex:none;border-radius:50%;display:grid;place-items:center;border:1.5px solid color-mix(in srgb,var(--pink) 35%,transparent);color:var(--pink-deep)}
+.homeCardGo{width:34px;height:34px;flex:none;border-radius:50%;display:grid;place-items:center;border:1.5px solid color-mix(in srgb,var(--pink) 35%,transparent);color:var(--pink-text)}
 
 /* ---------- beranda: tombol roadmap ----------
    min-height 44px wajib: ini <a>, dan check-overflow.mjs mengukur tiap
    <a>/<button> di dalam .app terhadap ambang target sentuh 44px. */
-.roadmapBtn{display:inline-flex;align-items:center;gap:9px;flex:none;padding:11px 18px;min-height:44px;border-radius:999px;background:var(--card);border:1px solid var(--line);color:var(--pink-deep);font:700 13.5px 'DM Sans';box-shadow:var(--shadow-pink);text-decoration:none}
+.roadmapBtn{display:inline-flex;align-items:center;gap:9px;flex:none;padding:11px 18px;min-height:44px;border-radius:999px;background:var(--card);border:1px solid var(--line);color:var(--pink-text);font:700 13.5px 'DM Sans';box-shadow:var(--shadow-pink);text-decoration:none}
 
 /* ---------- ringkasan progres ---------- */
 .progressSummary{position:relative;overflow:hidden;margin:0 20px 30px;padding:20px 24px;border-radius:var(--radius-lg);background:linear-gradient(135deg,var(--card),var(--pink-paler));border:1px solid var(--line);box-shadow:var(--shadow-pink)}

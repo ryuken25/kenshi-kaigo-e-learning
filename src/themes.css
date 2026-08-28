@@ -33,6 +33,7 @@
 
 /* ---------- yuki: biru salju ---------- */
 :root[data-theme=yuki]{
+  --pink-text:#0b6ba6;
   --ink:#27455e;--muted:#5b7a94;
   --pink:#3aa7e8;--pink-deep:#1f8bd0;--pink-pale:#d6ecfb;--pink-paler:#edf7fe;
   --lavender:#e0eefb;--gold:#ffd966;--gold-deep:#f0be3c;--mint:#d3f3ee;
@@ -50,6 +51,7 @@
 
 /* ---------- luna: ungu bulan ---------- */
 :root[data-theme=luna]{
+  --pink-text:#7042d8;
   --ink:#3a2f56;--muted:#6b6091;
   --pink:#8b5cf6;--pink-deep:#7042d8;--pink-pale:#e7ddfd;--pink-paler:#f5f0ff;
   --lavender:#ded4fa;--gold:#ffe08a;--gold-deep:#f2c65c;--mint:#dcd4f5;
@@ -134,6 +136,8 @@
    ========================================================================== */
 :root[data-mode=dark]{
   --faint:#9a86a8;
+  /* Di latar pekat aksen terang justru yang kontras; tidak perlu digelapkan. */
+  --pink-text:var(--pink-deep);--gold-text:var(--gold-deep);
   --ok:#5fd08a;--ok-line:#2f8f63;--ok-bg:#12281d;--ok-strong:#2f9e63;--ok-soft:#46b377;
   --bad:#ff7f9f;--bad-line:#8f3350;--bad-bg:#2a141c;--bad-ink:#ffb8c8;--bad-soft:#c4506d;--bad-strong:#a33355;
   --warn-bg:#2b2114;--warn-line:#5c4526;--warn-ink:#f0c18e;--warn-pill:#d9a97f;--warn-lock:#c9a06d;

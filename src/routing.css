@@ -73,9 +73,9 @@
 /* kartu compare (CompareTerm) */
 .compare-term{display:block}.compare-term__romaji{display:block;margin-top:2px;font:700 12px 'DM Sans';letter-spacing:.04em;color:var(--muted)}
 
-.unlimitedBanner{display:flex;flex-direction:column;gap:4px;margin:0 0 18px;padding:16px 18px;border:1px solid var(--pink-pale);border-radius:18px;background:linear-gradient(135deg,var(--pink-paler),var(--pink-pale));color:inherit;text-decoration:none}.unlimitedBanner b{font:700 18px Fredoka;color:var(--pink-deep)}.unlimitedBanner span{font-size:12px;color:var(--muted)}.unlimitedHero{margin:18px 0}.finalModeSwitch{display:flex;gap:4px;width:max-content;padding:4px;background:var(--pink-pale);border-radius:999px;margin-bottom:14px}.finalModeSwitch button{border:0;border-radius:999px;background:transparent;padding:8px 14px;color:var(--pink-deep);font-weight:700}.finalModeSwitch button.active{background:var(--card);box-shadow:0 3px 8px -4px rgba(255,100,160,.5)}.finalQuestion h2{font:700 22px/1.7 Fredoka}.finalOptions button span{line-height:1.6}.navSvg{stroke-width:1.8}
-.glossaryHeroEmoji{font-size:58px}.glossarySearchWrap{position:relative}.glossarySearch{padding-right:48px!important;font-size:16px!important}.glossaryClear{position:absolute;right:10px;top:50%;transform:translateY(-50%);border:0;background:var(--pink-paler);color:var(--pink-deep);border-radius:50%;width:30px;height:30px;font-size:20px}.glossaryHint{font-size:12px;color:var(--muted);margin:-7px 0 18px}.glossaryTop{padding:18px;background:linear-gradient(135deg,var(--card),var(--pink-paler));border:1px solid var(--line);border-radius:var(--radius-lg);margin-bottom:16px}.glossaryTop h2{font:600 20px Fredoka;margin:0 0 3px}.glossaryChips{display:flex;gap:8px;overflow:auto;padding:8px 2px 3px}.glossaryChip{display:flex;align-items:center;gap:7px;white-space:nowrap;background:var(--card);border:1px solid var(--pink-pale);border-radius:999px;padding:8px 11px;text-decoration:none;color:inherit}.glossaryChip b{background:var(--pink);color:#fff;border-radius:50%;width:20px;height:20px;text-align:center;font-size:12px;padding-top:2px}.glossaryChip strong{font:600 16px Fredoka}.glossaryChip small{color:var(--muted)}.glossaryFilters{display:flex;gap:7px;overflow:auto;margin:14px 0}.glossaryFilters button{flex:none;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:7px 13px;color:var(--muted);font-weight:700}.glossaryFilters button.active{background:var(--pink-pale);border-color:var(--pink);color:var(--pink-deep)}.glossaryCount{font-size:12px}.glossaryGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.glossaryCard{position:relative;display:block;padding:16px;border:1px solid var(--line);border-radius:var(--radius-md);background:var(--card);text-decoration:none;color:inherit;box-shadow:var(--shadow-pink);transition:transform .15s}.glossaryCard:active{transform:scale(.98)}.glossaryCard small{display:block;color:var(--faint);font-size:12px;letter-spacing:.12em}.glossaryCard b{display:block;font:600 25px Fredoka;margin:3px 0}.glossaryCard>span{display:block;color:var(--muted);font-size:12px}.glossaryCard p{margin:6px 0 0;font-weight:600}.glossaryCard em{position:absolute;right:12px;top:12px;color:var(--pink-deep);font-size:11px;font-style:normal}.glossaryCard mark{background:var(--amber-mark);border-radius:3px}.glossaryMore{width:100%;margin-top:18px}.glossaryDone{text-align:center;color:var(--muted);margin:22px}.glossaryEmpty{text-align:center;padding:30px}.glossaryDetail{max-width:720px}.detailHero{text-align:center;padding:25px 0 18px}.detailHero small{color:var(--faint);letter-spacing:.15em}.detailHero h1{font:600 62px Fredoka;font-size:clamp(28px,7.2vw,62px);margin:6px 0}.detailHero p{color:var(--muted);margin:0 0 12px}.detailHero strong{font-size:18px}.detailSection{margin-top:22px}.detailSection h2{font:600 18px Fredoka;color:var(--pink-deep)}.detailSection p{line-height:1.75}.kanjiBreakdown{display:flex;align-items:baseline;gap:12px;padding:12px 14px;background:var(--pink-paler);border-radius:12px;margin:7px 0}.kanjiBreakdown b{font:28px Fredoka}.kanjiBreakdown span{color:var(--muted)}.kanjiBreakdown small{margin-left:auto}.exampleBox{padding:14px;background:var(--amber-1);border-radius:14px;margin:8px 0}.exampleBox p{margin:7px 0 0;color:var(--muted)}.detailTags{display:flex;flex-wrap:wrap;gap:8px}.detailTags a{padding:8px 12px;border-radius:999px;background:var(--pink-pale);color:var(--pink-deep);text-decoration:none;font-weight:700}.materiTerms{margin:18px 0 4px}.materiTerms h3{font:600 15px Fredoka;color:var(--pink-deep);margin:0 0 10px}.materiTermButtons{display:flex;gap:8px;overflow-x:auto;padding:2px 1px 8px}.materiTermButton{flex:0 0 auto;min-width:108px;display:flex;flex-direction:column;gap:2px;padding:10px 12px;border-radius:14px;background:var(--card);border:1px solid var(--pink-pale);text-decoration:none;color:inherit;box-shadow:0 4px 12px -8px rgba(255,100,160,.45)}.materiTermButton small{color:var(--faint)}.materiTermButton b{font:700 21px Fredoka;color:var(--ink)}.materiTermButton span{font-size:11px;color:var(--muted);max-width:140px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.termHit{cursor:pointer}
-.termSheet{position:relative;width:min(640px,100%);max-height:min(78vh,620px);overflow:auto;background:var(--card);border-radius:24px 24px 16px 16px;padding:28px 22px 24px;box-shadow:0 -12px 40px -16px rgba(68,30,52,.5)}.termSheetClose{position:absolute;right:14px;top:12px;border:0;background:var(--pink-pale);color:var(--pink-deep);border-radius:50%;width:32px;height:32px;font-size:22px}.termSheet small{color:var(--faint);letter-spacing:.14em}.termSheet h2{font:700 48px Fredoka;font-size:clamp(28px,7.2vw,48px);margin:5px 0}.termSheetShort{font-weight:700;color:var(--pink-deep)}.termSheet p{line-height:1.7}.termHit{cursor:pointer;text-decoration:underline;text-decoration-style:dotted;text-decoration-color:var(--tint-underline);text-underline-offset:4px}.navSvg{width:22px;height:22px}.navEmoji{display:grid;place-items:center}
+.unlimitedBanner{display:flex;flex-direction:column;gap:4px;margin:0 0 18px;padding:16px 18px;border:1px solid var(--pink-pale);border-radius:18px;background:linear-gradient(135deg,var(--pink-paler),var(--pink-pale));color:inherit;text-decoration:none}.unlimitedBanner b{font:700 18px Fredoka;color:var(--pink-text)}.unlimitedBanner span{font-size:12px;color:var(--muted)}.unlimitedHero{margin:18px 0}.finalModeSwitch{display:flex;gap:4px;width:max-content;padding:4px;background:var(--pink-pale);border-radius:999px;margin-bottom:14px}.finalModeSwitch button{border:0;min-height:44px;border-radius:999px;background:transparent;padding:8px 14px;color:var(--pink-text);font-weight:700}.finalModeSwitch button.active{background:var(--card);box-shadow:0 3px 8px -4px rgba(255,100,160,.5)}.finalQuestion h2{font:700 22px/1.7 Fredoka}.finalOptions button span{line-height:1.6}.navSvg{stroke-width:1.8}
+.glossaryHeroEmoji{font-size:58px}.glossarySearchWrap{position:relative}.glossarySearch{padding-right:48px!important;font-size:16px!important}.glossaryClear{position:absolute;right:6px;top:50%;transform:translateY(-50%);border:0;background:var(--pink-paler);color:var(--pink-text);border-radius:50%;width:44px;height:44px;font-size:20px;display:grid;place-items:center}.glossaryHint{font-size:12px;color:var(--muted);margin:-7px 0 18px}.glossaryTop{padding:18px;background:linear-gradient(135deg,var(--card),var(--pink-paler));border:1px solid var(--line);border-radius:var(--radius-lg);margin-bottom:16px}.glossaryTop h2{font:600 20px Fredoka;margin:0 0 3px}.glossaryChips{display:flex;gap:8px;overflow:auto;padding:8px 2px 3px}.glossaryChip{display:flex;align-items:center;gap:7px;white-space:nowrap;background:var(--card);border:1px solid var(--pink-pale);border-radius:999px;padding:8px 11px;text-decoration:none;color:inherit}.glossaryChip b{background:var(--pink);color:#fff;border-radius:50%;width:20px;height:20px;text-align:center;font-size:12px;padding-top:2px}.glossaryChip strong{font:600 16px Fredoka}.glossaryChip small{color:var(--muted)}.glossaryFilters{display:flex;gap:7px;overflow:auto;margin:14px 0}.glossaryFilters button{flex:none;min-height:44px;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:7px 13px;color:var(--muted);font-weight:700}.glossaryFilters button.active{background:var(--pink-pale);border-color:var(--pink);color:var(--pink-text)}.glossaryCount{font-size:12px}.glossaryGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.glossaryCard{position:relative;display:block;padding:16px;border:1px solid var(--line);border-radius:var(--radius-md);background:var(--card);text-decoration:none;color:inherit;box-shadow:var(--shadow-pink);transition:transform .15s}.glossaryCard:active{transform:scale(.98)}.glossaryCard small{display:block;color:var(--faint);font-size:12px;letter-spacing:.12em}.glossaryCard b{display:block;font:600 25px Fredoka;margin:3px 0}.glossaryCard>span{display:block;color:var(--muted);font-size:12px}.glossaryCard p{margin:6px 0 0;font-weight:600}.glossaryCard em{position:absolute;right:12px;top:12px;color:var(--pink-text);font-size:11px;font-style:normal}.glossaryCard mark{background:var(--amber-mark);border-radius:3px}.glossaryMore{width:100%;margin-top:18px}.glossaryDone{text-align:center;color:var(--muted);margin:22px}.glossaryEmpty{text-align:center;padding:30px}.glossaryDetail{max-width:720px}.detailHero{text-align:center;padding:25px 0 18px}.detailHero small{color:var(--faint);letter-spacing:.15em}.detailHero h1{font:600 62px Fredoka;font-size:clamp(28px,7.2vw,62px);margin:6px 0}.detailHero p{color:var(--muted);margin:0 0 12px}.detailHero strong{font-size:18px}.detailSection{margin-top:22px}.detailSection h2{font:600 18px Fredoka;color:var(--pink-text)}.detailSection p{line-height:1.75}.kanjiBreakdown{display:flex;align-items:baseline;gap:12px;padding:12px 14px;background:var(--pink-paler);border-radius:12px;margin:7px 0}.kanjiBreakdown b{font:28px Fredoka}.kanjiBreakdown span{color:var(--muted)}.kanjiBreakdown small{margin-left:auto}.exampleBox{padding:14px;background:var(--amber-1);border-radius:14px;margin:8px 0}.exampleBox p{margin:7px 0 0;color:var(--muted)}.detailTags{display:flex;flex-wrap:wrap;gap:8px}.detailTags a{display:inline-flex;align-items:center;min-height:44px;padding:8px 14px;border-radius:999px;background:var(--pink-pale);color:var(--pink-text);text-decoration:none;font-weight:700}.materiTerms{margin:18px 0 4px}.materiTerms h3{font:600 15px Fredoka;color:var(--pink-text);margin:0 0 10px}.materiTermButtons{display:flex;gap:8px;overflow-x:auto;padding:2px 1px 8px}.materiTermButton{flex:0 0 auto;min-width:108px;display:flex;flex-direction:column;gap:2px;padding:10px 12px;border-radius:14px;background:var(--card);border:1px solid var(--pink-pale);text-decoration:none;color:inherit;box-shadow:0 4px 12px -8px rgba(255,100,160,.45)}.materiTermButton small{color:var(--faint)}.materiTermButton b{font:700 21px Fredoka;color:var(--ink)}.materiTermButton span{font-size:11px;color:var(--muted);max-width:140px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.termHit{cursor:pointer}
+.termSheet{position:relative;width:min(640px,100%);max-height:min(78vh,620px);overflow:auto;background:var(--card);border-radius:24px 24px 16px 16px;padding:28px 22px 24px;box-shadow:0 -12px 40px -16px rgba(68,30,52,.5)}.termSheetClose{position:absolute;right:14px;top:12px;border:0;background:var(--pink-pale);color:var(--pink-text);border-radius:50%;width:32px;height:32px;font-size:22px}.termSheet small{color:var(--faint);letter-spacing:.14em}.termSheet h2{font:700 48px Fredoka;font-size:clamp(28px,7.2vw,48px);margin:5px 0}.termSheetShort{font-weight:700;color:var(--pink-text)}.termSheet p{line-height:1.7}.termHit{cursor:pointer;text-decoration:underline;text-decoration-style:dotted;text-decoration-color:var(--tint-underline);text-underline-offset:4px}.navSvg{width:22px;height:22px}.navEmoji{display:grid;place-items:center}
 
 @media(max-width:600px){.glossaryGrid{grid-template-columns:1fr}.glossaryHeroEmoji{font-size:46px}.kanjiBreakdown{flex-wrap:wrap}.kanjiBreakdown small{margin-left:0;width:100%}}
 .page{padding:22px 20px 40px;max-width:720px;margin:auto;animation:popIn .35s ease}
@@ -106,7 +106,7 @@
 .levelRow .lockBadge{position:absolute;top:8px;right:10px;color:var(--warn-lock);display:flex;align-items:center}
 .levelNum{
   width:40px;height:40px;border-radius:13px;background:var(--pink-pale);display:grid;place-items:center;
-  font:700 14px Fredoka;color:var(--pink-deep);flex:none;
+  font:700 14px Fredoka;color:var(--pink-text);flex:none;
 }
 .levelRow.completed .levelNum{background:linear-gradient(145deg,var(--node-1),var(--node-2));color:var(--node-ink)}
 .levelRow div>small{display:block}
@@ -164,7 +164,7 @@
    line-height sengaja tidak di-set: biar .fg[lang="ja"] yang kasih ruang buat bacaan. */
 .richMateriCard h2.fg{font-size:24px}
 .richMateriCard .fg{max-width:34em}
-.richBody{max-width:34em}.richTag{display:inline-block;margin-bottom:14px;padding:5px 12px;border-radius:99px;background:var(--pink-pale);color:var(--pink-deep);font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase}
+.richBody{max-width:34em}.richTag{display:inline-block;margin-bottom:14px;padding:5px 12px;border-radius:99px;background:var(--pink-pale);color:var(--pink-text);font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase}
 .richMateriCard .mascotImg{margin-bottom:14px}.richTerm{text-align:center}.termReading{font-size:16px;color:var(--kk-furi);letter-spacing:.12em}.termKanji{font-size:58px;font-weight:800;line-height:1.2;color:var(--ink);margin:5px 0}.termRoman{font-weight:700;color:var(--muted);margin-bottom:22px}.japaneseTerm{display:block;font-weight:800;color:var(--ink);margin:4px 0 10px}.compareTerm{display:block;font-weight:800;font-size:clamp(20px,5vw,24px)}.richNote,.richPrompt,.richReveal{display:block;margin-top:16px;padding:14px 16px;background:var(--amber-1);border-radius:14px;color:var(--amber-ink);white-space:pre-line}.richQuestion{font-weight:700}.checkpointOpts{display:grid;gap:9px;margin-top:14px}.checkpointOption{padding:12px 14px;border:1px solid var(--line);border-radius:13px;background:var(--pink-paler)}.richRecap{list-style:none;padding:0;margin:0;display:grid;gap:12px}.richRecap li{padding-left:28px;line-height:1.6;position:relative}.richRecap li:before{content:'🌸';position:absolute;left:0}.richMateriNav{display:flex;gap:10px;margin-top:18px}.richMateriNav .primary{flex:1}.materiSkip{display:block;margin:14px auto 0;background:none;border:0;color:var(--muted);font-weight:700;text-decoration:underline}
 .richTermList{display:grid;gap:9px;margin-top:12px}.richTermItem{padding:12px 14px;border:1px solid var(--line);background:var(--pink-paler);border-radius:13px}.richTermItem b{display:block;font-size:15px}.richTermItem span{display:block;font-size:12px;color:var(--muted);margin-top:2px}
 @media(max-width:600px){.richMateriCard{padding:23px 19px}.materiTop{gap:7px}.materiTop .langSwitch button{padding:5px 7px}.richMateriCard h2{font-size:22px}.compareRow{grid-template-columns:1fr;gap:5px}.termKanji{font-size:50px}}
@@ -180,11 +180,11 @@
 .materiCard small{color:var(--pink);font-weight:700;letter-spacing:1.2px;font-size:10px}
 .materiHead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-top:8px;text-align:left}
 .materiCard h1{font:600 22px Fredoka;margin:0}
-.materiCard h1 rt{font-size:11px;color:var(--pink-deep)}
+.materiCard h1 rt{font-size:11px;color:var(--pink-text)}
 .materiCard .japanese{font-size:16px;line-height:1.8;margin:0 0 4px}
-.materiCard .japanese rt{font-size:11px;color:var(--pink-deep);font-weight:700}
+.materiCard .japanese rt{font-size:11px;color:var(--pink-text);font-weight:700}
 .terms{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;justify-content:center}
-.terms a{background:var(--pink-pale);color:var(--pink-deep);font-size:11px;font-weight:700;padding:6px 12px;border-radius:999px;text-decoration:none}
+.terms a{background:var(--pink-pale);color:var(--pink-text);font-size:11px;font-weight:700;padding:6px 12px;border-radius:999px;text-decoration:none}
 .materiActions{display:flex;gap:10px;margin-top:20px}
 .materiActions button{flex:1}
 
@@ -197,7 +197,7 @@
   background:var(--card);border:1px solid var(--line);border-radius:var(--radius-lg);padding:18px 20px;
   box-shadow:var(--shadow-pink);max-width:340px;
 }
-.resultStats b{font:700 26px Fredoka;color:var(--gold-deep)}
+.resultStats b{font:700 26px Fredoka;color:var(--gold-text)}
 .resultStats span{font-size:12px;color:var(--muted)}
 
 /* ---------- quiz page ---------- */
@@ -212,7 +212,7 @@
 
 .langSwitch{display:flex;gap:3px;flex:none;background:var(--pink-pale);border-radius:999px;padding:3px}
 .langSwitch button{font-size:11px;font-weight:700;padding:6px 10px;border-radius:999px;color:var(--muted);background:transparent;line-height:1;min-height:44px;min-width:44px}
-.langSwitch button.active{background:var(--card);color:var(--pink-deep);box-shadow:0 3px 8px -3px rgba(255,120,170,.5)}
+.langSwitch button.active{background:var(--card);color:var(--pink-text);box-shadow:0 3px 8px -3px rgba(255,120,170,.5)}
 .langSwitch.mini{padding:2px;transform:scale(.9);transform-origin:right center}
 .langSwitch.mini button{padding:5px 8px}
 
@@ -274,7 +274,7 @@
   border:1px solid var(--kk-pink-300);border-radius:var(--radius-lg);padding:14px 16px;margin-bottom:16px;
   animation:popIn .3s ease;
 }
-.retryBanner b{font:700 14px Fredoka;color:var(--pink-deep);display:block}
+.retryBanner b{font:700 14px Fredoka;color:var(--pink-text);display:block}
 .retryBanner span{font-size:11.5px;color:var(--faint)}
 .retryDots{display:flex;gap:5px;margin-left:auto}
 .retryDots i{width:9px;height:9px;border-radius:50%;background:var(--kk-pink-300)}
@@ -290,20 +290,20 @@
    Dijaga sekarang oleh `npm run validate:css-classes`. */
 .finalHomeBanner{display:flex;align-items:center;gap:12px;margin:0 20px 22px;padding:16px 18px;border:1px solid var(--pink-pale);border-radius:var(--radius-lg);background:linear-gradient(135deg,var(--card),var(--pink-paler));box-shadow:var(--shadow-pink);text-decoration:none;color:inherit}
 .finalHomeBanner>div{display:flex;flex-direction:column;gap:3px;min-width:0;flex:1}
-.finalHomeBanner b{font:600 17px Fredoka;color:var(--pink-deep)}
+.finalHomeBanner b{font:600 17px Fredoka;color:var(--pink-text)}
 .finalHomeBanner span{font-size:12.5px;color:var(--muted);line-height:1.45}
-.finalHomeBanner svg{flex:none;color:var(--pink-deep)}
+.finalHomeBanner svg{flex:none;color:var(--pink-text)}
 .glossaryHero{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:4px 0 14px}
 .glossaryHero p{margin:0}
 .detailSourceNote{font-size:12.5px;color:var(--muted);line-height:1.6;margin:10px 0 0}
-.externalGlossary{display:inline-flex;align-items:center;gap:6px;min-height:44px;font-size:13px;font-weight:600;color:var(--pink-deep);text-decoration:underline;text-underline-offset:3px}
+.externalGlossary{display:inline-flex;align-items:center;gap:6px;min-height:44px;font-size:13px;font-weight:600;color:var(--pink-text);text-decoration:underline;text-underline-offset:3px}
 .answerPopupText{display:block;line-height:1.55}
 .source{font-size:12px;color:var(--muted);margin:6px 0 0}
 
 /* Tombol istilah di kartu materi: dulu <Link> yang melempar user ke tab glossary dan
    memutus alur baca. Sekarang <button> yang membuka termSheet di tempat. Halaman glossary
    lengkap tetap bisa dituju lewat tautan sekunder di dalam popup-nya. */
-.termSheetMore{display:inline-flex;align-items:center;gap:6px;min-height:44px;margin-top:12px;font-size:13.5px;font-weight:600;color:var(--pink-deep);text-decoration:underline;text-underline-offset:3px}
+.termSheetMore{display:inline-flex;align-items:center;gap:6px;min-height:44px;margin-top:12px;font-size:13.5px;font-weight:600;color:var(--pink-text);text-decoration:underline;text-underline-offset:3px}
 /* Chip istilah mendatar (doc 52 §F): kanji + romaji saja, ketuk → termSheet.
    Ganti tumpukan 3-baris lama (~400px hemat vertikal). */
 .materiTermChips{display:flex;gap:8px;flex-wrap:wrap}
@@ -321,7 +321,7 @@
 .exploreCard small{color:var(--muted);font-size:11px}
 .exploreCard b{font-size:18px}
 .exploreCard span{font-size:12px;color:var(--muted);line-height:1.45;overflow:hidden;text-overflow:ellipsis}
-.exploreAll{display:inline-flex;align-items:center;min-height:44px;margin-top:12px;font-size:13px;font-weight:600;color:var(--pink-deep);text-decoration:underline;text-underline-offset:3px}
+.exploreAll{display:inline-flex;align-items:center;min-height:44px;margin-top:12px;font-size:13px;font-weight:600;color:var(--pink-text);text-decoration:underline;text-underline-offset:3px}
 
 /* term sheet backdrop — tanpa rule ini .termSheet cuma ikut aliran dokumen (position:static,
    z-index:auto), jadi role="dialog" aria-modal="true" bohong: sheet-nya nempel di bawah kartu
@@ -350,7 +350,7 @@
 .finalHero{text-align:center;padding:6px 0 16px}
 .finalYearGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,150px),1fr));gap:12px;padding:0 0 18px}
 .finalYearCard{display:flex;flex-direction:column;gap:2px;padding:16px 18px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius-md);box-shadow:var(--shadow-pink);text-decoration:none;color:inherit}
-.finalYearCard b{font:600 26px Fredoka;color:var(--pink-deep)}
+.finalYearCard b{font:600 26px Fredoka;color:var(--pink-text)}
 .finalYearCard strong{font-size:14px}
 .finalYearCard span,.finalYearCard small{color:var(--muted);font-size:12px}
 .finalParts{display:grid;gap:10px;padding-bottom:18px}
@@ -363,8 +363,8 @@
 .finalQuestion{background:var(--card);border:1px solid var(--line);border-radius:var(--radius-md);padding:18px 16px;box-shadow:var(--shadow-pink)}
 .finalOptions{display:grid;gap:8px;padding-top:12px}
 .finalOptions button{display:flex;gap:10px;align-items:flex-start;text-align:left;width:100%;padding:14px 14px;border-radius:14px;border:1px solid var(--line);background:var(--soft);min-height:44px}
-.finalOptions button.selected{border-color:var(--pink-deep);background:var(--pink-pale)}
-.finalOptions button b{color:var(--pink-deep);min-width:18px}
+.finalOptions button.selected{border-color:var(--pink-text);background:var(--pink-pale)}
+.finalOptions button b{color:var(--pink-text);min-width:18px}
 .finalFeedback{margin-top:12px;padding:12px 14px;border-radius:14px;background:var(--pink-paler);font-size:14px;line-height:1.7}
 .finalQuizNav{display:flex;gap:10px;padding:16px 0 0}
 .finalQuizNav button{flex:1;min-height:44px;padding:12px 14px;border-radius:14px;border:1px solid var(--line);background:var(--card);font-weight:600}
