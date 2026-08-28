@@ -48,8 +48,11 @@ export default async function handler(req, res) {
     const resetsAt = `${weekStart}T00:00:00+09:00`;
 
     if (scope === 'global') {
-      // Sama untuk semua user → cache publik. 60 detik cukup segar untuk papan XP.
-      res.setHeader('Cache-Control', 'public, max-age=60');
+      // Cache publik HANYA untuk tamu. Untuk user login respons ini TIDAK sama
+      // bagi semua orang — ada blok `me` (handle, rank, XP mingguan), flag isMe
+      // di tiap baris, dan newAchievements. Menandainya `public` mengizinkan
+      // cache bersama menyajikan potongan identitas satu user ke user lain.
+      res.setHeader('Cache-Control', user ? 'private, max-age=60' : 'public, max-age=60');
       const rows = await sql`
         WITH wk AS (
           SELECT user_id, SUM(xp_gained)::int AS xp FROM daily_activity

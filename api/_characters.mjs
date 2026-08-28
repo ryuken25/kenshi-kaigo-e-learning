@@ -15,3 +15,17 @@ export const LEVEL_UNLOCKS = [
   { completed: 5, id: 'kurumi' },
   { completed: 15, id: 'kinako' },
 ];
+
+// Pasangan awal onboarding per gender — HARUS sama dengan GENDER_PAIRS di
+// src/lib/social.jsx (yang dipakai OnboardingWizard menampilkan pilihannya) dan
+// dengan backfill migrasi 008. Kolom characters_unlocked default-nya cuma
+// ARRAY['momo'], jadi user yang dibuat SESUDAH 008 tidak pernah menerima pasangan
+// ini dari mana pun: setiap pilihan selain momo di onboarding ditolak 403
+// character_locked dan langkah 1 tidak pernah selesai. api/profile.mjs memberikannya
+// saat gender di-set (idempoten), persis seperti yang 008 lakukan untuk user lama.
+export const STARTER_PAIRS = {
+  male: ['momo', 'sora'],
+  female: ['momo', 'kurumi'],
+  other: ['momo', 'kurumi', 'sora'],
+  prefer_not: ['momo'],
+};

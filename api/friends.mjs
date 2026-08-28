@@ -62,21 +62,25 @@ export default async function handler(req, res) {
 
       // Daftar lengkap. Dua UNION (bukan CASE join): lebih gampang dibaca
       // dan tetap kena index friendships_user_idx / friendships_friend_idx.
+      // u.character_id WAJIB ikut di ketiga query: publicUser() jatuh ke 'momo'
+      // kalau kolomnya tidak ada, jadi tanpa ini SELURUH daftar teman tampil
+      // sebagai Momo walaupun mereka memakai Yuki/Luna (search & leaderboard
+      // sudah benar — cuma ketiga query inilah yang ketinggalan).
       const friends = await sql`
-        SELECT u.handle, u.display_name, u.avatar_key, u.avatar_frame, u.total_xp, u.streak_current
+        SELECT u.handle, u.display_name, u.avatar_key, u.avatar_frame, u.character_id, u.total_xp, u.streak_current
         FROM friendships f JOIN app_users u ON u.id = f.friend_id
         WHERE f.user_id=${user.id} AND f.status='accepted'
         UNION
-        SELECT u.handle, u.display_name, u.avatar_key, u.avatar_frame, u.total_xp, u.streak_current
+        SELECT u.handle, u.display_name, u.avatar_key, u.avatar_frame, u.character_id, u.total_xp, u.streak_current
         FROM friendships f JOIN app_users u ON u.id = f.user_id
         WHERE f.friend_id=${user.id} AND f.status='accepted'
         ORDER BY total_xp DESC`;
       const incoming = await sql`
-        SELECT u.handle, u.display_name, u.avatar_key, u.avatar_frame, u.total_xp, u.streak_current, f.created_at
+        SELECT u.handle, u.display_name, u.avatar_key, u.avatar_frame, u.character_id, u.total_xp, u.streak_current, f.created_at
         FROM friendships f JOIN app_users u ON u.id = f.user_id
         WHERE f.friend_id=${user.id} AND f.status='pending' ORDER BY f.created_at DESC`;
       const outgoing = await sql`
-        SELECT u.handle, u.display_name, u.avatar_key, u.avatar_frame, u.total_xp, u.streak_current, f.created_at
+        SELECT u.handle, u.display_name, u.avatar_key, u.avatar_frame, u.character_id, u.total_xp, u.streak_current, f.created_at
         FROM friendships f JOIN app_users u ON u.id = f.friend_id
         WHERE f.user_id=${user.id} AND f.status='pending' ORDER BY f.created_at DESC`;
       return res.status(200).json({ friends: friends.map(publicUser), incoming: incoming.map(publicUser), outgoing: outgoing.map(publicUser) });

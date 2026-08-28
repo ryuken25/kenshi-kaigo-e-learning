@@ -29,7 +29,12 @@ async function applyStreak(sql, user) {
     if (last === today) {
       nextStreak = user.streak_current;
     } else {
-      const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+      // Kemarin dihitung dari tanggal LOKAL user (today), bukan dari UTC. Dulu baris
+      // ini pakai Date.now()-86400000 dalam UTC sementara `today` & last_active_date
+      // dalam Asia/Tokyo: antara 00:00-08:59 JST tanggal UTC masih H-1, jadi yesterday
+      // jadi H-2 dan streak orang yang belajar pagi selalu di-RESET ke 1.
+      // Aritmetika kalender di atas string tanggal: selalu tepat satu hari, bebas DST.
+      const yesterday = new Date(Date.parse(today + 'T00:00:00Z') - 86400000).toISOString().slice(0, 10);
       if (last === yesterday) {
         nextStreak = user.streak_current + 1;
         increased = true;
@@ -324,7 +329,12 @@ export default async function handler(req, res) {
       // ikut hilang — statistik yang di-reset tidak boleh terus memunculkan badge.
       await sql`DELETE FROM user_achievements WHERE user_id = ${user.id}`;
       await sql`DELETE FROM leaderboard_seen WHERE user_id = ${user.id}`;
-      await sql`UPDATE app_users SET total_xp = 0, streak_current = 0, streak_longest = 0, last_active_date = NULL, avatar_frame = 'none' WHERE id = ${user.id}`;
+      // total_xp TIDAK boleh di-nolkan mentah: final_progress tidak ikut dihapus di sini,
+      // jadi total_xp=0 melanggar invariant SUM(level)+SUM(final) dan langsung muncul di
+      // scripts/verify-consistency.mjs. Recompute — hasilnya 0 kalau user memang belum
+      // pernah menyetor bagian ujian, dan tetap benar kalau pernah.
+      const totalXp = await recomputeTotalXp(sql, user.id);
+      await sql`UPDATE app_users SET total_xp = ${totalXp}, streak_current = 0, streak_longest = 0, last_active_date = NULL, avatar_frame = 'none' WHERE id = ${user.id}`;
       return res.status(200).json({ ok: true });
     }
 

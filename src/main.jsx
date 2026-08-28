@@ -273,7 +273,7 @@ function SectionOverview(){
           <div className="skillNodeWrap" style={{marginLeft:offset}}>
             <Link to={`/section/${s.id}/level/${l.id}`}
               className={`skillNode tap ${isMilestone?'milestone':''} ${completed?'completed':''} ${previewOnly?'locked':''} ${isCurrent?'current':''}`}>
-              {completed ? <Check size={isMilestone?26:20}/> : previewOnly ? <Lock size={isMilestone?22:16}/> : isMilestone ? <Star size={24} fill="#fff"/> : l.id}
+              {completed ? <Check size={isMilestone?26:20}/> : previewOnly ? <Lock size={isMilestone?22:16}/> : isMilestone ? <Star size={24} fill="currentColor"/> : l.id}
               {isCurrent && <span className="currentPing"/>}
             </Link>
             <span className="skillNodeLabel">{isMilestone ? '🎀 Ulasan' : l.titleId}</span>

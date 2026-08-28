@@ -1,7 +1,7 @@
 import { db } from './_db.mjs';
 import { requireUser } from './_auth.mjs';
 import { evaluateAchievements } from './_achievements.mjs';
-import { CHARACTERS } from './_characters.mjs';
+import { CHARACTERS, STARTER_PAIRS } from './_characters.mjs';
 
 // GET /api/profile — profil lengkap user login + status cooldown handle.
 // PATCH /api/profile — update field parsial. Semua nilai divalidasi di SERVER
@@ -74,6 +74,12 @@ export default async function handler(req, res) {
       let setSql = '';
       const push = (col, val) => { params.push(val); setSql += (setSql ? ', ' : '') + `${col} = $${params.length}`; };
 
+      // Karakter yang BOLEH dipakai = yang sudah dimiliki + pasangan awal gendernya.
+      // Gender yang baru dikirim di request ini ikut dihitung, karena onboarding
+      // mengirim gender & characterId dalam SATU patch.
+      const genderNow = body.gender !== undefined && GENDERS.includes(body.gender) ? body.gender : p.gender;
+      const unlocked = [...new Set([...(p.characters_unlocked || []), ...(STARTER_PAIRS[genderNow] || [])])];
+
       if (body.handle !== undefined) {
         const h = String(body.handle).trim().toLowerCase();
         if (!HANDLE_RE.test(h)) return res.status(400).json({ error: 'invalid_input', message: 'Handle: 4-14 karakter, huruf kecil/angka/underscore saja' });
@@ -106,7 +112,7 @@ export default async function handler(req, res) {
         // doc 49: server WAJIB cek karakter ada di characters_unlocked — kalau
         // tidak, karakter terkunci (termasuk nagi/beni "segera hadir") bisa
         // dipakai lewat API.
-        if (!(p.characters_unlocked || []).includes(c)) return res.status(403).json({ error: 'character_locked', message: 'Karakter ini belum terbuka' });
+        if (!unlocked.includes(c)) return res.status(403).json({ error: 'character_locked', message: 'Karakter ini belum terbuka' });
         push('character_id', c);
       }
       if (body.gender !== undefined) {
@@ -136,6 +142,11 @@ export default async function handler(req, res) {
           return res.status(409).json({ error: 'handle_taken', message: 'Handle sudah dipakai orang lain' });
         throw e;
       }
+
+      // Persist pasangan awal gender. Idempoten: hanya menulis kalau himpunannya
+      // benar-benar bertambah, jadi PATCH berulang tidak menyentuh baris.
+      if (unlocked.length !== (p.characters_unlocked || []).length)
+        await sql`UPDATE app_users SET characters_unlocked = ${unlocked}, updated_at = now() WHERE id = ${user.id}`;
 
       const newAchievements = await evaluateAchievements(sql, user.id);
       const fresh = await fetchProfile(sql, user.id);

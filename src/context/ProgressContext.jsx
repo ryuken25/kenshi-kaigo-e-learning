@@ -6,16 +6,29 @@ const ProgressContext = createContext(null);
 const GUEST_KEY = 'kaigoKittyProgress';
 const CLIENT_ID_KEY = 'kaigoKittyClientId';
 
+// Bentuknya DINORMALISASI, bukan cuma di-try/catch. JSON.parse cuma melempar untuk
+// JSON rusak; `null`, `5`, `[]`, atau `{"xp":7}` semuanya di-parse dengan sukses lalu
+// bikin `guest.done[key] = ...` di submitAttempt melempar TypeError. Lemparan itu
+// terjadi DI DALAM catch-nya jalur gagal-jaringan, jadi promise submitAttempt reject,
+// setSaving(false) di Quiz.doSubmit tidak pernah jalan, dan tombolnya nyangkut di
+// "Menyimpan…" selamanya tanpa pesan error apa pun.
 export function readGuestProgress() {
-  try {
-    return JSON.parse(localStorage.getItem(GUEST_KEY) || '{"done":{},"xp":0,"streak":0}');
-  } catch {
-    return { done: {}, xp: 0, streak: 0 };
-  }
+  let p = null;
+  try { p = JSON.parse(localStorage.getItem(GUEST_KEY) || 'null'); } catch { /* JSON rusak */ }
+  if (!p || typeof p !== 'object' || Array.isArray(p)) p = {};
+  return {
+    ...p,
+    done: (p.done && typeof p.done === 'object' && !Array.isArray(p.done)) ? p.done : {},
+    xp: Number.isFinite(p.xp) ? p.xp : 0,
+    streak: Number.isFinite(p.streak) ? p.streak : 0,
+  };
 }
 
 export function saveGuestProgress(p) {
-  localStorage.setItem(GUEST_KEY, JSON.stringify(p));
+  // Kuota penuh / storage dimatikan (Safari private) melempar di setItem. Sama seperti
+  // di atas: kalau dibiarkan naik, tombol submit quiz nyangkut. Progres lokal hilang,
+  // tapi UI tetap memberi feedback yang benar.
+  try { localStorage.setItem(GUEST_KEY, JSON.stringify(p)); } catch { /* kuota / storage mati */ }
   dispatchEvent(new Event('kk-progress-changed'));
 }
 

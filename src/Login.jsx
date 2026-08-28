@@ -21,6 +21,9 @@ export default function Login(){
       <span><Heart/> Streak & XP tersimpan permanen di akunmu</span>
       <span><Users/> Teman & papan peringkat mingguan</span>
       <span><Trophy/> 35 achievement + bingkai avatar eksklusif</span>
-      <span><Sparkles/> 4 tema tampilan: Kitty, Sora, Matcha, Yozora</span>
+      {/* Dulu: "4 tema tampilan: Kitty, Sora, Matcha, Yozora" — itu KEY DB mentah, bukan
+          nama yang dilihat user, dan jumlahnya sudah tidak benar sejak v9. Tema sekarang
+          mengikuti karakter (THEMES/PICKABLE_CHARS di lib/social.jsx = 3), plus mode gelap. */}
+      <span><Sparkles/> 3 karakter pendamping — Momo, Yuki, Luna — plus mode gelap</span>
     </div>
     <p className="authNote" style={{marginTop:14}}>Tautannya berlaku 20 menit dan sekali pakai.</p><Link className="back" to="/">‹ Kembali</Link></main>}
