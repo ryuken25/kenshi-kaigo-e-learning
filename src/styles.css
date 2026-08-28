@@ -227,7 +227,12 @@ header{
 .sectionCopy{flex:1;min-width:0;display:flex;flex-direction:column}
 .sectionBadge{align-self:flex-start;font:700 11px 'DM Sans';letter-spacing:.9px;color:var(--accent,var(--pink-deep));background:color-mix(in srgb,var(--accent,var(--pink)) 14%,transparent);padding:4px 10px;border-radius:8px;margin-bottom:6px}
 .sectionCopy b{display:block;font-family:var(--font-jp);font-size:16px;font-weight:700;line-height:1.35;color:var(--ink)}
-.sectionCopy span{display:block;font-size:12px;color:var(--muted);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* Subjudul bab boleh turun ke baris kedua, bukan dipotong keras. Diukur di WebKit
+   sungguhan (mesin Safari iOS): nowrap+ellipsis memangkas 17-56px di 375-402px, jadi
+   di iPhone SE label utama kartu terbaca "Kenapa martabat jadi dasar tiap...". Kartu
+   ini sudah punya .sectionDesc berklem 2 baris di bawahnya, jadi memotong LABELNYA
+   sendiri cuma menghilangkan informasi tanpa menghemat apa pun yang berarti. */
+.sectionCopy span{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;font-size:12px;color:var(--muted);margin-top:3px;overflow:hidden}
 /* Deskripsi penuh bab. Line-clamp 2 (bukan ellipsis 1 baris) karena
    grid-auto-rows:1fr sudah menyamakan tinggi kartu. */
 .sectionCopy em.sectionDesc{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;flex:1;font-size:11.5px;color:var(--muted);font-style:normal;line-height:1.55;margin-top:5px}

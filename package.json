@@ -36,6 +36,7 @@
   },
   "devDependencies": {
     "kuroshiro": "^1.2.0",
-    "kuroshiro-analyzer-kuromoji": "^1.1.0"
+    "kuroshiro-analyzer-kuromoji": "^1.1.0",
+    "playwright": "^1.62.1"
   }
 }
