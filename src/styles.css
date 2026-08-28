@@ -109,7 +109,7 @@ header{
 .brand small{font-size:9px;color:var(--muted);letter-spacing:1.4px;text-transform:uppercase;white-space:nowrap}
 .kitty{
   width:42px;height:42px;border-radius:15px;background:linear-gradient(145deg,var(--pink-pale),color-mix(in srgb,var(--pink) 33%,transparent));
-  display:grid;place-items:center;box-shadow:0 4px 14px -3px rgba(255,120,170,.5);
+  display:grid;place-items:center;box-shadow:0 4px 14px -3px color-mix(in srgb,var(--pink) 50%,transparent);
   transform:rotate(-4deg);overflow:hidden;flex:none;
 }
 .kitty img{width:100%;height:100%;object-fit:contain;padding:4px}
@@ -122,7 +122,7 @@ header{
 @media (min-width:460px){.topStats .xpStat{display:flex}}
 
 /* ---------- mascot (real Hello Kitty images) ---------- */
-.mascotImg{position:relative;display:inline-flex;align-self:center;filter:drop-shadow(0 14px 18px rgba(255,150,190,.45));animation:float 3.2s ease-in-out infinite}
+.mascotImg{position:relative;display:inline-flex;align-self:center;filter:drop-shadow(0 14px 18px color-mix(in srgb,var(--pink) 45%,transparent));animation:float 3.2s ease-in-out infinite}
 .mascotImg img{display:block;object-fit:contain;width:var(--mw,140px);height:auto;user-select:none;pointer-events:none}
 .mascotImg.size-sm img{--mw:78px}
 .mascotImg.size-md img{--mw:120px}
@@ -165,7 +165,7 @@ header{
 .progress{height:10px;width:190px;max-width:100%;background:var(--pink-pale);border-radius:999px;overflow:hidden;position:relative}
 .progress i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--pink) 0%,var(--pink-deep) 55%,var(--gold) 100%);transition:width .5s cubic-bezier(.34,1.4,.6,1);position:relative}
 .progress i::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.6),transparent);animation:shimmer 2.2s linear infinite;background-size:200% 100%}
-.badge{background:linear-gradient(135deg,var(--gold),var(--gold-deep));color:var(--node-ink);font:700 12px Fredoka;padding:8px 14px;border-radius:999px;box-shadow:0 6px 16px -4px rgba(255,180,80,.6);white-space:nowrap}
+.badge{background:linear-gradient(135deg,var(--gold),var(--gold-deep));color:var(--node-ink);font:700 12px Fredoka;padding:8px 14px;border-radius:999px;box-shadow:0 6px 16px -4px color-mix(in srgb,var(--gold) 60%,transparent);white-space:nowrap}
 
 .objective{display:flex;gap:12px;padding:15px 16px;background:var(--lavender);border-radius:var(--radius-md);margin:0 0 18px;align-items:flex-start;border:1px solid var(--lav-line)}
 .objective svg{flex:none;color:var(--lav-strong);margin-top:2px}
@@ -176,7 +176,7 @@ header{
 .sectionHead{display:flex;justify-content:space-between;align-items:center;padding:2px 20px 14px}
 .sectionHead h2{display:flex;align-items:center;gap:9px;font:600 22px Fredoka;margin:0}
 .sectionHead p{margin:2px 0 0;font-size:12px;color:var(--muted)}
-.round{background:var(--card);border:1px solid var(--line);width:38px;height:38px;border-radius:13px;display:grid;place-items:center;color:var(--pink-text);box-shadow:0 4px 12px -4px rgba(255,120,170,.4)}
+.round{background:var(--card);border:1px solid var(--line);width:38px;height:38px;border-radius:13px;display:grid;place-items:center;color:var(--pink-text);box-shadow:0 4px 12px -4px color-mix(in srgb,var(--pink) 40%,transparent)}
 
 /* ---------- section grid / cards ----------
    Tiap kartu membawa --accent sendiri lewat inline style (SECTION_ACCENT di
@@ -225,7 +225,7 @@ header{
 .pageTitle span{font-size:12px;color:var(--muted);font-weight:400}
 .search{width:100%;padding:14px 16px;border:1px solid var(--line);border-radius:var(--radius-md);font:inherit;outline:none;margin-bottom:16px;background:var(--card)}
 .search:focus{border-color:var(--pink)}
-.glossaryRow{display:flex;align-items:center;gap:12px;padding:14px 15px;border:1px solid var(--line);background:var(--card);border-radius:var(--radius-md);margin-bottom:10px;text-decoration:none;color:inherit;box-shadow:0 5px 16px -8px rgba(255,130,170,.3)}
+.glossaryRow{display:flex;align-items:center;gap:12px;padding:14px 15px;border:1px solid var(--line);background:var(--card);border-radius:var(--radius-md);margin-bottom:10px;text-decoration:none;color:inherit;box-shadow:0 5px 16px -8px color-mix(in srgb,var(--pink) 30%,transparent)}
 .glossaryRow b{font:600 15px Fredoka;display:block}
 .glossaryRow small{color:var(--muted);font-size:11px}
 .glossaryRow span{margin-left:auto;color:var(--faint);font-size:12px}
@@ -247,16 +247,16 @@ header{
   transition:transform .15s cubic-bezier(.34,1.56,.64,1), box-shadow .2s ease, filter .2s ease;
 }
 .primary{background:var(--btn-bg);color:var(--btn-text);box-shadow:0 10px 24px -8px var(--btn-shadow)}
-.primary:hover{filter:brightness(1.06);box-shadow:0 12px 28px -6px rgba(255,90,150,.7);transform:translateY(-1px)}
+.primary:hover{filter:brightness(1.06);box-shadow:0 12px 28px -6px color-mix(in srgb,var(--pink) 70%,transparent);transform:translateY(-1px)}
 .primary:active{transform:scale(.96) translateY(0);filter:brightness(.98)}
 .primary:disabled{opacity:.55;box-shadow:none;cursor:not-allowed;transform:none}
-.secondary{background:var(--card);color:var(--pink-text);border:1.5px solid var(--pink-pale);box-shadow:0 4px 14px -6px rgba(255,120,170,.3)}
+.secondary{background:var(--card);color:var(--pink-text);border:1.5px solid var(--pink-pale);box-shadow:0 4px 14px -6px color-mix(in srgb,var(--pink) 30%,transparent)}
 .secondary:hover{background:var(--pink-paler);border-color:var(--pink);transform:translateY(-1px)}
 .secondary:active{transform:scale(.96) translateY(0)}
 .big{width:100%;padding:16px}
 .flowButtons{display:flex;flex-direction:column;gap:10px;padding:0 20px 20px}
 .round{transition:transform .15s cubic-bezier(.34,1.56,.64,1), box-shadow .2s ease}
-.round:hover{box-shadow:0 6px 18px -4px rgba(255,120,170,.55);transform:translateY(-1px)}
+.round:hover{box-shadow:0 6px 18px -4px color-mix(in srgb,var(--pink) 55%,transparent);transform:translateY(-1px)}
 .round:active{transform:scale(.9)}
 
 /* ---------- loading skeletons (kawaii) ---------- */
@@ -278,12 +278,12 @@ header{
 nav{
   position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(720px,100%);
   height:76px;background:color-mix(in srgb,var(--pink-paler) 93%,transparent);backdrop-filter:blur(16px);border-top:1px solid var(--line);
-  display:flex;justify-content:space-around;z-index:30;padding-top:6px;box-shadow:0 -8px 24px -12px rgba(255,120,170,.25);
+  display:flex;justify-content:space-around;z-index:30;padding-top:6px;box-shadow:0 -8px 24px -12px color-mix(in srgb,var(--pink) 25%,transparent);
 }
 nav a{background:none;color:var(--muted);display:flex;flex-direction:column;gap:3px;align-items:center;font-size:10.5px;text-decoration:none;font-weight:700;padding-top:2px;flex:1}
 .navEmoji{width:34px;height:34px;display:grid;place-items:center;font-size:18px;border-radius:12px;background:transparent;transition:transform .2s cubic-bezier(.34,1.56,.64,1), background .2s ease}
 nav a:active .navEmoji{transform:scale(.82)}
-nav a.active .navEmoji{background:var(--pink-pale);transform:translateY(-2px);box-shadow:0 4px 10px -3px rgba(255,120,170,.5);animation:bounceIn .4s ease}
+nav a.active .navEmoji{background:var(--pink-pale);transform:translateY(-2px);box-shadow:0 4px 10px -3px color-mix(in srgb,var(--pink) 50%,transparent);animation:bounceIn .4s ease}
 nav a.active{color:var(--pink-text)}
 /* Mobile (<1024px) nav cuma 4 item: Teman & Peringkat disembunyikan, tetap bisa lewat
    kartu di halaman profil & sidebar desktop. nav a flex:1, jadi 4 item sisa tetap rata — tanpa gap. */
@@ -337,7 +337,7 @@ nav a.active{color:var(--pink-text)}
     flex-direction:column;justify-content:flex-start;align-items:stretch;gap:5px;
     padding:26px 20px;background:color-mix(in srgb,var(--card) 70%,transparent);
     backdrop-filter:blur(16px);border-top:0;border-right:1px solid var(--line);
-    box-shadow:8px 0 28px -18px rgba(255,120,170,.45);overflow-y:auto
+    box-shadow:8px 0 28px -18px color-mix(in srgb,var(--pink) 45%,transparent);overflow-y:auto
   }
   nav a{flex:none;flex-direction:row;justify-content:flex-start;gap:13px;padding:11px 13px;border-radius:18px;font:600 15px 'DM Sans';border:1px solid transparent}
   nav a:hover{background:var(--pink-paler);transform:translateX(2px)}
@@ -589,7 +589,7 @@ a.homeCard .homeCardArt{background:var(--lavender)}
     display:flex;flex-direction:column;gap:14px;position:fixed;top:0;right:0;bottom:0;width:340px;
     padding:24px 24px 24px 16px;overflow-y:auto;z-index:29;
     background:color-mix(in srgb,var(--card) 70%,transparent);backdrop-filter:blur(16px);
-    border-left:1px solid var(--line);box-shadow:-8px 0 28px -18px rgba(255,120,170,.45);
+    border-left:1px solid var(--line);box-shadow:-8px 0 28px -18px color-mix(in srgb,var(--pink) 45%,transparent);
   }
   /* Pil runtun beranda mati begitu rail muncul: angkanya SAMA persis dengan
      .railStat pertama, dan dua-duanya kelihatan sekaligus di layar yang sama. */
