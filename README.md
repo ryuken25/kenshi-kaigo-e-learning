@@ -258,16 +258,52 @@ casually.
 
 ## Pindah ke Supabase — SUDAH DILAKUKAN (2026-08-28)
 
-Produksi jalan di **Supabase**: project `kenshi-kaigo`, region `ap-southeast-2`,
-PostgreSQL 17.6, transaction pooler `aws-0-ap-southeast-2.pooler.supabase.com:6543`.
-Benar seperti rancangannya: **tidak ada deploy kode**, cuma `DATABASE_URL` di Vercel
-yang diganti lalu redeploy.
+Produksi jalan di **Supabase**: project `kenshi-kaigo-sg`, region `ap-southeast-1`
+(Singapura), PostgreSQL 17.6, transaction pooler
+`aws-0-ap-southeast-1.pooler.supabase.com:6543`. Function Vercel dipatok ke `sin1`
+lewat `vercel.json` supaya sebaris dengan databasenya — lihat "Region dan latensi".
 
-**Neon sengaja dibiarkan hidup dan utuh** sebagai jalan mundur — tidak satu pun
-tabel di sana disentuh, dan isinya masih sama persis dengan Supabase pada saat
-cutover. Nilai `DATABASE_URL` produksi sebelum cutover ada di
-`.env.rollback-neon.local` (gitignored) — itu yang dipakai kalau harus mundur,
-bukan `.env.neon.local`, karena parameter query-nya berbeda.
+Pindahnya dua langkah dalam satu hari: Neon → Supabase Sydney (`ap-southeast-2`),
+lalu Sydney → Singapura. Langkah kedua perlu **project baru**, karena region
+Supabase **tidak bisa diganti di tempat**; jalur resminya bikin project lalu
+migrasi ("restore to another project" yang lebih mulus itu fitur paid plan).
+
+**DUA lapis jalan mundur, dua-duanya dibiarkan hidup dan utuh:**
+
+| lapis | isi | URL rollback |
+| --- | --- | --- |
+| Supabase Sydney (`kenshi-kaigo`) | salinan penuh saat cutover kedua | `.env.rollback-supabase-syd.local` |
+| Neon | salinan penuh saat cutover pertama | `.env.rollback-neon.local` |
+
+Untuk Neon pakai berkas rollback itu, **bukan** `.env.neon.local` — host-nya sama
+tapi parameter query-nya berbeda.
+
+### Region dan latensi
+
+Diukur di produksi dengan `/api/auth/session`: tanpa cookie = nol query, dengan
+cookie palsu = tepat satu query. Selisihnya = biaya satu perjalanan ke database.
+Angkanya **min** dari 10 sampel; median kena noise jaringan klien.
+
+| function | database | 0 query | 1 query | biaya/query |
+| --- | --- | --- | --- | --- |
+| `iad1` (default) | Sydney | 380ms | 830ms | ~420ms |
+| `sin1` | Sydney | 156ms | 343ms | ~187ms |
+| `syd1` | Sydney | 292ms | 295ms | ~3ms |
+| `sin1` | **Singapura** | **203ms** | **203ms** | **~0ms** |
+
+Dua pelajaran yang terbaca dari tabel itu:
+
+1. **Function harus sebaris dengan database.** Default `iad1` membuat tiap query
+   menyeberang separuh bumi. Satu `GET /api/final` butuh tiga query berurutan,
+   jadi ~1,26 detik dari waktu tunggunya murni jarak.
+2. **Sesudah itu, yang tersisa cuma jarak user ke function.** Singapura ~90ms
+   lebih dekat ke user (Indonesia) daripada Sydney, dan hematnya konstan — tidak
+   peduli endpoint-nya butuh berapa query.
+
+Kalau target usernya pindah benua, dua-duanya (`vercel.json` regions DAN region
+project Supabase) harus ikut pindah bersamaan. Memindahkan salah satu saja membuat
+keadaan lebih buruk daripada tidak memindahkan apa pun — baris `sin1`/Sydney di
+tabel itu buktinya.
 
 Dua hal berjalan tidak seperti runbook di bawah, dan dua-duanya lebih baik:
 
@@ -335,6 +371,15 @@ ini **tidak butuh deploy kode**, cukup ganti env var.
    **Secret** (nilainya tidak bisa dibaca balik lewat `env pull`), sedangkan Development
    tersimpan sebagai Config. Kalau perlu memverifikasi nilai yang terkirim, banding lewat
    Development — perintah dan stdin-nya sama.
+
+   **JEBAKAN, dan ini gagal DIAM-DIAM.** Sekali variabelnya dibuat per-environment,
+   `vercel env rm DATABASE_URL --yes` **tanpa** nama environment tidak menghapus apa
+   pun (tiga entri bernama sama = ambigu), lalu `env add` berikutnya juga gagal karena
+   variabelnya masih ada. Keluaran CLI-nya tidak terbaca seperti kegagalan, deployment
+   berikutnya tetap READY, dan produksi tetap menunjuk database LAMA. Ketahuan cuma
+   karena probe `magic_tokens` di bawah menunjukkan Sydney yang naik, bukan Singapura.
+   Sebut environment-nya satu per satu: `env rm DATABASE_URL production --yes`, dst.
+   Lalu WAJIB verifikasi ulang sebelum percaya cutover-nya jadi.
 
 Tiga hal yang bisa menggigit:
 

@@ -84,9 +84,10 @@ probe; it throws `tamper anchor tidak ditemukan` rather than silently passing.
 
 All DB scripts read `DATABASE_URL` from the ambient environment and hit the live database
 directly — there is no dotenv loader, so export it first. **Since 2026-08-28 that database is
-Supabase**, not Neon (see README "Pindah ke Supabase"). The Neon project is deliberately left
-running and untouched as the rollback path; `.env.rollback-neon.local` (gitignored) holds the
-exact production URL that was in Vercel before the cutover.
+Supabase in Singapore** (`kenshi-kaigo-sg`, `ap-southeast-1`), not Neon — see README "Pindah ke
+Supabase". `.env.supabase.local` (gitignored) points at it. There are **two** rollback layers,
+both deliberately left running and untouched: Supabase Sydney (`.env.rollback-supabase-syd.local`)
+and Neon (`.env.rollback-neon.local`). Use those files, not `.env.neon.local`.
 
 ```bash
 node scripts/run-migration.mjs scripts/001_init.sql   # apply a migration (README: use DATABASE_URL_UNPOOLED)
@@ -124,8 +125,11 @@ nothing — run `npx vercel deploy --prod --yes --token "$VERCEL_TOKEN"`. See RE
 Persistence is Postgres. **`api/_db.mjs` picks the driver from the host in `DATABASE_URL`**:
 `*.neon.tech` → `@neondatabase/serverless` (HTTP), anything else → `postgres` (postgres.js, TCP).
 Production runs the **postgres.js** branch now: Supabase's transaction pooler on
-`aws-0-ap-southeast-2.pooler.supabase.com:6543`, which is why `prepare:false` in that file is
-load-bearing and must not be turned back on.
+`aws-0-ap-southeast-1.pooler.supabase.com:6543` (project `kenshi-kaigo-sg`, Singapore), which
+is why `prepare:false` in that file is load-bearing and must not be turned back on.
+`vercel.json` pins functions to `sin1` so they sit **in the same region as the database** — the
+default `iad1` put every query half a world away and cost ~420ms each, ~1.26s on a three-query
+`GET /api/final`. If either region ever moves, move both; see README "Region dan latensi".
 The call surface is identical either way (tagged template + `.query(text, params)`, both returning
 plain arrays), so no other call site knows which driver is live. `DB_DRIVER=postgres|neon`
 overrides the host check — needed because Neon's unpooled host is still `*.neon.tech`, so the
