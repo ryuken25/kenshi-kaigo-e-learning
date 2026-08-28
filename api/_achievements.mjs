@@ -41,8 +41,14 @@ async function fetchStats(sql, userId) {
   const perSection = await sql`
     SELECT section_id, COUNT(*)::int n FROM level_progress
     WHERE user_id=${userId} AND status='completed' GROUP BY section_id`;
+  // COUNT(DISTINCT lawan), bukan COUNT(*). Pertemanan yang diterima itu SEPASANG
+  // baris (friends.mjs menulis dua arah), jadi COUNT(*) dengan predikat dua arah
+  // menghitung tiap teman DUA KALI: 3 teman terbaca 6, dan 'friend-5' ("Punya 5
+  // teman") menyala di teman ketiga. DISTINCT juga benar kalau pasangannya
+  // sempat setengah tertulis — UPDATE+INSERT di friends.mjs bukan satu transaksi.
   const friendCount = await sql`
-    SELECT COUNT(*)::int n FROM friendships
+    SELECT COUNT(DISTINCT CASE WHEN user_id=${userId} THEN friend_id ELSE user_id END)::int n
+    FROM friendships
     WHERE (user_id=${userId} OR friend_id=${userId}) AND status='accepted'`;
   const times = await sql`SELECT first_completed_at t FROM level_progress WHERE user_id=${userId} AND first_completed_at IS NOT NULL`;
   return { u: u[0], agg: agg[0], perSection, friendCount: friendCount[0].n, times };

@@ -309,7 +309,7 @@ export function LeaderboardPage(){
           </div>)}
       {tab==='global' && data.me && <div className="lbMe">
         <Avatar characterId={user?.characterId} frame={user?.avatarFrame} size={40}/>
-        <div><b>Posisimu: #{data.me.rank}{data.me.delta!==null && data.me.delta!==0 && <span className={`lbDelta ${data.me.delta>0?'up':'down'}`}> {data.me.delta>0?'▲':'▼'}{Math.abs(data.me.delta)}</span>}</b>
+        <div><b>{data.me.rank===null?'Belum masuk papan minggu ini':`Posisimu: #${data.me.rank}`}{data.me.delta!==null && data.me.delta!==0 && <span className={`lbDelta ${data.me.delta>0?'up':'down'}`}> {data.me.delta>0?'▲':'▼'}{Math.abs(data.me.delta)}</span>}</b>
         <small>{data.me.weeklyXp} XP minggu ini{!data.me.inTop?' · di luar top 100, terus kejar!':''}{data.me.handle===null?'':' · @'+data.me.handle}</small></div>
         <Medal size={18} style={{color:'var(--gold-deep)',marginLeft:'auto'}}/>
       </div>}

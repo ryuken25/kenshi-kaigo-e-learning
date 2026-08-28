@@ -41,6 +41,12 @@ export default async function handler(req, res) {
     let next = String(req.query?.next || '');
     if (!next.startsWith('/') || next.startsWith('//') || next.includes('\\')) next = '/profile';
 
+    // no-store pada respons yang MEMBAWA Set-Cookie sesi. 302 memang tidak
+    // heuristically-cacheable menurut RFC 7231 sehingga CDN patuh tidak menyimpannya,
+    // tapi proxy korporat/antivirus yang agresif bisa menyajikan ulang Set-Cookie
+    // satu user ke user lain di jaringan yang sama. Dua endpoint auth lain sudah
+    // memasang header ini; yang justru membagikan cookie malah belum.
+    res.setHeader('Cache-Control', 'no-store');
     res.setHeader('Set-Cookie', cookieHeader('kaigo_session', session, 60 * 60 * 24 * 30));
     res.setHeader('Location', process.env.APP_URL ? `${process.env.APP_URL}${next}` : next);
     return res.status(302).send('Signed in. Redirecting…');

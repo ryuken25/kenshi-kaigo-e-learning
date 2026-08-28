@@ -136,6 +136,24 @@ try {
   assert(r.statusCode === 200, 'B block A');
   r = await call(friendsHandler, { method: 'POST', cookie: A.cookie, body: { action: 'request', handle: 'e2e_atar_b' } });
   assert(r.statusCode === 403 && r.body.error === 'blocked', 'A request saat diblokir → 403');
+
+  // OTORISASI: A TIDAK BOLEH bisa melepas blokir milik B. Dulu bisa, dua panggilan
+  // saja: 'block' menghapus baris dua arah tanpa filter status (ikut membuang baris
+  // blokir B), lalu 'unblock' membuang baris A sendiri — nol baris tersisa, B tidak
+  // pernah diberi tahu, dan permintaan A masuk lagi ke inbox B.
+  r = await call(friendsHandler, { method: 'POST', cookie: A.cookie, body: { action: 'block', handle: 'e2e_atar_b' } });
+  assert(r.statusCode === 200, 'A balas block B');
+  r = await call(friendsHandler, { method: 'POST', cookie: A.cookie, body: { action: 'unblock', handle: 'e2e_atar_b' } });
+  assert(r.statusCode === 200, 'A unblock B');
+  const blokirB = await sql`SELECT status FROM friendships WHERE user_id=${B.id} AND friend_id=${A.id}`;
+  assert(blokirB[0]?.status === 'blocked', 'blokir milik B SELAMAT dari block+unblock milik A');
+  r = await call(friendsHandler, { method: 'POST', cookie: A.cookie, body: { action: 'request', handle: 'e2e_atar_b' } });
+  assert(r.statusCode === 403 && r.body.error === 'blocked', 'A tetap tertahan blokir B sesudahnya');
+
+  // block dua kali beruntun tidak boleh 500 (INSERT tanpa ON CONFLICT dulu bisa).
+  r = await call(friendsHandler, { method: 'POST', cookie: B.cookie, body: { action: 'block', handle: 'e2e_atar_a' } });
+  assert(r.statusCode === 200, 'block berulang tetap 200, bukan 500');
+
   r = await call(friendsHandler, { method: 'POST', cookie: B.cookie, body: { action: 'unblock', handle: 'e2e_atar_a' } });
   assert(r.statusCode === 200, 'B unblock A');
   // Block memang MEMUTUS pertemanan (semantik yang benar). Re-add supaya
@@ -152,10 +170,17 @@ try {
   await sql`DELETE FROM leaderboard_seen WHERE user_id=${A.id}`; // determinisme delta
   r = await call(leaderboardHandler, { cookie: A.cookie, query: { scope: 'global' } });
   assert(r.statusCode === 200 && r.body.scope === 'global', 'global scope');
-  assert(r.body.me && r.body.me.rank >= 1, `posisi sendiri terhitung (rank ${r.body.me?.rank})`);
-  assert(r.body.me.delta === null, 'kunjungan pertama minggu ini → delta null');
-  r = await call(leaderboardHandler, { cookie: A.cookie, query: { scope: 'global' } });
-  assert(r.body.me.delta === 0, 'kunjungan kedua → delta 0 (rank tetap)');
+  // Papan mingguan dibangun dari daily_activity SEJAK SENIN. Di titik ini user
+  // belum menyetor apa pun minggu ini (step [7] baru jalan sesudah blok ini), jadi
+  // ia memang BUKAN peserta papan dan rank-nya harus null.
+  // Asersi lama `rank >= 1` justru mengunci bugnya: rumus lama COUNT(xp > punyaku)+1
+  // menghasilkan rank 1 untuk papan KOSONG, dan evaluateLeaderboardAchievements
+  // lalu membagikan lb-appear + lb-top50 + lb-top10 ke user ber-XP 0 — setiap Senin.
+  assert(r.body.me && r.body.me.rank === null, `belum ada aktivitas minggu ini -> rank null (dapat ${r.body.me?.rank})`);
+  assert(r.body.me.inTop === false, 'rank null -> inTop false');
+  assert(Array.isArray(r.body.newAchievements) && r.body.newAchievements.length === 0, 'rank null -> TIDAK membagikan achievement peringkat');
+  const seenKosong = await sql`SELECT count(*)::int c FROM leaderboard_seen WHERE user_id=${A.id} AND scope='global'`;
+  assert(seenKosong[0].c === 0, 'rank null -> leaderboard_seen tidak dicatat');
 
   console.log('\n[7] POST /api/progress → hook achievement + idempotensi');
   const attemptId = crypto.randomUUID();
@@ -170,6 +195,16 @@ try {
     sectionId: 1, levelId: 1, score: 100, correctCount: 5, totalCount: 5, attemptId,
   }});
   assert(r.body.totalXp === totalXp1, 'replay attemptId sama → XP tidak dobel (cache idempoten)');
+
+  console.log('\n[7b] Papan global SESUDAH ada aktivitas → rank jadi angka nyata');
+  r = await call(leaderboardHandler, { cookie: A.cookie, query: { scope: 'global' } });
+  assert(r.body.me && typeof r.body.me.rank === 'number' && r.body.me.rank >= 1, `rank terisi setelah submit (dapat ${r.body.me?.rank})`);
+  assert(r.body.me.inTop === true, 'rank nyata -> inTop true');
+  assert(r.body.rows.some(x => x.isMe), 'muncul sebagai baris di papan');
+  const rank1 = r.body.me.rank;
+  assert(r.body.me.delta === null, 'kunjungan pertama dengan rank nyata -> delta null');
+  r = await call(leaderboardHandler, { cookie: A.cookie, query: { scope: 'global' } });
+  assert(r.body.me.rank === rank1 && r.body.me.delta === 0, 'kunjungan kedua -> rank tetap, delta 0');
 
   console.log('\n[8] RESET progress → achievement ikut terhapus');
   r = await call(progressHandler, { method: 'DELETE', cookie: A.cookie, body: { confirm: 'RESET' } });

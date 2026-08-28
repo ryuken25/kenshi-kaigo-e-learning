@@ -69,20 +69,42 @@ export default async function handler(req, res) {
       const eligible = Boolean(user && user.handle) && user.visibility === 'public';
       if (eligible) {
         const my = await sql`SELECT COALESCE(SUM(xp_gained),0)::int xp FROM daily_activity WHERE user_id=${user.id} AND activity_date >= ${weekStart}::date`;
-        const above = await sql`
+        // ROW_NUMBER di atas CTE dan ORDER BY yang SAMA PERSIS dengan daftar di atas.
+        // Rumus lama COUNT(WHERE xp > punyaku) + 1 salah di dua arah:
+        //   (a) Senin pagi papan masih kosong -> nol baris di atasku -> rank 1, dan
+        //       evaluateLeaderboardAchievements membagikan lb-appear + lb-top50 +
+        //       lb-top10 ke user ber-XP 0 yang bahkan tidak ada di papan. Unlock-nya
+        //       permanen, dan jendelanya terbuka SETIAP Senin.
+        //   (b) 11 orang seri 100 XP: semuanya dapat rank 1 walau daftarnya
+        //       mengurutkan mereka 1..11 lewat tiebreak — layar menampilkan saya di
+        //       baris #12 sekaligus kartu "Posisimu: #1".
+        // rank null = memang belum punya aktivitas minggu ini; klien menampilkannya
+        // sebagai "belum masuk papan", dan achievement peringkat TIDAK dievaluasi.
+        const rankRows = await sql`
           WITH wk AS (
             SELECT user_id, SUM(xp_gained)::int AS xp FROM daily_activity
             WHERE activity_date >= ${weekStart}::date GROUP BY user_id
+          ), peringkat AS (
+            SELECT u.id, ROW_NUMBER() OVER (
+              ORDER BY wk.xp DESC, u.streak_current DESC, u.created_at ASC, u.id ASC
+            )::int AS rn
+            FROM wk JOIN app_users u ON u.id = wk.user_id
+            WHERE u.visibility='public' AND u.handle IS NOT NULL
           )
-          SELECT COUNT(*)::int n FROM wk JOIN app_users u ON u.id = wk.user_id
-          WHERE u.visibility='public' AND u.handle IS NOT NULL AND wk.xp > ${my[0].xp}`;
-        me = { handle: user.handle, weeklyXp: my[0].xp, rank: above[0].n + 1, inTop: above[0].n < 100 };
-        const seen = await sql`SELECT last_rank FROM leaderboard_seen WHERE user_id=${user.id} AND scope='global' AND week_start=${weekStart}::date`;
-        delta = seen[0] ? seen[0].last_rank - me.rank : null; // positif = naik ▲
-        await sql`
-          INSERT INTO leaderboard_seen(user_id, scope, week_start, last_rank)
-          VALUES(${user.id}, 'global', ${weekStart}::date, ${me.rank})
-          ON CONFLICT (user_id, scope, week_start) DO UPDATE SET last_rank=EXCLUDED.last_rank, seen_at=now()`;
+          SELECT rn FROM peringkat WHERE id = ${user.id}`;
+        const rank = rankRows[0]?.rn ?? null;
+        me = { handle: user.handle, weeklyXp: my[0].xp, rank, inTop: rank !== null && rank <= 100 };
+        // Hanya dicatat kalau user BENAR-BENAR ada di papan. Menyimpan rank null
+        // melanggar NOT NULL last_rank, dan panah delta ▲▼ minggu depan jadi
+        // dihitung dari angka yang tidak pernah nyata.
+        if (rank !== null) {
+          const seen = await sql`SELECT last_rank FROM leaderboard_seen WHERE user_id=${user.id} AND scope='global' AND week_start=${weekStart}::date`;
+          delta = seen[0] ? seen[0].last_rank - rank : null; // positif = naik ▲
+          await sql`
+            INSERT INTO leaderboard_seen(user_id, scope, week_start, last_rank)
+            VALUES(${user.id}, 'global', ${weekStart}::date, ${rank})
+            ON CONFLICT (user_id, scope, week_start) DO UPDATE SET last_rank=EXCLUDED.last_rank, seen_at=now()`;
+        }
       }
       const newAchievements = me ? await evaluateLeaderboardAchievements(sql, user.id, me.rank) : [];
       return res.status(200).json({

@@ -74,7 +74,13 @@ export default async function handler(req, res) {
         SELECT u.handle, u.display_name, u.avatar_key, u.avatar_frame, u.character_id, u.total_xp, u.streak_current
         FROM friendships f JOIN app_users u ON u.id = f.user_id
         WHERE f.friend_id=${user.id} AND f.status='accepted'
-        ORDER BY total_xp DESC`;
+        ORDER BY total_xp DESC, handle ASC`;
+      // handle ASC wajib: kelas bug yang sama sudah diakui di komentar leaderboard.mjs.
+      // ORDER BY total_xp saja tidak menentukan urutan dua teman yang XP-nya sama, dan
+      // UNION melakukan dedupe lewat hash dulu sehingga urutan masuk ke sort ikut
+      // iterasi hash table — daftar teman bisa berganti urutan tiap refresh tanpa ada
+      // yang berubah, dan itu terbaca sebagai bug. handle dipakai karena id/created_at
+      // tidak ikut di-SELECT jadi tidak sah dipakai di ORDER BY sesudah UNION.
       const incoming = await sql`
         SELECT u.handle, u.display_name, u.avatar_key, u.avatar_frame, u.character_id, u.total_xp, u.streak_current, f.created_at
         FROM friendships f JOIN app_users u ON u.id = f.user_id
@@ -140,9 +146,20 @@ export default async function handler(req, res) {
       }
 
       if (action === 'block') {
-        // Blokir menghapus semua baris dua arah, lalu menulis SATU baris blocked.
-        await sql`DELETE FROM friendships WHERE (user_id=${user.id} AND friend_id=${target.id}) OR (user_id=${target.id} AND friend_id=${user.id})`;
-        await sql`INSERT INTO friendships(user_id, friend_id, status) VALUES(${user.id}, ${target.id}, 'blocked')`;
+        // Blokir membuang baris dua arah, TAPI TIDAK PERNAH baris 'blocked' milik target.
+        // Tanpa pengecualian itu, blokir jadi senjata untuk melepas blokir orang lain:
+        // B blokir A -> A kirim block -> DELETE membuang baris blokir B -> A kirim
+        // unblock -> nol baris tersisa -> permintaan A masuk lagi ke inbox B, dan B
+        // tidak pernah diberi tahu blokirnya hilang. Dua panggilan API, tanpa jejak.
+        // Bandingkan 'remove' di atas yang sudah benar karena difilter status='accepted'.
+        await sql`DELETE FROM friendships
+          WHERE ((user_id=${user.id} AND friend_id=${target.id})
+              OR (user_id=${target.id} AND friend_id=${user.id} AND status <> 'blocked'))`;
+        // ON CONFLICT: DELETE dan INSERT bukan satu transaksi, jadi dua tap tombol
+        // blokir yang beriringan bikin INSERT kedua kena unique violation -> 500,
+        // padahal blokirnya sendiri sudah berhasil.
+        await sql`INSERT INTO friendships(user_id, friend_id, status) VALUES(${user.id}, ${target.id}, 'blocked')
+          ON CONFLICT (user_id, friend_id) DO UPDATE SET status='blocked', updated_at=now()`;
         return res.status(200).json({ ok: true });
       }
 

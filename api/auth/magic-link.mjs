@@ -10,14 +10,27 @@ const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 // email-bombing satu alamat. Instanceless (tiap serverless instance punya Map sendiri),
 // jadi limit efektif = batas × jumlah instance aktif — tetap memotong bulk abuse.
 const rlMap = new Map();
+// Pembersihan HARUS di dalam rlTake. Dulu barisnya berdiri di lingkup MODUL, jadi
+// dievaluasi tepat sekali saat cold start — waktu rlMap masih kosong — dan tidak
+// pernah lagi sesudahnya. Komentarnya menjanjikan pembersihan yang tidak pernah
+// terjadi: pada instance warm yang dihujani email/IP berbeda, map-nya tumbuh
+// monoton sampai kehabisan memori, dan entri yang jendelanya sudah lewat pun
+// tidak pernah dilepas.
+const RL_MAX_ENTRIES = 10000;
 const rlTake = (key, max, windowMs) => {
   const now = Date.now();
+  if (rlMap.size > RL_MAX_ENTRIES) {
+    // Buang yang jendelanya sudah lewat dulu; kalau masih sesak juga, kosongkan
+    // total. Mengosongkan total memang melonggarkan limit sesaat, tapi itu jauh
+    // lebih baik daripada instance mati kehabisan memori.
+    for (const [k, v] of rlMap) if (now - v.start > windowMs) rlMap.delete(k);
+    if (rlMap.size > RL_MAX_ENTRIES) rlMap.clear();
+  }
   const e = rlMap.get(key);
   if (!e || now - e.start > windowMs) { rlMap.set(key, { start: now, n: 1 }); return true; }
   if (e.n >= max) return false;
   e.n += 1; return true;
 };
-if (rlMap.size > 10000) rlMap.clear(); // buang entri lama saat map membengkak
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return json(res, { error: 'Method not allowed' }, 405);
