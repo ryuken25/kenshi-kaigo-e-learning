@@ -136,7 +136,11 @@ function makeLevel(sectionId, plan, levelId, topic){
    Ikon menggantikan emoji: emoji dirender font sistem sehingga bentuknya beda di
    Android/iOS/Windows dan warnanya tidak bisa ikut tema. Nama ikon harus ada di
    SECTION_ICON_NAMES pada src/Icons.jsx. */
-export const SECTION_ACCENT=['#ff7bab','#9d8bf0','#e8a33c','#4d9fd8','#e8709a','#5fae90','#c07be0','#4fa8c9','#e5893f','#7f9be0','#d76b8f','#6ea86a','#b06fd8'];
+// Aksen bab TIDAK lagi hex mati: 13 nilai ini custom property yang dihitung dari
+// rona tema aktif (--sec-h di themes.css, --sec-N di styles.css). Dipasang ke
+// --accent lewat inline style di main.jsx, jadi ikon, bilah progres, dan cincin
+// kartu bab semuanya ikut berganti saat user memilih Yuki atau Luna.
+export const SECTION_ACCENT=Array.from({length:13},(_,i)=>`var(--sec-${i+1})`);
 export const SECTION_ICON=['sakura','surat','rumah','jantung','tulip','otak','beruang','stetoskop','stroberi','gelembung','bak','catatan','pita'];
 
 export const sections=plans.map(([titleJa,titleId,count,icon,topics],i)=>({id:i+1,titleJa,titleId,icon,iconName:SECTION_ICON[i],accent:SECTION_ACCENT[i],levelCount:count,description:`${titleJa}を基礎から事例まで段階的に学びます。`,descriptionId:SECTION_ID_DESC[i],levels:topics.map((topic,j)=>makeLevel(i+1,[titleJa,titleId,count,icon,topics],j+1,topic))}));

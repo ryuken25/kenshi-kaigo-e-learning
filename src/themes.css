@@ -33,6 +33,7 @@
 
 /* ---------- yuki: biru salju ---------- */
 :root[data-theme=yuki]{
+  --sec-h:214;--sec-s:66%;--sec-l:48%;
   --pink-text:#0b6ba6;
   --ink:#27455e;--muted:#5b7a94;
   --pink:#3aa7e8;--pink-deep:#1f8bd0;--pink-pale:#d6ecfb;--pink-paler:#edf7fe;
@@ -51,6 +52,7 @@
 
 /* ---------- luna: ungu bulan ---------- */
 :root[data-theme=luna]{
+  --sec-h:266;--sec-s:62%;--sec-l:56%;
   --pink-text:#7042d8;
   --ink:#3a2f56;--muted:#6b6091;
   --pink:#8b5cf6;--pink-deep:#7042d8;--pink-pale:#e7ddfd;--pink-paler:#f5f0ff;
@@ -78,6 +80,7 @@
 
 /* ---------- momo gelap ---------- */
 :root[data-mode=dark],:root[data-mode=dark][data-theme=momo]{
+  --sec-h:338;--sec-s:70%;--sec-l:68%;
   --ink:#f7eaf4;--muted:#a892b8;
   --pink:#ff7bb0;--pink-deep:#ff5fa0;--pink-pale:#2a1a2e;--pink-paler:#1d1424;
   --lavender:#2a1f3d;--gold:#ffd47e;--gold-deep:#f5bf5c;--mint:#1e3a35;
@@ -95,6 +98,7 @@
 
 /* ---------- yuki gelap ---------- */
 :root[data-mode=dark][data-theme=yuki]{
+  --sec-h:214;--sec-s:64%;--sec-l:66%;
   --ink:#e8f4fe;--muted:#8fadc8;
   --pink:#4fb4f0;--pink-deep:#33a2e6;--pink-pale:#14263a;--pink-paler:#101c2b;
   --lavender:#182c42;--gold:#ffd966;--gold-deep:#eec24c;--mint:#153b36;
@@ -112,6 +116,7 @@
 
 /* ---------- luna gelap ---------- */
 :root[data-mode=dark][data-theme=luna]{
+  --sec-h:266;--sec-s:64%;--sec-l:70%;
   --ink:#ece4fd;--muted:#9d90c2;
   --pink:#a084f9;--pink-deep:#8b5cf6;--pink-pale:#241b3a;--pink-paler:#1b1430;
   --lavender:#291f45;--gold:#ffe08a;--gold-deep:#efcb6e;--mint:#1f3446;

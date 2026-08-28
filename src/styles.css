@@ -1,6 +1,28 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fredoka:wght@400;500;600;700&display=swap');
 
 :root{
+  /* ---- aksen 13 bab, DITURUNKAN dari tema ----
+     Dulu 13 hex mati di src/data.js, jadi di tema biru ubin BAB 01 tetap merah
+     muda, BAB 02 ungu, BAB 03 amber — pelangi yang tidak nyambung dengan
+     halamannya. Sekarang ronanya menyebar simetris di sekitar --sec-h milik tema
+     aktif: tiap bab tetap punya warna sendiri (masih bisa dibedakan sekilas),
+     tapi semuanya sekeluarga dengan temanya. Mode gelap menaikkan --sec-l karena
+     warna jenuh yang sama terbaca jauh lebih gelap di latar pekat.
+     Pangkalnya ada di themes.css, satu set per tema per mode. */
+  --sec-h:338;--sec-s:72%;--sec-l:62%;
+  --sec-1:hsl(calc(var(--sec-h) + -24) var(--sec-s) calc(var(--sec-l) + -4%));
+  --sec-2:hsl(calc(var(--sec-h) + -20) var(--sec-s) var(--sec-l));
+  --sec-3:hsl(calc(var(--sec-h) + -16) var(--sec-s) calc(var(--sec-l) + 4%));
+  --sec-4:hsl(calc(var(--sec-h) + -12) var(--sec-s) calc(var(--sec-l) + -4%));
+  --sec-5:hsl(calc(var(--sec-h) + -8) var(--sec-s) var(--sec-l));
+  --sec-6:hsl(calc(var(--sec-h) + -4) var(--sec-s) calc(var(--sec-l) + 4%));
+  --sec-7:hsl(var(--sec-h) var(--sec-s) calc(var(--sec-l) + -4%));
+  --sec-8:hsl(calc(var(--sec-h) + 4) var(--sec-s) var(--sec-l));
+  --sec-9:hsl(calc(var(--sec-h) + 8) var(--sec-s) calc(var(--sec-l) + 4%));
+  --sec-10:hsl(calc(var(--sec-h) + 12) var(--sec-s) calc(var(--sec-l) + -4%));
+  --sec-11:hsl(calc(var(--sec-h) + 16) var(--sec-s) var(--sec-l));
+  --sec-12:hsl(calc(var(--sec-h) + 20) var(--sec-s) calc(var(--sec-l) + 4%));
+  --sec-13:hsl(calc(var(--sec-h) + 24) var(--sec-s) calc(var(--sec-l) + -4%));
   --ink:#5b3f52;
   --muted:#7a5f6c;
   --pink:#ff7bab;
