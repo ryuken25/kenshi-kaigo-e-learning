@@ -15,23 +15,46 @@ import {dailyQuote} from './data/quotes.js';
 import {useTTS,toKana} from './lib/tts.js';
 import {kanaToRomaji} from './lib/kana.js';
 import './styles.css';import './translation.css';import './routing.css';import './auth.css';import './themes.css';import './social.css';
+/* Deploy MENGHAPUS chunk lama. Nama berkasnya ber-hash isi, jadi tiap rilis bikin
+   nama baru dan yang lama hilang dari deployment. Tab yang sudah terbuka masih
+   memegang index.html lama, dan begitu user pindah rute ia meminta chunk yang
+   sudah tidak ada — import() gagal, React melepas seluruh pohon, layar putih.
+   vercel.json sekarang mengembalikan 404 asli untuk /assets yang hilang (dulu
+   rewrite-nya menyajikan index.html BER-STATUS 200, sehingga HTML diurai sebagai
+   modul JS — gagalnya jadi jauh lebih membingungkan).
+   lazyReload menambal sisanya: sekali gagal muat, halaman dimuat ulang supaya
+   index.html segar terambil. sessionStorage menjaga agar TIDAK pernah jadi
+   putaran reload — kalau sesudah reload masih gagal, galatnya dibiarkan naik. */
+const RELOAD_KEY='kk_chunk_reloaded';
+function lazyReload(load){
+  return React.lazy(()=>load().catch(err=>{
+    let sudah=false; try{sudah=sessionStorage.getItem(RELOAD_KEY)==='1'}catch{}
+    if(sudah) throw err;
+    try{sessionStorage.setItem(RELOAD_KEY,'1')}catch{}
+    window.location.reload();
+    return new Promise(()=>{}); // tahan sampai reload benar-benar terjadi
+  }));
+}
+// Rilis yang berhasil dimuat menghapus tandanya, jadi kejadian berikutnya boleh reload lagi.
+try{sessionStorage.removeItem(RELOAD_KEY)}catch{}
+
 // Route-level code-splitting: FinalTest, Glossary, Social, Login di-lazy supaya chunk
 // utama (data.js + furigana.generated.js ~1MB source) tidak memuat halaman yang jarang
 // dibuka di load pertama. Wrapper komponen (bukan .then m=>({default:m.X})) supaya
 // validate:jsx tetap melihat deklarasi <FinalHome/> dkk di file ini.
-const Login=React.lazy(()=>import('./Login.jsx'));
-const FinalHome=React.lazy(()=>import('./FinalTest.jsx').then(m=>({default:m.FinalHome})));
-const FinalYear=React.lazy(()=>import('./FinalTest.jsx').then(m=>({default:m.FinalYear})));
-const FinalQuiz=React.lazy(()=>import('./FinalTest.jsx').then(m=>({default:m.FinalQuiz})));
-const FinalResult=React.lazy(()=>import('./FinalTest.jsx').then(m=>({default:m.FinalResult})));
-const UnlimitedFinal=React.lazy(()=>import('./FinalTest.jsx').then(m=>({default:m.UnlimitedFinal})));
-const GlossaryPage=React.lazy(()=>import('./GlossaryPage.jsx').then(m=>({default:m.GlossaryPage})));
-const GlossaryDetail=React.lazy(()=>import('./GlossaryPage.jsx').then(m=>({default:m.GlossaryDetail})));
-const FriendsPage=React.lazy(()=>import('./Social.jsx').then(m=>({default:m.FriendsPage})));
-const LeaderboardPage=React.lazy(()=>import('./Social.jsx').then(m=>({default:m.LeaderboardPage})));
-const AchievementsPage=React.lazy(()=>import('./Social.jsx').then(m=>({default:m.AchievementsPage})));
-const OnboardingWizard=React.lazy(()=>import('./Social.jsx').then(m=>({default:m.OnboardingWizard})));
-const ProfileEditor=React.lazy(()=>import('./Social.jsx').then(m=>({default:m.ProfileEditor})));
+const Login=lazyReload(()=>import('./Login.jsx'));
+const FinalHome=lazyReload(()=>import('./FinalTest.jsx').then(m=>({default:m.FinalHome})));
+const FinalYear=lazyReload(()=>import('./FinalTest.jsx').then(m=>({default:m.FinalYear})));
+const FinalQuiz=lazyReload(()=>import('./FinalTest.jsx').then(m=>({default:m.FinalQuiz})));
+const FinalResult=lazyReload(()=>import('./FinalTest.jsx').then(m=>({default:m.FinalResult})));
+const UnlimitedFinal=lazyReload(()=>import('./FinalTest.jsx').then(m=>({default:m.UnlimitedFinal})));
+const GlossaryPage=lazyReload(()=>import('./GlossaryPage.jsx').then(m=>({default:m.GlossaryPage})));
+const GlossaryDetail=lazyReload(()=>import('./GlossaryPage.jsx').then(m=>({default:m.GlossaryDetail})));
+const FriendsPage=lazyReload(()=>import('./Social.jsx').then(m=>({default:m.FriendsPage})));
+const LeaderboardPage=lazyReload(()=>import('./Social.jsx').then(m=>({default:m.LeaderboardPage})));
+const AchievementsPage=lazyReload(()=>import('./Social.jsx').then(m=>({default:m.AchievementsPage})));
+const OnboardingWizard=lazyReload(()=>import('./Social.jsx').then(m=>({default:m.OnboardingWizard})));
+const ProfileEditor=lazyReload(()=>import('./Social.jsx').then(m=>({default:m.ProfileEditor})));
 
 /* ---------- 3-mode language switch: 漢字(kanji) / ふりがな(furigana) / ID (Indonesia) ----------
    Icon-button kecil di pojok kanan atas tiap card (soal, choice, explanation, materi paragraf).
