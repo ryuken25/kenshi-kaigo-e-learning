@@ -82,8 +82,11 @@ probe; it throws `tamper anchor tidak ditemukan` rather than silently passing.
 
 ### Database and generator scripts
 
-All DB scripts read `DATABASE_URL` from the ambient environment and hit Neon directly — there is
-no dotenv loader, so export it first.
+All DB scripts read `DATABASE_URL` from the ambient environment and hit the live database
+directly — there is no dotenv loader, so export it first. **Since 2026-08-28 that database is
+Supabase**, not Neon (see README "Pindah ke Supabase"). The Neon project is deliberately left
+running and untouched as the rollback path; `.env.rollback-neon.local` (gitignored) holds the
+exact production URL that was in Vercel before the cutover.
 
 ```bash
 node scripts/run-migration.mjs scripts/001_init.sql   # apply a migration (README: use DATABASE_URL_UNPOOLED)
@@ -92,7 +95,7 @@ node scripts/verify-consistency.mjs                   # total_xp vs level+final 
 node scripts/backup-db.mjs .backup/d.json             # dump ALL public tables to JSON
 node scripts/restore-db.mjs .backup/d.json --yes       # replay that dump into an empty DB
 node scripts/e2e-make-token.mjs [email]               # mint a magic token for /api/auth/verify?token=
-node scripts/smoke-social.mjs                         # in-process E2E of the social APIs against prod Neon
+node scripts/smoke-social.mjs                         # in-process E2E of the social APIs against the prod DB
 node scripts/cleanup-e2e-test.mjs                     # delete the e2e-smoke-test user
 node scripts/gen-furigana.mjs                         # regenerate src/furigana.generated.js (bracket notation only)
 node scripts/gen-characters.mjs                       # regenerate the 36 character SVGs (deterministic, byte-identical)
@@ -120,6 +123,9 @@ routes rewritten to `index.html` (`vercel.json`; Vercel matches `api/` before th
 nothing — run `npx vercel deploy --prod --yes --token "$VERCEL_TOKEN"`. See README.md.
 Persistence is Postgres. **`api/_db.mjs` picks the driver from the host in `DATABASE_URL`**:
 `*.neon.tech` → `@neondatabase/serverless` (HTTP), anything else → `postgres` (postgres.js, TCP).
+Production runs the **postgres.js** branch now: Supabase's transaction pooler on
+`aws-0-ap-southeast-2.pooler.supabase.com:6543`, which is why `prepare:false` in that file is
+load-bearing and must not be turned back on.
 The call surface is identical either way (tagged template + `.query(text, params)`, both returning
 plain arrays), so no other call site knows which driver is live. `DB_DRIVER=postgres|neon`
 overrides the host check — needed because Neon's unpooled host is still `*.neon.tech`, so the
@@ -403,9 +409,10 @@ state **at the time each pack landed**. They go stale; HEAD is the source of tru
 
 ## Secrets
 
-`creds.txt` in the repo root holds a GitHub PAT, Vercel token, Neon API key, Cloudflare/R2,
-Midtrans and Porkbun credentials. It is gitignored and has never been committed. Do not read it
-into context, echo it, or move it into tracked files. The whole `.claude/` directory and `skills/`
+`creds.txt` in the repo root holds a GitHub PAT, Vercel token, Neon API key, Supabase
+(`supabase_project`, `supabase_token`, `supabase_url`, `project_password` — the last one is the
+database password), Cloudflare/R2, Midtrans and Porkbun credentials. It is gitignored and has
+never been committed. Do not read it into context, echo it, or move it into tracked files. The whole `.claude/` directory and `skills/`
 are gitignored, as is `.smoke/` (scratch dir for smoke tests: tokens, headers, payloads).
 
 Runtime secrets (`DATABASE_URL`, `SMTP_*`, `APP_URL`) come from Vercel env vars only; see README.md

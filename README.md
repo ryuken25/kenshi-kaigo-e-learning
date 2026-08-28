@@ -256,12 +256,46 @@ casually.
 
 ---
 
-## Pindah ke Supabase
+## Pindah ke Supabase — SUDAH DILAKUKAN (2026-08-28)
 
-Kodenya sudah siap-cutover: `api/_db.mjs` memilih driver dari HOST di `DATABASE_URL`,
-jadi perpindahan Neon → Supabase **tidak butuh deploy kode**, cukup ganti env var.
-Cabang postgres.js sudah terbukti lawan Neon lewat TCP, tapi **belum pernah diuji
-lawan Supabase sungguhan**.
+Produksi jalan di **Supabase**: project `kenshi-kaigo`, region `ap-southeast-2`,
+PostgreSQL 17.6, transaction pooler `aws-0-ap-southeast-2.pooler.supabase.com:6543`.
+Benar seperti rancangannya: **tidak ada deploy kode**, cuma `DATABASE_URL` di Vercel
+yang diganti lalu redeploy.
+
+**Neon sengaja dibiarkan hidup dan utuh** sebagai jalan mundur — tidak satu pun
+tabel di sana disentuh, dan isinya masih sama persis dengan Supabase pada saat
+cutover. Nilai `DATABASE_URL` produksi sebelum cutover ada di
+`.env.rollback-neon.local` (gitignored) — itu yang dipakai kalau harus mundur,
+bukan `.env.neon.local`, karena parameter query-nya berbeda.
+
+Dua hal berjalan tidak seperti runbook di bawah, dan dua-duanya lebih baik:
+
+- **Migrasi 001–008 dijalankan lewat Supabase Management API** (`POST
+  /v1/projects/<ref>/database/query`) satu berkas satu request, bukan lewat
+  `run-migration.mjs`. Artinya `BEGIN`/`COMMIT` di tiap berkas benar-benar berlaku,
+  jadi migrasinya **atomik** — justru lebih aman daripada jalur biasa yang membuang
+  keduanya. Jalur ini juga tidak butuh password DB, cuma token `sbp_`.
+- **`compare-schema.mjs` akan melaporkan 106 selisih palsu** di kombinasi ini.
+  Neon PG 18.6, Supabase PG 17.6, dan PG 18 mewujudkan NOT NULL sebagai baris
+  `pg_constraint` bernama (`contype='n'`) sementara PG 17 tidak. Semua selisihnya
+  bernama `*_not_null`. Bagian kolom sudah memuat `null=NO/YES` dan itu identik,
+  jadi NOT NULL-nya sama persis. Saring `AND c.contype <> 'n'` sebelum menyimpulkan:
+  sesudah itu kolom 126=126, constraint 49=49, index 38=38, identik.
+
+Bukti cutover yang dipakai, bukan sekadar "tidak ada galat": hitung baris
+`magic_tokens` di kedua database, POST `/api/auth/magic-link` ke alamat
+`@kaigokitty.internal` di produksi (INSERT terjadi **sebelum** kirim email, jadi
+barisnya pasti tertulis), lalu hitung ulang. Neon 6 → 6, Supabase 6 → 7. Barisnya
+dihapus lagi sesudahnya. Data juga dibandingkan per-tabel (14 tabel, 64 baris,
+identik), `SUM(app_users.total_xp)` 27 = 27, `verify-consistency.mjs` cetak `[]`,
+dan ketiga kolom jsonb dibaca balik sebagai **objek** (bukan string ganda-encode —
+jebakan yang gagalnya senyap).
+
+### Runbook (disimpan untuk perpindahan berikutnya)
+
+`api/_db.mjs` memilih driver dari HOST di `DATABASE_URL`, jadi perpindahan seperti
+ini **tidak butuh deploy kode**, cukup ganti env var.
 
 1. Ambil dua connection string dari Supabase (Project Settings → Database):
    - **transaction pooler**, port `6543` → untuk `DATABASE_URL` (runtime)
@@ -293,13 +327,20 @@ lawan Supabase sungguhan**.
    DO NOTHING`, jadi restore yang gagal di tengah aman diulang.
 5. Ganti `DATABASE_URL` di Vercel (Production + Preview) ke URL pooler `6543`, lalu
    redeploy — env var Vercel baru berlaku di deployment baru.
-6. Rollback: kembalikan `DATABASE_URL` ke Neon dan redeploy, atau set `DB_DRIVER=neon`
-   selama URL-nya masih Neon.
+6. Rollback: kembalikan `DATABASE_URL` ke nilai di `.env.rollback-neon.local` dan
+   redeploy. `DB_DRIVER=neon` hanya berguna selama URL-nya MASIH Neon — flag itu tidak
+   bisa menyelamatkan URL Supabase.
+
+   Catatan cutover 2026-08-28: `vercel env add` menyimpan Production & Preview sebagai
+   **Secret** (nilainya tidak bisa dibaca balik lewat `env pull`), sedangkan Development
+   tersimpan sebagai Config. Kalau perlu memverifikasi nilai yang terkirim, banding lewat
+   Development — perintah dan stdin-nya sama.
 
 Tiga hal yang bisa menggigit:
 
-- **Versi Postgres.** Neon di sini PG 18.6, Supabase biasanya 15/17. Baca ulang migrasi
-  001–008 kalau ada sintaks yang hanya ada di 18.
+- **Versi Postgres.** Neon di sini PG 18.6, Supabase 17.6. Migrasi 001–008 jalan apa adanya
+  di dua-duanya, tapi bedanya muncul waktu MEMBANDINGKAN skema — lihat catatan `contype='n'`
+  di atas.
 - **IPv6.** Host direct `db.<ref>.supabase.co` IPv6-only tanpa add-on IPv4. Kalau mesinmu
   IPv4-only, pakai pooler port `5432` (session mode) untuk `DATABASE_URL_UNPOOLED`.
 - **Transaction pooler dan prepared statement.** postgres.js dijalankan dengan
