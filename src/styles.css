@@ -475,7 +475,15 @@ a.homeCard .homeCardArt{background:var(--lavender)}
   .homeHeroArt{position:absolute;right:26px;top:-12px;z-index:1;pointer-events:none}
   /* Karakter tetap seukuran kanvas (240px); yang dilebarkan RUANGNYA. Membatasi
      tingginya memang menghapus tumpang tindih tapi lebarnya ikut turun 42%. */
+  /* Tinggi ruang hero mengikuti RASIO aset tiap skin, bukan satu angka untuk semua.
+     idle.png: momo 147x199, yuki 168x161, luna 144x230 — di lebar 240px itu 324,9 /
+     230,0 / 383,3px. Satu angka 318px pas untuk momo, menyisakan 100px udara kosong
+     untuk yuki, dan MASIH ditembus luna (kelincinya menutupi sepertiga chevron
+     Ujian Akhir). Rumusnya 240 * (tinggi/lebar aset) - 12 (offset top hero).
+     data-char berisi SKIN, bukan id DB — lihat applyChar di src/lib/social.jsx. */
   .welcome{min-height:318px}
+  :root[data-char=yuki] .welcome{min-height:224px}
+  :root[data-char=luna] .welcome{min-height:376px}
   /* Kartu bab versi desktop: kotak ikon 96px, judul 21px — ukuran kanvas
      DesktopDashboard. Di mobile tetap 56px/16px seperti kanvas Main. */
   /* align-items:flex-start + chevron absolut = anatomi kanvas: kotak ikon menempel
