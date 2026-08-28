@@ -100,6 +100,61 @@ function NightSky(){
   </div>;
 }
 
+/* ---------- bilah kanan: statistik + target harian (>=1100px) ----------
+   Pengganti <header>. Begitu bilah ini muncul, headernya disembunyikan (styles.css);
+   di bawah 1100px header lama yang masih membawa runtun & XP, jadi tidak ada lebar
+   yang kehilangan keduanya sekaligus.
+   TIDAK ada fetch baru: semuanya dari /api/progress yang sudah ditarik ProgressContext.
+   recentActivity cuma 14 hari terakhir — cukup untuk "hari ini" dan "sejak Senin".
+   Tanggal dibandingkan sebagai string 'YYYY-MM-DD' zona Asia/Tokyo, BUKAN selisih
+   milidetik: bug runtun-reset-tiap-pagi lahir persis dari aritmetika UTC yang diadu
+   dengan tanggal lokal, dan daily_activity.activity_date juga disimpan per zona itu. */
+const RAIL_XP_GOAL=30, RAIL_LEVEL_GOAL=2, RAIL_TZ={timeZone:'Asia/Tokyo'}, RAIL_DAYS=['Sn','Sl','Rb','Km','Jm','Sb','Mg'];
+function SideRail(){
+  const {loading, streakCurrent, totalXp, completedCount, serverProgress} = useProgress();
+  const {status} = useAuth();
+  const wait = loading && status==='authenticated';
+  const acts = serverProgress?.recentActivity||[];
+  const day = r=>String(r.date).slice(0,10);
+  const today = new Date().toLocaleDateString('en-CA',RAIL_TZ);
+  // Senin dihitung dari string tanggal Tokyo, disandarkan ke tengah hari UTC supaya
+  // pergeseran zona tidak pernah menggeser harinya. getUTCDay: 0=Minggu, jadi +6 %7.
+  const m = new Date(today+'T12:00:00Z'); m.setUTCDate(m.getUTCDate()-((m.getUTCDay()+6)%7));
+  const senin = m.toISOString().slice(0,10);
+  const todayXp = acts.reduce((a,r)=>day(r)===today?a+(r.xpGained||0):a,0);
+  const todayLv = acts.reduce((a,r)=>day(r)===today?a+(r.levelsCompleted||0):a,0);
+  const weekXp  = acts.reduce((a,r)=>day(r)>=senin?a+(r.xpGained||0):a,0);
+  const bar = (n,of)=>Math.min(100,Math.round(n/of*100))+'%';
+  // Tujuh hari sejak Senin, dibangkitkan sendiri — recentActivity hanya berisi hari yang
+  // PUNYA aktivitas, jadi kalau dipetakan langsung batangnya bergeser tiap ada hari bolong.
+  const pekan = Array.from({length:7},(_,i)=>{
+    const d=new Date(senin+'T12:00:00Z'); d.setUTCDate(d.getUTCDate()+i);
+    const k=d.toISOString().slice(0,10);
+    return {k, lbl:RAIL_DAYS[i], xp:acts.reduce((a,r)=>day(r)===k?a+(r.xpGained||0):a,0)};
+  });
+  // Lantai 10 supaya hari dengan 2 XP tidak jadi batang setinggi penuh di pekan yang sepi.
+  const puncak = Math.max(10,...pekan.map(d=>d.xp));
+  return <aside className="railBar" aria-label="Ringkasan belajar">
+    <div className="railStats">
+      <span className="railStat"><Flame size={17} fill="#ff718f"/><b>{wait?'…':streakCurrent}</b><small>hari</small></span>
+      <span className="railStat"><Heart size={17} fill="#ff718f"/><b>{wait?'…':totalXp}</b><small>XP</small></span>
+      <span className="railStat"><Medal size={17}/><b>{wait?'…':completedCount}</b><small>level</small></span>
+    </div>
+    <section className="railCard">
+      <div className="railHead"><b>Target harian</b><Link to="/belajar">Belajar</Link></div>
+      <div className="railGoal"><span>{todayXp} / {RAIL_XP_GOAL} XP</span><div className="miniProgress"><i style={{width:bar(todayXp,RAIL_XP_GOAL)}}/></div></div>
+      <div className="railGoal"><span>{todayLv} / {RAIL_LEVEL_GOAL} level</span><div className="miniProgress"><i style={{width:bar(todayLv,RAIL_LEVEL_GOAL)}}/></div></div>
+      <p className="railNote">{todayXp>=RAIL_XP_GOAL?'Target hari ini sudah tercapai — mantap!':'Sedikit setiap hari, hasil luar biasa.'}</p>
+    </section>
+    <section className="railCard">
+      <div className="railHead"><b>Minggu ini</b><Link to="/leaderboard">Peringkat</Link></div>
+      <p className="railBig">{wait?'…':weekXp}<small>XP sejak Senin</small></p>
+      <div className="railWeek">{pekan.map(d=><span key={d.k} className={d.k===today?'railDay railDayNow':'railDay'} title={d.k+' · '+d.xp+' XP'}><span className="railDayBar"><i style={{height:d.xp?Math.max(5,Math.round(d.xp/puncak*38))+'px':0}}/></span><small>{d.lbl}</small></span>)}</div>
+      <p className="railNote">Angka yang sama dipakai papan peringkat mingguan.</p>
+    </section>
+  </aside>;
+}
+
 function Shell({children}){
   const loc=useLocation();
   const {isAuthenticated, loading, streakCurrent, totalXp} = useProgress();
@@ -120,7 +175,9 @@ function Shell({children}){
      header disembunyikan di sana, sekalian membebaskan padding sidebar 268px yang
      bikin kartunya meleset 134px dari titik tengah jendela.
      appHome: beranda desktop mengikuti kanvas DeskMomo yang TIDAK punya header —
-     mereknya dibawa sidebar. Halaman lain tetap berheader (kanvas DesktopMateri). */
+     mereknya dibawa sidebar. Sejak ada bilah kanan, MULAI 1100px header dimatikan di
+     SEMUA rute dan SideRail yang membawa runtun & XP; appHome tinggal mengurus
+     pita 960-1099px, tempat header lama masih tampil. */
   const bare = loc.pathname==='/' || loc.pathname==='/login';
   return <div className={bare?"app appBare":loc.pathname==='/belajar'?"app appHome":"app"}>
     <ScrollToTop/>
@@ -132,6 +189,7 @@ function Shell({children}){
       </div>
     </header>
     {children}
+    {!bare&&<SideRail/>}
     <nav>
       <Link to="/belajar" className="sideBrand"><span className="sideBrandArt"><img src={brandSrc} alt=""/></span><span><b className="sideBrandName">kenshi</b><small className="sideBrandSub">kaigo e-learning</small></span></Link>
       {navItems.map(n=><Link key={n.label} className={`tap ${n.cls||''} ${n.match(loc.pathname)?'active':''}`} to={n.to}><span className="navEmoji"><NavIcon kind={n.kind}/></span><span>{n.label}</span></Link>)}

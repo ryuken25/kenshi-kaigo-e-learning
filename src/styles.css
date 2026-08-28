@@ -536,3 +536,66 @@ a.homeCard .homeCardArt{background:var(--lavender)}
 @media (min-width:960px){
   .appBare{padding-left:0}
 }
+
+/* ============================================================================
+   BILAH KANAN (>=1100px) — pengganti <header> di semua rute.
+   Referensi tata letak: rail kanan Duolingo (salinan halamannya ada di contoh/,
+   di-gitignore). Di sana rail-nya sticky di dalam flex row-reverse; DI SINI
+   position:fixed seperti sidebar kiri, karena {children} HARUS tetap anak
+   langsung .app — belasan aturan di routing.css menyasar `.app>main.page`, dan
+   membungkusnya dalam div pemisah akan mematikan semuanya diam-diam.
+   Kenapa 1100px dan bukan 960: sidebar 268 + rail 340 menyisakan <500px untuk isi
+   di bawah itu, dan kartu istilah/pilihan jawaban mulai pecah. Selama rail belum
+   muncul, header lama tetap tampil membawa runtun & XP — jadi tidak ada lebar yang
+   kehilangan keduanya sekaligus.
+   ========================================================================== */
+.railBar{display:none}
+.railStats{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;min-height:44px}
+.railStat{display:flex;align-items:center;gap:6px;padding:8px 12px;border-radius:999px;background:var(--pink-pale);color:var(--pink-text);min-width:0}
+.railStat b{font:700 15px Fredoka;color:var(--ink)}
+.railStat small{font-size:10px;font-weight:600;opacity:.65;letter-spacing:.03em}
+.railCard{padding:16px;border-radius:var(--radius-md);background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow-pink)}
+.railHead{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:12px}
+.railHead b{font:600 15px Fredoka;color:var(--ink)}
+.railHead a{font:700 12px 'DM Sans';color:var(--pink-text);text-decoration:none}
+.railGoal{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+/* min-width tetap: tanpa itu bilah progres tiap baris mulai di titik berbeda
+   begitu angkanya naik dari 1 ke 2 digit, dan dua barisnya terlihat miring. */
+.railGoal span{flex:none;min-width:76px;font:700 12px 'DM Sans';color:var(--muted)}
+.railBig{display:flex;align-items:baseline;gap:8px;margin:0;font:700 30px Fredoka;color:var(--pink-text);line-height:1.1}
+.railBig small{font:600 12px 'DM Sans';color:var(--muted)}
+.railNote{margin:2px 0 0;font-size:11.5px;line-height:1.5;color:var(--muted)}
+/* Batang aktivitas 7 hari. Tiap hari punya TALANG setinggi penuh (.railDayBar) dan
+   isian yang tingginya dari inline style — tanpa talang, hari tanpa XP hilang sama
+   sekali dan deretnya terbaca seperti data yang bolong, bukan hari yang kosong.
+   Tinggi isian dihitung di JSX; jangan pasang height untuk elemen i di sini. */
+.railWeek{display:flex;align-items:flex-end;justify-content:space-between;gap:5px;margin:14px 0 12px}
+.railDay{display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;min-width:0}
+.railDayBar{display:flex;align-items:flex-end;width:100%;max-width:24px;height:38px;border-radius:7px;background:color-mix(in srgb,var(--pink) 13%,transparent);overflow:hidden}
+.railDayBar i{display:block;width:100%;border-radius:7px;background:color-mix(in srgb,var(--pink) 48%,transparent)}
+.railDay small{font-size:9.5px;font-weight:700;color:var(--muted);letter-spacing:.02em}
+.railDayNow .railDayBar{background:color-mix(in srgb,var(--pink) 22%,transparent)}
+.railDayNow .railDayBar i{background:var(--pink)}
+.railDayNow small{color:var(--pink-text)}
+
+@media (min-width:1100px){
+  /* Header dimatikan di SEMUA rute: mereknya sudah dibawa sidebar dan runtun/XP
+     pindah ke .railStats. Aturan header desktop di blok 960px (sticky + padding
+     inline berhitung :has()) sengaja DIBIARKAN — masih dipakai di 960-1099px. */
+  header{display:none}
+  .app{padding-right:340px}
+  /* Tanpa header, isi halaman mepet tepi atas jendela. 24px = padding-top rail,
+     supaya baris statistik dan judul halaman berangkat dari garis yang sama. */
+  .app>main{padding-top:24px}
+  .railBar{
+    display:flex;flex-direction:column;gap:14px;position:fixed;top:0;right:0;bottom:0;width:340px;
+    padding:24px 24px 24px 16px;overflow-y:auto;z-index:29;
+    background:color-mix(in srgb,var(--card) 70%,transparent);backdrop-filter:blur(16px);
+    border-left:1px solid var(--line);box-shadow:-8px 0 28px -18px rgba(255,120,170,.45);
+  }
+  /* Pil runtun beranda mati begitu rail muncul: angkanya SAMA persis dengan
+     .railStat pertama, dan dua-duanya kelihatan sekaligus di layar yang sama. */
+  .homeTop{display:none}
+  /* Landing & login tidak punya sesi: tidak ada angka untuk ditampilkan. */
+  .appBare{padding-right:0}
+}

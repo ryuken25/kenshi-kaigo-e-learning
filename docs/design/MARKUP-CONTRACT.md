@@ -182,7 +182,38 @@ jambu yang nyaris kembar (`#9f8191 #c2a7bb #a78e9d #a58d9b #b596a5 #c48fa3
 Kanvas `DesktopDashboard` tidak punya header — mereknya dibawa sidebar, dan runtun
 harian pindah ke `.homeTop`. Karena itu `Shell` memasang kelas `appHome` di `.app`
 saat rutenya `/belajar`, dan `@media (min-width:960px)` menyembunyikan
-`.appHome>header`. Halaman lain tetap berheader, sesuai kanvas `DesktopMateri`.
+`.appHome>header`.
+
+**Sejak bilah kanan ada, aturan itu cuma berlaku di pita 960–1099px.** Mulai
+1100px `header` disembunyikan di SEMUA rute dan `.railBar` yang membawa runtun,
+XP, jumlah level, target harian, serta batang aktivitas tujuh hari — lihat bagian
+berikutnya. `.homeTop` ikut dimatikan di sana karena angkanya kembar dengan
+`.railStat` pertama.
+
+## Bilah kanan (`.railBar`, >=1100px)
+
+Rujukan tata letaknya rail kanan Duolingo. Di sana rail-nya `position:sticky` di
+dalam `flex row-reverse`; di sini `position:fixed` di tepi kanan, persis seperti
+sidebar, dan `.app` menyisakan tempatnya lewat `padding-right:340px`. Alasannya
+mengikat: `{children}` HARUS tetap anak langsung `.app`, karena belasan aturan di
+`routing.css` menyasar `.app>main.page` / `.app>main.skillPage` / dst. Begitu
+`main` dibungkus div pemisah untuk bikin flex row, semua aturan itu mati diam-diam
+dan tiap rute kehilangan cap lebar bacanya tanpa error apa pun.
+
+Ambangnya 1100px, bukan 960px: sidebar 268 + rail 340 menyisakan <500px untuk isi
+di bawah itu. Di 960–1099px rail tidak muncul dan header lama tetap tampil, jadi
+tidak ada lebar yang kehilangan runtun & XP sekaligus.
+
+Isi rail: `.railStats` (tiga pil — runtun, XP, level), lalu kartu `.railCard`.
+Semua angkanya dari respons `/api/progress` yang SUDAH ditarik `ProgressContext`;
+tidak ada fetch baru. `recentActivity` cuma 14 hari terakhir — cukup untuk "hari
+ini" dan "sejak Senin", dan tanggalnya dibandingkan sebagai string `YYYY-MM-DD`
+zona Asia/Tokyo, BUKAN selisih milidetik (lihat bug runtun-reset-tiap-pagi).
+Tujuh batang `.railDay` dibangkitkan sendiri dari Senin, bukan dipetakan langsung
+dari `recentActivity` — baris di sana hanya ada untuk hari yang punya aktivitas,
+jadi pemetaan langsung menggeser batangnya tiap ada hari bolong. Tiap hari punya
+talang `.railDayBar` setinggi penuh supaya hari nol XP terbaca sebagai kosong,
+bukan sebagai data hilang.
 
 `main` mengisi **seluruh** sisa layar di kanan sidebar (padding 32px), bukan kolom
 1100px. Halaman yang memang butuh kolom baca memasang capnya sendiri
