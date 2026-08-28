@@ -78,12 +78,14 @@
 .friendInfo b{font:600 14.5px Fredoka;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .friendInfo small{color:var(--muted);font-size:11px}
 .friendActions{display:flex;gap:6px;flex:none;margin-left:auto}
-.friendActions button{min-height:44px;padding:9px 12px;border-radius:12px;font-size:12px;font-weight:700;background:var(--pink-pale);color:var(--pink-text)}
+.friendActions button{min-height:44px;min-width:44px;padding:9px 12px;border-radius:12px;font-size:12px;font-weight:700;background:var(--pink-pale);color:var(--pink-text)}
 .friendActions button.ghost{background:var(--card);border:1px solid var(--line);color:var(--muted)}
 .friendActions button.danger{background:var(--bad-bg);color:var(--bad)}
 .emptyState{text-align:center;padding:34px 20px;color:var(--muted);font-size:13px;line-height:1.6}
 .emptyState span{font-size:34px;display:block;margin-bottom:10px}
-.resultCard{border:1px solid var(--line);background:var(--pink-paler);border-radius:var(--radius-md);padding:13px 14px;margin-bottom:14px;display:flex;align-items:center;gap:11px}
+/* flex-wrap sama seperti .friendRow: tanpa ini kolom nama di kartu hasil pencarian
+   tinggal 34px di 320px dan handle-nya tercetak menimpa tombol. */
+.resultCard{border:1px solid var(--line);background:var(--pink-paler);border-radius:var(--radius-md);padding:13px 14px;margin-bottom:14px;display:flex;flex-wrap:wrap;align-items:center;gap:11px}
 .resultCard .friendInfo small{display:block}
 .relPill{font-size:9.5px;font-weight:700;letter-spacing:.5px;border-radius:999px;padding:3px 9px;text-transform:uppercase;flex:none}
 .relPill.friend{background:var(--ok-bg);color:var(--ok)}

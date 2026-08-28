@@ -42,19 +42,19 @@
      (blok :root[data-mode=dark] di themes.css). Warna status sengaja TIDAK ikut
      tema — hijau benar / merah salah / amber preview adalah arti, bukan merek. */
   --faint:#9f8191;
-  --ok:#4cba89;--ok-line:#63c89a;--ok-bg:#effcf5;--ok-strong:#3bbf72;--ok-soft:#5fd68a;
+  --ok:#217a52;--ok-line:#63c89a;--ok-bg:#effcf5;--ok-strong:#3bbf72;--ok-soft:#5fd68a;
   --bad:#e0577c;--bad-line:#f4849b;--bad-bg:#fff1f3;--bad-ink:#8a3049;--bad-soft:#ff8fa8;--bad-strong:#ff5c8a;
   --warn-bg:#fff3e2;--warn-line:#f4dcb8;--warn-ink:#a1723f;--warn-pill:#b98a6d;--warn-lock:#c9a06d;
   --amber-1:#fff9e8;--amber-2:#fff3d3;--amber-line:#f8e3b4;--amber-line-2:#f6dfa3;
-  --amber-ink:#8a6a3a;--amber-head:#9a6b1f;--amber-soft:#b8934a;--amber-on:#ffdd8f;--amber-on-ink:#7a5310;
+  --amber-ink:#8a6a3a;--amber-head:#9a6b1f;--amber-soft:#8a6a3a;--amber-on:#ffdd8f;--amber-on-ink:#7a5310;
   --amber-link:#987744;--amber-mark:#ffe29b;
   --node-1:#ffe27a;--node-2:#ffc94d;--node-sh:#d9a53a;--node-ink:#7a4a15;
-  --node-todo-1:#ffd2e4;--node-todo-2:#ff9fbf;--node-todo-sh:#e0729a;--node-todo-ink:#ffffff;
-  --node-ms-1:#ffb3d4;--node-ms-2:#ff6fa0;--node-ms-sh:#d64d80;
-  --node-lock-1:#f1e4ea;--node-lock-2:#e6d5df;--node-lock-sh:#d3bcc8;--node-lock-ink:#b79aa9;
+  --node-todo-1:#ffd2e4;--node-todo-2:#ff9fbf;--node-todo-sh:#e0729a;--node-todo-ink:#7a2547;
+  --node-ms-1:#ffb3d4;--node-ms-2:#ff6fa0;--node-ms-sh:#d64d80;--node-ms-ink:#5c1633;
+  --node-lock-1:#f1e4ea;--node-lock-2:#e6d5df;--node-lock-sh:#d3bcc8;--node-lock-ink:#66505f;
   --lav-ink:#7d6a9a;--lav-strong:#9b7ae0;--lav-link:#9b5fd6;--lav-line:#e4d3ff;--lav-badge:#8354c9;
-  --tint-underline:#ff78a3;--tint-listen:#ff7393;--tint-listen-line:#f5dbe4;--tint-listen-bg:#fff7fa;
-  --info:#3f7fb0;--info-bg:#e3f0fa;--neutral-bg:#f0f0f2;--neutral-ink:#8a8a94;
+  --tint-underline:#ff78a3;--tint-listen:#c62f57;--tint-listen-line:#f5dbe4;--tint-listen-bg:#fff7fa;
+  --info:#3f7fb0;--info-bg:#e3f0fa;--neutral-bg:#f0f0f2;--neutral-ink:#63636b;
   /* Aksen SEBAGAI TEKS. --pink-deep (#ff5c9a) di atas putih cuma 2,90:1 dan di
      atas --pink-pale 2,41:1 — jauh di bawah ambang 4,5:1 yang dipakai produk.
      Warna itu tetap dipakai untuk isian, garis, dan ikon (di sana kontras teks
@@ -113,7 +113,9 @@ header{
 .topStats span{display:flex;align-items:center;gap:4px;background:var(--pink-pale);padding:6px 9px;border-radius:999px;white-space:nowrap}
 .topStats .statLabel{font-size:9px;font-weight:600;opacity:.6;letter-spacing:.03em}
 .topStats .xpStat{display:none}
-@media (min-width:420px){.topStats .xpStat{display:flex}}
+/* 460px, bukan 420: pil XP muncul terlalu dini dan menekan balik kolom merek,
+   sehingga 360/402 muat sementara 444 justru terpotong. */
+@media (min-width:460px){.topStats .xpStat{display:flex}}
 
 /* ---------- mascot (real Hello Kitty images) ---------- */
 .mascotImg{position:relative;display:inline-flex;align-self:center;filter:drop-shadow(0 14px 18px rgba(255,150,190,.45));animation:float 3.2s ease-in-out infinite}
@@ -138,7 +140,7 @@ header{
   display:flex;justify-content:space-between;align-items:center;gap:12px;
   padding:32px 22px 22px;position:relative;
 }
-.eyebrow{font-size:11px;letter-spacing:1.6px;color:var(--pink);font-weight:700;margin:0 0 10px;text-transform:uppercase}
+.eyebrow{font-size:11px;letter-spacing:1.6px;color:var(--pink-text);font-weight:700;margin:0 0 10px;text-transform:uppercase}
 .welcome h1{font:600 38px/1.1 Fredoka;margin:0;letter-spacing:-1px}
 /* v8: h1 beranda sekarang kutipan harian — sering full-kanji, jadi pakai font JP
    & ukuran lebih kecil dari slogan Fredoka. Spec 0-2-0 sengaja mengalahkan
