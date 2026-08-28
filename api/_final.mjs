@@ -23,3 +23,15 @@ export function finalXpFor({ correct, isRepeat }) {
   const full = Math.max(2, Math.round((correct / PER_PART) * 20));
   return isRepeat ? Math.max(2, Math.round(full * 0.2)) : full;
 }
+
+// Review per-soal untuk layar hasil. Bentuk entri SENGAJA cuma {no, chosen, correct}:
+// kunci jawaban, teks opsi benar, maupun indeksnya TIDAK BOLEH ikut keluar — soal yang
+// salah harus tetap salah sampai user mencoba ulang. Soal tak terjawab / nilai di luar
+// '1'..'5' → chosen null, correct false. Selalu terurut menurut nomor soal global.
+export function buildReview(questions, answers) {
+  const src = answers && typeof answers === 'object' && !Array.isArray(answers) ? answers : {};
+  return (Array.isArray(questions) ? questions : []).map(q => {
+    const v = src[String(q.no)], chosen = ['1', '2', '3', '4', '5'].includes(v) ? v : null;
+    return { no: q.no, chosen, correct: chosen !== null && chosen === q.answer };
+  }).sort((a, b) => a.no - b.no);
+}

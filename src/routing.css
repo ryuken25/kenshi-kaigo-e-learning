@@ -370,3 +370,33 @@
 .finalQuizNav button{flex:1;min-height:44px;padding:12px 14px;border-radius:14px;border:1px solid var(--line);background:var(--card);font-weight:600}
 .finalQuizNav button:disabled{opacity:.45}
 
+
+/* ---------- review hasil ujian akhir ----------
+   Kunci soal yang SALAH sengaja tidak ditampilkan: tujuannya user mengerjakan
+   ulang bagiannya, bukan membaca jawaban dari layar hasil. Warna memakai token
+   status (--ok/--bad/--neutral), jadi ikut mode gelap tanpa aturan tambahan. */
+.finalReview{margin:18px 0 6px;padding:16px;border:1px solid var(--line);border-radius:var(--radius-lg);background:var(--card);box-shadow:var(--shadow-pink);text-align:left}
+.finalReviewHead{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:6px;margin-bottom:10px}
+.finalReviewHead b{font:600 16px Fredoka;color:var(--ink)}
+.finalReviewHead span{font-size:12px;color:var(--muted);font-weight:600}
+.finalReviewLegend{list-style:none;display:flex;flex-wrap:wrap;gap:12px;padding:0;margin:0 0 12px;font-size:11.5px;font-weight:700;color:var(--muted)}
+.finalReviewLegend li{display:flex;align-items:center;gap:6px}
+.finalReviewLegend li::before{content:'';width:11px;height:11px;border-radius:4px;flex:none}
+.finalReviewLegend .ok::before{background:var(--ok)}
+.finalReviewLegend .bad::before{background:var(--bad)}
+.finalReviewLegend .skip::before{background:var(--neutral-ink)}
+/* auto-fill minmax: 25 petak jadi 2 kolom di 320px dan mengisi lebar di desktop,
+   tanpa breakpoint terpisah. */
+.finalReviewGrid{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px}
+.finalReviewItem{min-height:56px;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:8px 10px;border-radius:14px;border:1px solid var(--line);background:var(--pink-paler);min-width:0}
+.finalReviewItem b{font:700 15px Fredoka;line-height:1.1}
+.finalReviewItem span{font-size:10.5px;font-weight:600;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.finalReviewItem.ok{border-color:var(--ok-line);background:var(--ok-bg)}
+.finalReviewItem.ok b{color:var(--ok)}
+.finalReviewItem.bad{border-color:var(--bad-line);background:var(--bad-bg)}
+.finalReviewItem.bad b{color:var(--bad)}
+.finalReviewItem.skip{background:var(--neutral-bg)}
+.finalReviewItem.skip b{color:var(--neutral-ink)}
+.finalReviewNote{margin:12px 0 0;font-size:12px;line-height:1.55;color:var(--muted)}
+.finalResultNav{display:flex;flex-direction:column;gap:10px;margin-top:18px}
+@media(min-width:600px){.finalResultNav{flex-direction:row}.finalResultNav a{flex:1}}

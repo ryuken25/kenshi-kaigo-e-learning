@@ -2,7 +2,7 @@ import { db } from './_db.mjs';
 import { requireUser, recomputeAllXp } from './_auth.mjs';
 import { reportClientAchievements } from './_achievements.mjs';
 import finalData from '../src/content/final/index.js';
-import { PARTS, PER_PART, UUID_RE, sanitizeAnswers, finalXpFor } from './_final.mjs';
+import { PARTS, PER_PART, UUID_RE, sanitizeAnswers, finalXpFor, buildReview } from './_final.mjs';
 
 // GET  /api/final              — progress ujian semua tahun {progress, prefMode}.
 // POST /api/final              — submit satu bagian (25 soal).
@@ -17,6 +17,8 @@ import { PARTS, PER_PART, UUID_RE, sanitizeAnswers, finalXpFor } from './_final.
 //   (replay mengembalikan response cache, tidak pernah mendobel attempts/XP).
 // - XP ujian disimpan di final_progress.xp_earned; total_xp direcompute gabungan
 //   (recomputeAllXp) dan dicatat ke app_users supaya leaderboard konsisten.
+// - `review` (GET & POST) cuma {no, chosen, correct} — buildReview di _final.mjs.
+//   Kunci jawaban TIDAK PERNAH dikirim ke client, termasuk untuk soal yang salah.
 const YEARS = Object.keys(finalData).map(Number);
 
 // Achievement ujian dihitung server sekarang (final_progress bisa diverifikasi).
@@ -47,12 +49,16 @@ export default async function handler(req, res) {
 
     if (req.method === 'GET') {
       res.setHeader('Cache-Control', 'private, no-store');
-      const rows = await sql`SELECT year, part, mode, correct_count, answered, best_correct, attempts, xp_earned, last_attempt FROM final_progress WHERE user_id = ${user.id}`;
+      const rows = await sql`SELECT year, part, mode, correct_count, answered, best_correct, attempts, xp_earned, answers, last_attempt FROM final_progress WHERE user_id = ${user.id}`;
       const progress = {};
       for (const r of rows) {
+        // review dihitung ULANG dari kolom answers (bukan disimpan), supaya layar hasil
+        // tetap benar setelah refresh. answers = jawaban attempt TERBAIK (lihat upsert POST).
+        const qs = finalData[r.year] ? finalData[r.year].questions.slice((r.part - 1) * PER_PART, r.part * PER_PART) : [];
         (progress[r.year] ||= {})[r.part] = {
           best: r.best_correct, answered: r.answered, attempts: r.attempts,
           mode: r.mode, xp: r.xp_earned, lastAttempt: r.last_attempt,
+          review: buildReview(qs, r.answers),
         };
       }
       return res.status(200).json({ progress, prefMode: user.pref_final_mode === 'exam' ? 'exam' : 'practice' });
@@ -127,6 +133,9 @@ export default async function handler(req, res) {
         best: row.best_correct, attempts: row.attempts, mode: row.mode,
         score: Math.round((row.best_correct / PER_PART) * 100),
         xpDelta, totalXp, newAchievements, saved: true,
+        // review attempt ini (dari clean, bukan row.answers) — ikut masuk cache response
+        // di final_attempts, jadi replay attemptId yang sama mengembalikan review identik.
+        review: buildReview(qs, clean),
       };
       await sql`INSERT INTO final_attempts(attempt_id, user_id, year, part, response) VALUES (${attemptId}, ${user.id}, ${year}, ${part}, ${JSON.stringify(responseBody)})`;
       return res.status(200).json(responseBody);
