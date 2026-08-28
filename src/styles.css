@@ -470,20 +470,18 @@ a.homeCard .homeCardArt{background:var(--lavender)}
   .homeCards{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-left:32px;margin-right:32px}
   .progressSummary{margin-left:32px;margin-right:32px}
   .homeCard{min-height:118px}
-  /* Karakter hero keluar dari alur seperti di kanvas: tanpa ini blok sambutan
-     setinggi 240px dan kartu-kartu terdorong jauh ke bawah lipatan. */
-  .homeHeroArt{position:absolute;right:26px;top:-12px;z-index:1;pointer-events:none}
-  /* Karakter tetap seukuran kanvas (240px); yang dilebarkan RUANGNYA. Membatasi
-     tingginya memang menghapus tumpang tindih tapi lebarnya ikut turun 42%. */
-  /* Tinggi ruang hero mengikuti RASIO aset tiap skin, bukan satu angka untuk semua.
-     idle.png: momo 147x199, yuki 168x161, luna 144x230 — di lebar 240px itu 324,9 /
-     230,0 / 383,3px. Satu angka 318px pas untuk momo, menyisakan 100px udara kosong
-     untuk yuki, dan MASIH ditembus luna (kelincinya menutupi sepertiga chevron
-     Ujian Akhir). Rumusnya 240 * (tinggi/lebar aset) - 12 (offset top hero).
-     data-char berisi SKIN, bukan id DB — lihat applyChar di src/lib/social.jsx. */
-  .welcome{min-height:318px}
-  :root[data-char=yuki] .welcome{min-height:224px}
-  :root[data-char=luna] .welcome{min-height:376px}
+  /* Karakter hero DIHILANGKAN di desktop (permintaan user, 2026-08-28).
+     Dulu ia position:absolute supaya keluar dari alur — dan justru itu masalahnya:
+     h1 kutipan harian tidak tahu ia ada, jadi kutipan yang panjang tersembunyi di
+     BAWAH gambarnya. Ukuran kutipan berubah tiap hari (dailyQuote deterministik),
+     jadi tumpang tindihnya datang-pergi dan tidak pernah kelihatan saat mengetes
+     satu kutipan saja.
+     Rangkaian min-height per skin yang dulu ada di sini ikut dibuang: satu-satunya
+     gunanya memesan ruang untuk karakter ini, jadi tanpa karakternya ia cuma
+     menyisakan 318-376px udara kosong di atas lipatan.
+     Di MOBILE karakternya tetap ada — di sana .welcome itu flex row dan
+     .homeHeroArt jadi item biasa di sebelah teks, tidak pernah menimpanya. */
+  .homeHeroArt{display:none}
   /* Kartu bab versi desktop: kotak ikon 96px, judul 21px — ukuran kanvas
      DesktopDashboard. Di mobile tetap 56px/16px seperti kanvas Main. */
   /* align-items:flex-start + chevron absolut = anatomi kanvas: kotak ikon menempel
