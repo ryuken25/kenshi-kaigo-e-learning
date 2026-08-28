@@ -17,7 +17,26 @@ export default async function handler(req, res) {
     if (!clientId) return res.status(400).json({ error: 'invalid_input', message: 'clientId required' });
     if (entries.length > 300) return res.status(400).json({ error: 'invalid_input', message: 'too many entries' });
 
-    const already = await sql`SELECT 1 FROM progress_merges WHERE client_id = ${clientId}`;
+    // Idempotensi di-scope ke USER, bukan cuma client_id. Dua alasan, dua-duanya nyata:
+    //
+    // 1. KEBOCORAN LINTAS-AKUN. client_id itu kaigoKittyClientId di localStorage —
+    //    per-PERAMBAN, bukan per-akun, dan tidak pernah dihapus. Satu laptop berdua:
+    //    A login & merge sukses; B belajar sebagai tamu lalu login -> baris client_id
+    //    sudah ada -> B dijawab alreadyMerged. Klien hanya menghapus GUEST_KEY kalau
+    //    !alreadyMerged, jadi data B ditolak lagi di SETIAP login berikutnya, selamanya,
+    //    tanpa satu pun galat. Sekarang B dinilai lewat user_id miliknya sendiri.
+    //
+    // 2. KLAIM TANPA BATAS. Endpoint ini memang tidak bisa memverifikasi data tamu —
+    //    itu sifat merge. Yang tidak boleh adalah mengulanginya: dengan client_id acak
+    //    baru, siapa pun bisa mengirim 152 level bernilai 100 berkali-kali. Dibatasi
+    //    SEKALI PER USER, permukaan klaimnya jadi terbatas dan sekali seumur akun.
+    //
+    // client_id itu PRIMARY KEY (001_init.sql:175), jadi memfilter dengan
+    // `OR client_id = ...` TETAP memblokir user kedua — barisnya cuma bisa dimiliki
+    // satu orang. Karena itu kuncinya murni user_id, dan barisnya disimpan per
+    // PASANGAN (klien, user) lewat client_id gabungan di bawah. Baris lama yang
+    // client_id-nya masih mentah tetap melindungi pemiliknya lewat user_id.
+    const already = await sql`SELECT 1 FROM progress_merges WHERE user_id = ${user.id}`;
     if (already[0]) {
       const totalXp = await recomputeAllXp(sql, user.id);
       return res.status(200).json({ alreadyMerged: true, totalXp, merged: 0, skipped: 0 });
@@ -54,7 +73,13 @@ export default async function handler(req, res) {
       merged++;
     }
 
-    await sql`INSERT INTO progress_merges(client_id, user_id, entries_count) VALUES (${clientId}, ${user.id}, ${merged})`;
+    // client_id gabungan "<klien>::<user>": PK-nya per-baris, jadi dua akun yang
+    // memakai peramban yang sama masing-masing bisa punya catatan merge sendiri.
+    // ON CONFLICT DO NOTHING supaya percobaan ulang setelah 500 di tengah loop
+    // (lihat validasi entri di atas) tidak berakhir jadi galat kedua.
+    await sql`INSERT INTO progress_merges(client_id, user_id, entries_count)
+      VALUES (${clientId + '::' + user.id}, ${user.id}, ${merged})
+      ON CONFLICT (client_id) DO NOTHING`;
 
     const totalXp = await recomputeAllXp(sql, user.id);
     await sql`UPDATE app_users SET total_xp = ${totalXp}, updated_at = now() WHERE id = ${user.id}`;

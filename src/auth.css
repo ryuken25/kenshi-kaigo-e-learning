@@ -21,5 +21,5 @@
 .landingCard h1{font:600 26px/1.25 Fredoka;margin:8px 0 14px;color:var(--ink)}
 .landingPoints{list-style:none;padding:0;margin:0 0 18px;display:grid;gap:7px;text-align:left;font-size:13px;color:var(--muted)}
 .landingPoints li{padding-left:22px;position:relative}
-.landingPoints li:before{content:'🌸';position:absolute;left:0}
+.landingPoints li:before{content:'✿';color:var(--pink);position:absolute;left:0}
 .landingNote{font-size:11px;color:var(--faint);margin-top:12px}

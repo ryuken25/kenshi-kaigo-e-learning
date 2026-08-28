@@ -22,7 +22,7 @@
   --soft:#fff7fb;--card:#ffffff;--line:#f6def0;
   --shadow-pink:0 10px 30px -8px rgba(255,110,160,.35);
   --shadow-pink-lg:0 18px 45px -10px rgba(255,110,160,.4);
-  --kk-furi:#8a6e7c;--kk-pink-300:#ff9ec1;--kk-pink-50:#fff4f9;
+  --kk-furi:#745c68;--kk-pink-300:#ff9ec1;--kk-pink-50:#fff4f9;
 }
 :root body,:root[data-theme=momo] body{
   background:
@@ -41,7 +41,7 @@
   --soft:#f6fbff;--card:#ffffff;--line:#d8e9f7;
   --shadow-pink:0 10px 30px -8px rgba(80,160,220,.32);
   --shadow-pink-lg:0 18px 45px -10px rgba(80,160,220,.38);
-  --kk-furi:#5d7d99;--kk-pink-300:#8ecdf0;--kk-pink-50:#f0f9ff;
+  --kk-furi:#4a647a;--kk-pink-300:#8ecdf0;--kk-pink-50:#f0f9ff;
 }
 :root[data-theme=yuki] body{
   background:
@@ -60,13 +60,36 @@
   --soft:#faf7ff;--card:#ffffff;--line:#e3dbf7;
   --shadow-pink:0 10px 30px -8px rgba(120,90,200,.32);
   --shadow-pink-lg:0 18px 45px -10px rgba(120,90,200,.38);
-  --kk-furi:#7d719f;--kk-pink-300:#b79bf5;--kk-pink-50:#f6f1ff;
+  --kk-furi:#62587c;--kk-pink-300:#b79bf5;--kk-pink-50:#f6f1ff;
 }
 :root[data-theme=luna] body{
   background:
     radial-gradient(circle at 10% 0%, #e9deff 0%, transparent 45%),
     radial-gradient(circle at 90% 10%, #f8e8f8 0%, transparent 40%),
     linear-gradient(180deg,#f9f6ff,#fffcff 60%);
+}
+
+
+/* Token simpul/tint/lavender versi TEMA BIRU TERANG.
+   Sebelumnya token-token ini cuma ada di :root (default momo) dan di blok
+   [data-mode=dark] — tidak pernah di blok tema terang. Akibatnya user bertema
+   biru melihat SELURUH bulatan level di /section/N berwarna merah muda, garis
+   bawah istilah merah muda, dan tombol dengar berlatar merah muda. Ini kebocoran
+   terluas yang tersisa sesudah sapuan rgba, dan tidak akan pernah tertangkap
+   pencarian literal karena literalnya duduk di definisi token, bukan di aturan. */
+:root[data-theme=yuki]{
+  --node-todo-1:#d2e8fa;--node-todo-2:#8dc4ec;--node-todo-sh:#5d97c4;--node-todo-ink:#14364f;
+  --node-ms-1:#b3d9f5;--node-ms-2:#6fb0e6;--node-ms-sh:#4a86b8;--node-ms-ink:#0e2c44;
+  --node-lock-1:#e4ebf1;--node-lock-2:#d4dee6;--node-lock-sh:#bdcad4;--node-lock-ink:#546672;
+  --lav-ink:#5f7a99;--lav-strong:#4f93d6;--lav-link:#2f7fc4;--lav-line:#cfe3f5;--lav-badge:#2b6ea8;
+  --tint-underline:#4d9fd8;--tint-listen:#1d5f8a;--tint-listen-line:#d3e6f3;--tint-listen-bg:#f5fafd;
+}
+:root[data-theme=luna]{
+  --node-todo-1:#e2d9f8;--node-todo-2:#b49aee;--node-todo-sh:#8a6cc4;--node-todo-ink:#2f1f52;
+  --node-ms-1:#d0bff5;--node-ms-2:#9b7ae0;--node-ms-sh:#7355b8;--node-ms-ink:#241645;
+  --node-lock-1:#e9e3f1;--node-lock-2:#dbd2e7;--node-lock-sh:#c6bad4;--node-lock-ink:#5e5372;
+  --lav-ink:#6f5f96;--lav-strong:#8f6fdc;--lav-link:#7a52c8;--lav-line:#ded0f7;--lav-badge:#6a45ae;
+  --tint-underline:#9d8bf0;--tint-listen:#5b3fa0;--tint-listen-line:#e0d6f5;--tint-listen-bg:#faf7ff;
 }
 
 /* ============================================================================

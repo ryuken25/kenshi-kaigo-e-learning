@@ -31,10 +31,21 @@ export default async function handler(req, res) {
       if (!finalData[year] || !Number.isInteger(part) || part < 1 || part > PARTS ||
           !Number.isInteger(best) || best < 0 || best > PER_PART ||
           !Number.isInteger(answered) || answered < 0 || answered > PER_PART || !clean) continue;
+      // best_correct DIHITUNG ULANG dari jawaban, tidak pernah dipercaya dari klien.
+      // Bahannya sudah ada di sini — `clean` dan bank soal deterministik — persis yang
+      // dipakai POST /api/final. Tanpa ini, satu request berisi answers:{} dan best:25
+      // menulis best_correct=25 tanpa satu jawaban benar; submit berikutnya membaca
+      // GREATEST(25,...) lalu membuka 'perfect-part' dan menampilkan hasil 100%.
+      // (`!clean` tidak menyaring apa pun: sanitizeAnswers mengembalikan {} untuk objek
+      // kosong, dan {} itu truthy.)
+      const qsMerge = finalData[year].questions.slice((part - 1) * PER_PART, part * PER_PART);
+      let benar = 0;
+      for (const q of qsMerge) if (clean[String(q.no)] === q.answer) benar++;
+      const terjawab = Object.keys(clean).length;
       const mode = e.mode === 'exam' ? 'exam' : 'practice';
       await sql`
         INSERT INTO final_progress(user_id, year, part, mode, correct_count, answered, best_correct, attempts, xp_earned, answers, first_done_at, last_attempt)
-        VALUES (${user.id}, ${year}, ${part}, ${mode}, ${best}, ${answered}, ${best}, 1, 0, ${JSON.stringify(clean)}, now(), now())
+        VALUES (${user.id}, ${year}, ${part}, ${mode}, ${benar}, ${terjawab}, ${benar}, 1, 0, ${JSON.stringify(clean)}, now(), now())
         ON CONFLICT (user_id, year, part) DO UPDATE SET
           best_correct = GREATEST(final_progress.best_correct, EXCLUDED.best_correct),
           correct_count = GREATEST(final_progress.correct_count, EXCLUDED.correct_count),

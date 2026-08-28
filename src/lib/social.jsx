@@ -137,10 +137,15 @@ export const themeSkinOf=(k)=>THEME_SKIN[k]||'momo';
 // Saran tema per gender (spec user: cowo → biru/sora, cewe → pink).
 // Cuma SARAN — user bebas pilih tema lain di step berikutnya.
 export const GENDERS = [
-  {value:'female',      label:'Cewek',        emoji:'🌸', theme:'kitty'},
-  {value:'male',        label:'Cowok',        emoji:'⛅', theme:'sora'},
-  {value:'other',       label:'Lainnya',      emoji:'🌈', theme:'matcha'},
-  {value:'prefer_not',  label:'Rahasia dong', emoji:'🤫', theme:'kitty'},
+  {value:'female',      label:'Cewek',        emoji:'✿', theme:'kitty'},
+  {value:'male',        label:'Cowok',        emoji:'☁', theme:'sora'},
+  // theme:'yozora', bukan 'matcha'. THEMES cuma menawarkan kitty/sora/yozora, jadi
+  // user yang memilih "Lainnya" dulu mendapat nilai yang TIDAK ADA di pemilih tema
+  // sidebar — tidak satu pun titik terlihat terpilih olehnya. 'matcha' tetap sah di
+  // DB (CHECK 007 mengizinkannya) dan THEME_SKIN tetap memetakannya ke palet luna,
+  // jadi akun lama yang terlanjur memakainya tidak terganggu sama sekali.
+  {value:'other',       label:'Lainnya',      emoji:'❃', theme:'yozora'},
+  {value:'prefer_not',  label:'Rahasia dong', emoji:'◌', theme:'kitty'},
 ];
 
 /* Avatar = karakter aktif (doc 49: karakter menentukan tampilan). Key lama
@@ -169,8 +174,8 @@ export function ToastProvider({children}){
     {children}
     <div className="achToastLayer" aria-live="polite">
       {items.map(a=>a._kind==='char'
-        ? <div className="achToast charToast" key={a._k}><img className="achToastChar" src={charPath(a.id,'happy')} alt=""/><div className="achToastCopy"><small>KARAKTER BARU TERBUKA 🌸</small><b>{CHARACTERS[a.id]?.name||a.id} sekarang bisa dipakai!</b><p>{CHARACTERS[a.id]?.desc||''}</p></div></div>
-        : <div className="achToast" key={a._k}><span className="achToastIcon">{a.icon}</span><div className="achToastCopy"><small>ACHIEVEMENT TERBUKA ✨</small><b>{a.nameId}</b><p>{a.descId}</p></div></div>)}
+        ? <div className="achToast charToast" key={a._k}><img className="achToastChar" src={charPath(a.id,'happy')} alt=""/><div className="achToastCopy"><small>KARAKTER BARU TERBUKA ✿</small><b>{CHARACTERS[a.id]?.name||a.id} sekarang bisa dipakai!</b><p>{CHARACTERS[a.id]?.desc||''}</p></div></div>
+        : <div className="achToast" key={a._k}><span className="achToastIcon">{a.icon}</span><div className="achToastCopy"><small>ACHIEVEMENT TERBUKA ✦</small><b>{a.nameId}</b><p>{a.descId}</p></div></div>)}
     </div>
   </ToastCtx.Provider>;
 }
@@ -178,21 +183,21 @@ export function ToastProvider({children}){
 export const useAchToast = ()=>useContext(ToastCtx);
 
 export const CATEGORY_META = {
-  learning: {label:'Belajar',   emoji:'📚'},
-  exam:     {label:'Ujian',     emoji:'📝'},
-  social:   {label:'Sosial',    emoji:'💌'},
-  glossary: {label:'Glosarium', emoji:'📖'},
-  meta:     {label:'XP',        emoji:'✨'},
+  learning: {label:'Belajar',   emoji:'▤'},
+  exam:     {label:'Ujian',     emoji:'✎'},
+  social:   {label:'Sosial',    emoji:'✉'},
+  glossary: {label:'Glosarium', emoji:'▤'},
+  meta:     {label:'XP',        emoji:'✦'},
 };
 
 // Tingkatan bingkai avatar (hadiah achievement). min = jumlah achievement.
 export const FRAME_META = {
   none:    {label:'Polos',   emoji:'',   min:0},
-  bronze:  {label:'Perunggu',emoji:'🥉', min:5},
-  silver:  {label:'Perak',   emoji:'🥈', min:12},
-  gold:    {label:'Emas',    emoji:'🥇', min:20},
-  sakura:  {label:'Sakura',  emoji:'🌸', min:30},
-  rainbow: {label:'Pelangi', emoji:'🌈', min:35},
+  bronze:  {label:'Perunggu',emoji:'③', min:5},
+  silver:  {label:'Perak',   emoji:'②', min:12},
+  gold:    {label:'Emas',    emoji:'①', min:20},
+  sakura:  {label:'Sakura',  emoji:'✿', min:30},
+  rainbow: {label:'Pelangi', emoji:'❃', min:35},
 };
 
 export const HANDLE_RE = /^[a-z0-9_]{4,14}$/;

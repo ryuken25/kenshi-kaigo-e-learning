@@ -27,11 +27,20 @@ const YEARS = Object.keys(finalData).map(Number);
 async function unlockExamAchievements(sql, userId, { correct }) {
   const ids = ['exam-first'];
   if (correct === PER_PART) ids.push('perfect-part');
-  const doneYears = await sql`SELECT year FROM final_progress WHERE user_id = ${userId} GROUP BY year HAVING COUNT(*) = ${PER_PART}`;
+  // PARTS (=5), BUKAN PER_PART (=25). PK final_progress adalah (user_id, year, part)
+  // dengan CHECK part BETWEEN 1 AND 5, jadi COUNT per tahun tidak pernah bisa lebih
+  // dari 5 — syarat "= 25" MUSTAHIL terpenuhi. Akibatnya 'exam-pass' dan
+  // 'exam-all-years' terkunci permanen apa pun yang dikerjakan user, walau ia
+  // menuntaskan kelima bagian dengan nilai sempurna.
+  const doneYears = await sql`SELECT year FROM final_progress WHERE user_id = ${userId} GROUP BY year HAVING COUNT(*) = ${PARTS}`;
   if (doneYears.length >= 1) ids.push('exam-pass');
   if (doneYears.length >= YEARS.length) ids.push('exam-all-years');
   const partsDone = await sql`SELECT COUNT(*)::int n FROM final_progress WHERE user_id = ${userId}`;
-  if (partsDone[0].n >= 30) ids.push('exam-gold'); // >=60% dari 50 bagian
+  // Total bagian nyata = 6 tahun x 5 = 30, bukan 50 seperti komentar lama. Jadi
+  // ambang 30 berarti 100%, bukan 60% — dan sesudah perbaikan di atas syaratnya
+  // jadi persis sama dengan exam-all-years, dua lencana untuk satu pencapaian.
+  // 60% dari 30 = 18.
+  if (partsDone[0].n >= 18) ids.push('exam-gold');
   return reportClientAchievements(sql, userId, ids);
 }
 

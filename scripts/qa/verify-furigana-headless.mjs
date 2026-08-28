@@ -38,7 +38,7 @@ const notes = [];
 const fail = (layer, msg) => fails.push(`[${layer}] ${msg}`);
 
 // ---------------------------------------------------------------- LAPIS 1: CSS statis
-const cssFiles = ['src/routing.css', 'src/styles.css', 'src/translation.css'].filter(f => fs.existsSync(path.join(ROOT, f)));
+const cssFiles = ['src/routing.css', 'src/styles.css', 'src/translation.css', 'src/themes.css', 'src/social.css', 'src/auth.css'].filter(f => fs.existsSync(path.join(ROOT, f)));
 if (!cssFiles.length) fail('css', 'tidak ada file CSS yang ditemukan — path berubah?');
 
 // Kumpulkan semua deklarasi jadi daftar {selector, prop, value, file, line} biar bisa di-query.
@@ -205,8 +205,8 @@ function buildTestHtml() {
   // Semua varian ukuran diuji: .fg--opt (kecil, dipakai di pilihan jawaban) sampai .fg--xl
   // (judul besar) — di sanalah bug melar/tabrakan biasanya muncul, bukan di ukuran default.
   const variants = ['', 'fg--opt', 'fg--tight', 'fg--lg', 'fg--xl'];
-  const blocks = variants.map(v => `<div class="fg ${v} kkProbe" lang="ja" data-mode="furigana" data-variant="${v || 'default'}">${tokens}</div>`).join('\n')
-    + '\n' + variants.map(v => `<div class="fg ${v} kkProbe" lang="ja" data-mode="furigana" data-variant="dense:${v || 'default'}">${dense}</div>`).join('\n')
+  const blocks = variants.map(v => `<div class="kkVarBox"><div class="fg ${v} kkProbe" lang="ja" data-mode="furigana" data-variant="${v || 'default'}">${tokens}</div></div>`).join('\n')
+    + '\n' + variants.map(v => `<div class="kkVarBox"><div class="fg ${v} kkProbe" lang="ja" data-mode="furigana" data-variant="dense:${v || 'default'}">${dense}</div></div>`).join('\n')
     // Struktur di bawah menyalin markup asli main.jsx:269 (term sheet) & main.jsx:277 +
     // main.jsx:281 (istilah di kartu materi). Kalau markup di main.jsx berubah, samakan di sini.
     + '\n' + REAL_CONTEXTS.map(t => `<div class="termSheetBackdrop"><section class="termSheet"><h2 class="fg fg--xl kkProbe" lang="ja" data-mode="furigana" data-variant="real:termSheet-h2">${ruby(t)}</h2></section></div>`).join('\n')
@@ -230,7 +230,16 @@ function buildTestHtml() {
   return `<!doctype html><html lang="id"><head><meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
   <style>${css}
-  body{margin:0;padding:16px;font-family:system-ui,sans-serif}</style></head><body>
+  body{margin:0;padding:16px;font-family:system-ui,sans-serif}
+  /* .kkVarBox meniru kontainer yang SELALU ada di aplikasi. .fg--xl tidak pernah
+     berdiri telanjang di produk: pemakainya cuma .termSheet h2 (main.jsx) dan
+     .japaneseTerm di dalam .richMateriCard, dua-duanya container-type:inline-size.
+     Token ruby itu nowrap dan tidak bisa pecah baris, jadi ukurannya diikat ke
+     LEBAR KOLOM lewat cqi — bukan lebar viewport, karena sidebar 268px + rail 340px
+     bikin vw menyesatkan. Tanpa pembungkus ini probe mengukur kombinasi yang tidak
+     ada di produk lalu melaporkan luber palsu; harness yang menyimpang dari JSX
+     menyesatkan ke DUA arah. 452px = lebar kolom materi di viewport 1100px. */
+  .kkVarBox{container-type:inline-size;max-width:452px}</style></head><body>
   <div class="app"><div id="furi">${blocks}</div>
   <div id="kanji" class="fg" lang="ja" data-mode="kanji">${tokens}</div>
   <div id="kanjiRef" class="fg" lang="ja" data-mode="furigana">${tokens}</div></div>
@@ -386,7 +395,7 @@ if (wantMeasure) {
   // padahal glyph-nya kepotong senyap oleh .app{overflow-x:hidden}.
   // 402px = iPhone 17 (1206px fisik / DPR 3). 444px = Poco F6 (1220px / DPR 2.75).
   // 1920px = desktop 1080p. Lebar CSS, bukan piksel fisik — itu yang dipakai clamp() berbasis vw.
-  const widths = [320, 360, 402, 444, 768, 1280, 1920]; // terkecil, mobile-first, iPhone 17, Poco F6, tablet, desktop, 1080p
+  const widths = [320, 360, 402, 444, 768, 1100, 1280, 1920]; // terkecil, mobile-first, iPhone 17, Poco F6, tablet, desktop, 1080p
   let m;
   try { m = await measure(widths); } catch (e) { m = { skipped: e.message }; }
   if (m.skipped) { measureUnavailable = m.skipped; }

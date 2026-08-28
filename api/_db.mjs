@@ -44,7 +44,25 @@ function pgPool(url){
       // yang tersimpan `"{\"a\":1}"` (skalar string) alih-alih objek — cache
       // idempotensi jadi sampah tanpa error apa pun. Serializer ini meloloskan
       // string apa adanya, objek tetap di-stringify: sama persis dengan neon.
-      types: { json: { to: 114, from: [114, 3802], serialize: x => typeof x === 'string' ? x : JSON.stringify(x), parse: x => JSON.parse(x) } },
+      types: {
+        json: { to: 114, from: [114, 3802], serialize: x => typeof x === 'string' ? x : JSON.stringify(x), parse: x => JSON.parse(x) },
+        // JEBAKAN PARITAS KELIMA — yang ini SUDAH MERUSAK DATA (2026-08-28).
+        // Kolom `date` (OID 1082) default-nya diurai jadi objek Date, dan dua driver
+        // memilih TENGAH MALAM yang berbeda: neon pakai zona lokal proses, postgres.js
+        // pakai UTC. Di server (TZ=UTC) keduanya sepakat, jadi bugnya tidur — tapi
+        // skrip yang jalan di laptop non-UTC tidak.
+        // Yang terjadi: backup-db.mjs dibaca lewat neon di mesin UTC+8, jadi tanggal
+        // 2026-08-11 jadi Date "2026-08-10T16:00:00.000Z"; JSON.stringify menyimpan
+        // string itu; restore-db.mjs meneruskannya ke kolom `date`; date_in Postgres
+        // memotong jamnya dan MENGABAIKAN zona -> tersimpan 2026-08-10. Mundur sehari,
+        // tanpa satu pun galat. Akibatnya applyStreak membaca runtun sebagai putus dan
+        // me-reset ke 1, XP mingguan salah hari, dan week_start berhenti jatuh di Senin.
+        // Dikembalikan sebagai STRING 'YYYY-MM-DD' apa adanya: tidak ada zona waktu yang
+        // terlibat sama sekali, jadi tidak ada yang bisa bergeser. Semua pembacanya sudah
+        // aman terhadap ini — applyStreak membungkusnya dengan new Date(), dan klien
+        // menormalkan lewat String(r.date).slice(0,10).
+        date: { to: 1082, from: [1082], serialize: x => x, parse: x => x },
+      },
     }));
     pools.set(url, p);
   }

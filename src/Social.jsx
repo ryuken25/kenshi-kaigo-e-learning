@@ -73,7 +73,7 @@ export function OnboardingWizard({onDone}){
 
   if(step==='handle') return <main className="page onboarding">
     <p className="obStep">Langkah 2 dari 2</p>
-    <h1>Buat handle-mu 🏷️</h1>
+    <h1>Buat handle-mu ▧️</h1>
     <p className="muted">ID unik ini dipakai teman untuk mencari & menambah kamu. Huruf kecil saja, 4-14 karakter. Bisa diganti tiap 7 hari.</p>
     <form className="handleForm" onSubmit={e=>{e.preventDefault();submitHandle();}}>
       <label>Handle<input value={handle} onChange={e=>setHandle(e.target.value.toLowerCase())} placeholder="cth: kenshi_satu" maxLength={14} autoFocus/></label>
@@ -85,7 +85,7 @@ export function OnboardingWizard({onDone}){
 
   return <main className="page onboarding">
     <p className="obStep">Langkah 1 dari 2</p>
-    <h1>Kenalan dulu yuk 👋</h1>
+    <h1>Kenalan dulu yuk ☞</h1>
     <p className="muted">Pilih teman belajarmu — karakter menentukan warna tema aplikasimu.</p>
     <div className="obChoices">
       {GENDERS.map(g=><button key={g.value} type="button" className={`obChoice tap ${gender===g.value?'on':''}`} onClick={()=>pickGender(g)}><span>{g.emoji}</span>{g.label}</button>)}
@@ -176,11 +176,11 @@ export function ProfileEditor(){
     </div>
     <div><p className="muted" style={{margin:'4px 0 8px'}}>Visibilitas di papan peringkat global</p>
       <div className="visibilityToggle">
-        <button className={p.visibility==='public'?'on':''} onClick={()=>p.visibility!=='public'&&save({visibility:'public'},'Visibilitas')}>🌐 Publik</button>
-        <button className={p.visibility==='private'?'on':''} onClick={()=>p.visibility!=='private'&&save({visibility:'private'},'Visibilitas')}>🔒 Privat</button>
+        <button className={p.visibility==='public'?'on':''} onClick={()=>p.visibility!=='public'&&save({visibility:'public'},'Visibilitas')}>◉ Publik</button>
+        <button className={p.visibility==='private'?'on':''} onClick={()=>p.visibility!=='private'&&save({visibility:'private'},'Visibilitas')}>▬ Privat</button>
       </div>
     </div>
-    {msg && <p className="cooldownNote" style={{color:msg.includes('✓')?'#4c8a4a':'#df5879',fontWeight:600}}>{msg}</p>}
+    {msg && <p className="cooldownNote" style={{color:msg.includes('✓')?'var(--ok)':'var(--bad)',fontWeight:600}}>{msg}</p>}
   </div>;
 }
 
@@ -201,7 +201,7 @@ export function FriendsPage(){
     }catch{}
   };
   useEffect(()=>{load()},[]);
-  if(status!=='authenticated') return <main className="page"><div className="emptyState"><span>🔒</span>Login dulu untuk memakai fitur teman.<br/><a className="primary tap" style={{display:'inline-flex',marginTop:12}} href="/login">Masuk</a></div></main>;
+  if(status!=='authenticated') return <main className="page"><div className="emptyState"><span>▬</span>Login dulu untuk memakai fitur teman.<br/><a className="primary tap" style={{display:'inline-flex',marginTop:12}} href="/login">Masuk</a></div></main>;
 
   const act = async (action,handle,after)=>{
     setBusy(true);
@@ -225,7 +225,7 @@ export function FriendsPage(){
     }catch{}
   };
 
-  if(!data) return <main className="page"><div className="emptyState"><span>🐾</span>Memuat…</div></main>;
+  if(!data) return <main className="page"><div className="emptyState"><span>✦</span>Memuat…</div></main>;
 
   const list = tab==='friends' ? data.friends : tab==='incoming' ? data.incoming : data.outgoing;
 
@@ -256,7 +256,7 @@ export function FriendsPage(){
       <button className={tab==='outgoing'?'on':''} onClick={()=>setTab('outgoing')}>Keluar ({data.outgoing.length})</button>
     </div>
     {list.length===0
-      ? <div className="emptyState"><span>{tab==='friends'?'🌸':'💌'}</span>{tab==='friends'?'Belum ada teman. Cari seseorang lewat handle di kotak atas!':tab==='incoming'?'Belum ada permintaan masuk.':'Belum ada permintaan keluar.'}</div>
+      ? <div className="emptyState"><span>{tab==='friends'?'✿':'✉'}</span>{tab==='friends'?'Belum ada teman. Cari seseorang lewat handle di kotak atas!':tab==='incoming'?'Belum ada permintaan masuk.':'Belum ada permintaan keluar.'}</div>
       : list.map(u=><div className="friendRow" key={u.handle}>
           <Avatar characterId={u.characterId} frame={u.avatarFrame} size={44}/>
           <div className="friendInfo"><b>{u.displayName}</b><small>@{u.handle} · {u.totalXp} XP · streak {u.streak}</small></div>
@@ -289,7 +289,7 @@ export function LeaderboardPage(){
     return ()=>{live=false};
   },[tab]);
 
-  if(status!=='authenticated') return <main className="page"><div className="emptyState"><span>🔒</span>Login dulu untuk melihat papan peringkat.<br/><a className="primary tap" style={{display:'inline-flex',marginTop:12}} href="/login">Masuk</a></div></main>;
+  if(status!=='authenticated') return <main className="page"><div className="emptyState"><span>▬</span>Login dulu untuk melihat papan peringkat.<br/><a className="primary tap" style={{display:'inline-flex',marginTop:12}} href="/login">Masuk</a></div></main>;
 
   return <main className="page">
     <h1 className="pageTitle">Papan Peringkat <span>· XP minggu ini</span></h1>
@@ -297,12 +297,12 @@ export function LeaderboardPage(){
       <button className={tab==='friends'?'on':''} onClick={()=>{setTab('friends');setData(null)}}><Users size={13} style={{display:'inline',verticalAlign:'-2px'}}/> Teman</button>
       <button className={tab==='global'?'on':''} onClick={()=>{setTab('global');setData(null)}}><Trophy size={13} style={{display:'inline',verticalAlign:'-2px'}}/> Global Top 100</button>
     </div>
-    <div className="lbMeta"><span>{tab==='friends'?'Lingkaran temanmu + kamu':'Hanya profil publik · top 100'}</span><span>Reset tiap Senin 00.00 (Jepang) 🕛</span></div>
-    {!data ? <div className="emptyState"><span>🐾</span>Memuat papan…</div> : <>
+    <div className="lbMeta"><span>{tab==='friends'?'Lingkaran temanmu + kamu':'Hanya profil publik · top 100'}</span><span>Reset tiap Senin 00.00 (Jepang) ◴</span></div>
+    {!data ? <div className="emptyState"><span>✦</span>Memuat papan…</div> : <>
       {data.rows.length===0
-        ? <div className="emptyState"><span>{tab==='friends'?'🌸':'🏆'}</span>{tab==='friends'?'Belum ada yang tampil. Tambah teman dulu!':'Belum ada XP mingguan dari profil publik.'}</div>
+        ? <div className="emptyState"><span>{tab==='friends'?'✿':'⚑'}</span>{tab==='friends'?'Belum ada yang tampil. Tambah teman dulu!':'Belum ada XP mingguan dari profil publik.'}</div>
         : data.rows.map(r=><div className={`lbRow ${r.isMe?'isMe':''} ${r.rank===1?'top1':''}`} key={r.handle}>
-            <span className="lbRank">{r.rank===1?'👑':r.rank}</span>
+            <span className="lbRank">{r.rank===1?'★':r.rank}</span>
             <Avatar characterId={r.characterId} frame={r.avatarFrame} size={40}/>
             <div className="lbInfo"><b>{r.displayName}{r.isMe?' (kamu)':''}</b><small>@{r.handle} · streak {r.streak}</small></div>
             <span className="lbXp">{r.weeklyXp} XP</span>
@@ -332,8 +332,8 @@ export function AchievementsPage(){
     })();
   },[]);
 
-  if(status!=='authenticated') return <main className="page"><div className="emptyState"><span>🔒</span>Login dulu untuk mengumpulkan achievement.<br/><a className="primary tap" style={{display:'inline-flex',marginTop:12}} href="/login">Masuk</a></div></main>;
-  if(!data) return <main className="page"><div className="emptyState"><span>🐾</span>Memuat…</div></main>;
+  if(status!=='authenticated') return <main className="page"><div className="emptyState"><span>▬</span>Login dulu untuk mengumpulkan achievement.<br/><a className="primary tap" style={{display:'inline-flex',marginTop:12}} href="/login">Masuk</a></div></main>;
+  if(!data) return <main className="page"><div className="emptyState"><span>✦</span>Memuat…</div></main>;
 
   const groups = Object.entries(CATEGORY_META).map(([cat,meta])=>({cat,meta,items:data.achievements.filter(a=>a.category===cat)})).filter(g=>g.items.length);
 
@@ -357,7 +357,7 @@ export function AchievementsPage(){
         {g.items.map(a=><div className={`achCard ${a.unlocked?'':'locked'}`} key={a.id}>
           <span className="achIcon">{a.icon}</span>
           <span className="achCopy"><b>{a.nameId}</b><p>{a.descId}</p></span>
-          <span className="achXp">✨ {a.xpReward} XP</span>
+          <span className="achXp">✦ {a.xpReward} XP</span>
         </div>)}
       </div>
     </React.Fragment>)}

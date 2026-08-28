@@ -86,18 +86,18 @@ function CharArt({variant='home',size='md',className='',style}){
   const src = useCharExpr(MASCOT_EXPR[variant]||'idle');
   return <div className={`mascotImg size-${size} ${className}`} style={style} aria-label="Maskot Kenshi">
     <img src={src} alt="Maskot Kenshi" loading="lazy"/>
-    <span className="sparkle s1">✨</span>
-    <span className="sparkle s2">🎀</span>
+    <span className="sparkle s1">✦</span>
+    <span className="sparkle s2">✦</span>
   </div>;
 }
 
 function Confetti(){
-  const pieces = useMemo(()=>Array.from({length:26},(_,i)=>({id:i,left:Math.random()*100,delay:(Math.random()*0.7).toFixed(2),emoji:['🎀','✨','💗','⭐','🌸','🩷'][i%6]})),[]);
+  const pieces = useMemo(()=>Array.from({length:26},(_,i)=>({id:i,left:Math.random()*100,delay:(Math.random()*0.7).toFixed(2),emoji:['✿','✦','♥','★','❀','●'][i%6]})),[]);
   return <div className="confettiLayer" aria-hidden="true">{pieces.map(p=><i key={p.id} style={{left:`${p.left}%`,animationDelay:`${p.delay}s`}}>{p.emoji}</i>)}</div>;
 }
 
 function KawaiiLoader({label='Memuat…'}){
-  return <div className="kawaiiLoader"><span className="loaderBow">🎀</span><p>{label}</p></div>;
+  return <div className="kawaiiLoader"><span className="loaderBow">✿</span><p>{label}</p></div>;
 }
 
 function ScrollToTop(){
@@ -159,8 +159,8 @@ function SideRail(){
   const puncak = Math.max(10,...pekan.map(d=>d.xp));
   return <aside className="railBar" aria-label="Ringkasan belajar">
     <div className="railStats">
-      <span className="railStat"><Flame size={17} fill="#ff718f"/><b>{wait?'…':streakCurrent}</b><small>hari</small></span>
-      <span className="railStat"><Heart size={17} fill="#ff718f"/><b>{wait?'…':totalXp}</b><small>XP</small></span>
+      <span className="railStat"><Flame size={17} fill="var(--pink-deep)"/><b>{wait?'…':streakCurrent}</b><small>hari</small></span>
+      <span className="railStat"><Heart size={17} fill="var(--pink-deep)"/><b>{wait?'…':totalXp}</b><small>XP</small></span>
       <span className="railStat"><Medal size={17}/><b>{wait?'…':completedCount}</b><small>level</small></span>
     </div>
     <section className="railCard">
@@ -226,8 +226,8 @@ function Shell({children}){
     <header>
       <Link to="/belajar" className="brand"><div className="kitty"><img src={brandSrc} alt="Kenshi Kaigo E-Learning"/></div><div><b>kenshi kaigo e-learning</b><small>belajar kaigo</small></div></Link>
       <div className="topStats">
-        <span><Flame size={16} fill="#ff718f"/> {loading && status==='authenticated' ? '…' : streakCurrent}<span className="statLabel">hari</span></span>
-        <span className="xpStat"><Heart size={16} fill="#ff718f"/> {loading && status==='authenticated' ? '…' : totalXp}<span className="statLabel">XP</span></span>
+        <span><Flame size={16} fill="var(--pink-deep)"/> {loading && status==='authenticated' ? '…' : streakCurrent}<span className="statLabel">hari</span></span>
+        <span className="xpStat"><Heart size={16} fill="var(--pink-deep)"/> {loading && status==='authenticated' ? '…' : totalXp}<span className="statLabel">XP</span></span>
       </div>
     </header>
     {children}
@@ -366,7 +366,7 @@ function SectionOverview(){
   const currentIdx = levelStates.findIndex(x=>!x.completed);
 
   return <main className="page skillPage"><Link to="/belajar" className="back"><ArrowLeft size={16}/> Urutan belajar</Link>
-    <div className="sectionHero"><span>{s.icon}</span><div><small>BAB {s.id}</small><h1>{s.titleJa}</h1><p>{s.titleId}</p></div></div>
+    <div className="sectionHero" style={{['--accent']:s.accent}}><span className="sectionHeroIcon"><Icon name={s.iconName} size={44} fill="var(--accent)" tint="var(--card)"/></span><div><small>BAB {s.id}</small><h1>{s.titleJa}</h1><p>{s.titleId}</p></div></div>
     <p className="muted">{s.descriptionId||s.description}</p>
     {!sectionOfficial && <div className="previewBanner"><Lock size={16}/><span>Section ini belum resmi terbuka — kamu tetap bisa preview materi & coba quiz, tapi progress tidak dihitung completed sampai section sebelumnya selesai.</span></div>}
     <div className="skillPath">
@@ -382,12 +382,12 @@ function SectionOverview(){
               {completed ? <Check size={isMilestone?26:20}/> : previewOnly ? <Lock size={isMilestone?22:16}/> : isMilestone ? <Star size={24} fill="currentColor"/> : l.id}
               {isCurrent && <span className="currentPing"/>}
             </Link>
-            <span className="skillNodeLabel">{isMilestone ? '🎀 Ulasan' : l.titleId}</span>
+            <span className="skillNodeLabel">{isMilestone ? '✿ Ulasan' : l.titleId}</span>
           </div>
         </div>;
       })}
     </div>
-    <div className="recapLink"><Link to={`/section/${s.id}/recap`}><Star fill="#ffb73b"/> Section recap <span>{s.levelCount} level review</span><ChevronRight/></Link></div>
+    <div className="recapLink"><Link to={`/section/${s.id}/recap`}><Star fill="var(--gold-deep)"/> Section recap <span>{s.levelCount} level review</span><ChevronRight/></Link></div>
   </main>;
 }
 
@@ -455,7 +455,7 @@ function Materi(){
     <div className="materiTop"><Link to={`/section/${s.id}/level/${l.id}`} className="back">× Tutup</Link><div className="materiDots" aria-label={`Kartu ${i+1} dari ${cards.length}`}>{cards.map((c,n)=><button type="button" key={c.id||n} className={`${n===i?'active':''} ${n<i?'done':''}`} disabled={n>i} aria-label={`Kartu ${n+1}`} onClick={()=>setI(n)}/>)}</div><LangSwitch mode={mode} setMode={setMode}/></div>
     <article className={`richMateriCard rich-${card.type||'lesson'}`} key={card.id||i}><RichCardBody card={card} mode={mode} glossary={glossaryKanji} onTerm={openTerm}/></article>
     {termSheet&&<div className="termSheetBackdrop" role="presentation" onClick={()=>setTermSheet(null)}><section className="termSheet" role="dialog" aria-modal="true" aria-label={`Istilah ${termSheet.kanji}`} onClick={e=>e.stopPropagation()}><button className="termSheetClose" onClick={()=>setTermSheet(null)} aria-label="Tutup">×</button>{mode==='kanji'?<small>{termSheet.reading} · {kanaToRomaji(termSheet.reading)}</small>:<small>{kanaToRomaji(termSheet.reading)}</small>}<Furigana field={termField(termSheet)} mode={mode} as="h2" variant="xl"/><p className="termSheetShort">{termSheet.id.short}</p><p>{termSheet.id.long}</p><Link className="termSheetMore" to={`/glossary/${termSheet.slug}`}>Buka halaman lengkapnya →</Link></section></div>}
-    {(()=>{const terms=cardGlossaryTerms(card,glossaryData.terms);return terms.length>0&&<section className="materiTerms"><h3>🔎 Istilah di kartu ini</h3><div className="materiTermChips">{terms.map(t=><button type="button" key={t.slug} onClick={()=>setTermSheet(t)} className="materiTermChip"><b>{t.kanji}</b><small>{kanaToRomaji(t.reading)}</small></button>)}</div></section>})()}
+    {(()=>{const terms=cardGlossaryTerms(card,glossaryData.terms);return terms.length>0&&<section className="materiTerms"><h3>⌕ Istilah di kartu ini</h3><div className="materiTermChips">{terms.map(t=><button type="button" key={t.slug} onClick={()=>setTermSheet(t)} className="materiTermChip"><b>{t.kanji}</b><small>{kanaToRomaji(t.reading)}</small></button>)}</div></section>})()}
     <div className="richMateriNav">{i>0&&<button type="button" className="secondary tap" onClick={()=>setI(v=>v-1)}>Kembali</button>}<button type="button" className="primary tap" onClick={()=>i<cards.length-1?setI(i+1):nav(`/section/${s.id}/level/${l.id}/quiz`)}>{i<cards.length-1?'Lanjut':'Mulai quiz'} <ChevronRight/></button></div>
     <button type="button" className="materiSkip" onClick={()=>nav(`/section/${s.id}/level/${l.id}/quiz`)}>Lewati ke quiz</button>
   </main>;
@@ -476,7 +476,7 @@ function RichCardBody({card,mode,glossary,onTerm}){
   if(card.type==='hook') return <><CharArt variant="materi" size="sm"/><Furigana field={body} mode={mode} className="richBody" glossary={glossary} onTerm={onTerm}/></>;
   if(card.type==='term'){const t=card.term;const rom=t.romaji||(t.reading?kanaToRomaji(t.reading):'');return <div className="richTerm"><JapaneseTerm term={t} mode={mode} onTerm={onTerm}/><div className="termRoman">{rom}{t.meaning?` / ${t.meaning}`:''}</div><div className="termExample">{t.example&&mode==='id'&&<><p lang="ja" className="termExampleJa">{stripRuby(t.example.ja||'')}</p><p>{t.example.id}</p></>}{t.example&&mode!=='id'&&<Furigana field={t.example} mode={mode} glossary={glossary} onTerm={onTerm}/>}</div></div>}
   if(card.type==='explain') return <><Furigana field={heading} mode={mode} as="h2" glossary={glossary} onTerm={onTerm}/><Furigana field={body} mode={mode} className="richBody" glossary={glossary} onTerm={onTerm}/></>;
-  if(card.type==='compare') return <><Furigana field={card.heading||heading} mode={mode} as="h2" glossary={glossary} onTerm={onTerm}/><div className="compareGrid">{card.rows.map(r=><div className="compareRow" key={r.term.kanji}><CompareTerm term={r.term} mode={mode} className="compareTerm" glossary={glossary} onTerm={onTerm}/><Furigana field={r.meaning} mode={mode} glossary={glossary} onTerm={onTerm}/><Furigana field={r.when} mode={mode} glossary={glossary} onTerm={onTerm}/></div>)}</div>{(card.note||heading)&&<Furigana field={card.note||heading} mode={mode} className="richNote" glossary={glossary} onTerm={onTerm}/>}</>;
+  if(card.type==='compare') return <><Furigana field={card.heading||heading} mode={mode} as="h2" glossary={glossary} onTerm={onTerm}/><div className="compareGrid">{card.rows.map(r=><div className="compareRow" key={r.term.kanji}><CompareTerm term={r.term} mode={mode} glossary={glossary} onTerm={onTerm}/><Furigana field={r.meaning} mode={mode} glossary={glossary} onTerm={onTerm}/><Furigana field={r.when} mode={mode} glossary={glossary} onTerm={onTerm}/></div>)}</div>{(card.note||heading)&&<Furigana field={card.note||heading} mode={mode} className="richNote" glossary={glossary} onTerm={onTerm}/>}</>;
   if(card.type==='checkpoint') return <><span className="richTag">Cek cepat · tidak dinilai</span><Furigana field={card.question?.prompt} mode={mode} className="richQuestion" glossary={glossary} onTerm={onTerm}/><div className="checkpointOpts">{card.question.options.map(o=><div key={o.key} className="checkpointOption"><Furigana field={o.text} mode={mode} glossary={glossary} onTerm={onTerm}/></div>)}</div><p className="richNote">Jawabannya akan dibahas setelah kamu lanjut membaca materi.</p></>;
   if(card.type==='case') return <><span className="richTag">Kasus lapangan</span><Furigana field={heading} mode={mode} as="h2" glossary={glossary} onTerm={onTerm}/><Furigana field={card.scenario} mode={mode} className="richBody" glossary={glossary} onTerm={onTerm}/><Furigana field={card.prompt} mode={mode} className="richPrompt" glossary={glossary} onTerm={onTerm}/><Furigana field={card.reveal} mode={mode} className="richReveal" glossary={glossary} onTerm={onTerm}/></>;
   if(card.type==='exam-tip') return <><span className="richTag">Sudut pandang ujian</span><Furigana field={heading} mode={mode} as="h2" glossary={glossary} onTerm={onTerm}/><Furigana field={body} mode={mode} className="richBody" glossary={glossary} onTerm={onTerm}/></>;
@@ -527,8 +527,8 @@ function ExplanationBox({q}){
   </div>;
 }
 
-const CORRECT_LINES = ['Yeayy! ✨','Perfect! 🎀','完璧！','Sugoi! 💗','Betul banget! 🌸'];
-const WRONG_LINES = ['Zannen... 😣','Hampir! 🩹','Coba lagi ya~','惜しい！','Yuk cek lagi 🎗️'];
+const CORRECT_LINES = ['Yeayy! ✦','Perfect! ✿','完璧！','Sugoi! ♥','Betul banget! ✿'];
+const WRONG_LINES = ['Zannen... ⊘','Hampir! ✚','Coba lagi ya~','惜しい！','Yuk cek lagi ✦️'];
 
 function AnswerPopup({correct,onClose}){
   const line = useMemo(()=> correct
@@ -540,7 +540,7 @@ function AnswerPopup({correct,onClose}){
     return ()=>clearTimeout(t);
   },[onClose]);
   return <div className={`answerPopup ${correct?'good':'bad'}`} role="status">
-    <span className="answerPopupIcon">{correct?'🎉':'😣'}</span>
+    <span className="answerPopupIcon">{correct?'✹':'⊘'}</span>
     <span className="answerPopupText">{line}</span>
   </div>;
 }
@@ -680,7 +680,7 @@ function Result(){
   return <main className="page result">
     {isPerfect && !isPreview && <Confetti/>}
     <CharArt variant={isPerfect?'perfect':'good'} size="lg"/>
-    <p className="eyebrow">{isPreview?'PREVIEW ATTEMPT':'LEVEL COMPLETE ✨'}</p>
+    <p className="eyebrow">{isPreview?'PREVIEW ATTEMPT':'LEVEL COMPLETE ✦'}</p>
     <h1>{state?.score||0} / {state?.total||5}</h1>
     <p className="muted">{isPreview?'Latihan preview — belum resmi completed sampai prasyarat sebelumnya selesai.':(isPerfect?'完璧！Perfect!':'Bagus, terus latihan sedikit lagi.')}</p>
     <div className="resultStats"><b>+{xp} XP</b><span>Materi: {l?.titleId}</span></div>
@@ -688,7 +688,7 @@ function Result(){
   </main>;
 }
 
-function Recap(){const {sectionId}=useParams(),s=getSection(sectionId);if(!s)return <Navigate to="/belajar"/>;return <main className="page result"><div className="sectionHero"><span>{s.icon}</span><div><small>RECAP</small><h1>{s.titleJa}</h1><p>Section review · {s.titleId}</p></div></div><CharArt variant="recap" size="md"/><h2>Siap diuji?</h2><p className="muted">Soal campuran dari semua level di section ini.</p><Link className="primary big tap" to={`/section/${s.id}/level/1/quiz`}>Mulai recap <Star/></Link></main>;}
+function Recap(){const {sectionId}=useParams(),s=getSection(sectionId);if(!s)return <Navigate to="/belajar"/>;return <main className="page result"><div className="sectionHero" style={{['--accent']:s.accent}}><span className="sectionHeroIcon"><Icon name={s.iconName} size={44} fill="var(--accent)" tint="var(--card)"/></span><div><small>RECAP</small><h1>{s.titleJa}</h1><p>Section review · {s.titleId}</p></div></div><CharArt variant="recap" size="md"/><h2>Siap diuji?</h2><p className="muted">Soal campuran dari semua level di section ini.</p><Link className="primary big tap" to={`/section/${s.id}/level/1/quiz`}>Mulai recap <Star/></Link></main>;}
 
 function Glossary(){return <GlossaryPage/>;}
 
@@ -721,10 +721,10 @@ function Profile(){
     </div>
     {isAuthenticated ? <>
       <ProfileEditor/>
-      <div className="tip" style={{marginTop:16}}><Star fill="#ffb73b"/> <span><b>Pelan saja</b><br/>Tidak harus sempurna. Yang penting jalan terus.</span></div>
+      <div className="tip" style={{marginTop:16}}><Star fill="var(--gold-deep)"/> <span><b>Pelan saja</b><br/>Tidak harus sempurna. Yang penting jalan terus.</span></div>
       <button className="secondary big tap" style={{marginTop:16}} onClick={doLogout}>Logout</button>
     </> : <>
-      <div className="tip"><Star fill="#ffb73b"/> <span><b>Pelan saja</b><br/>Tidak harus sempurna. Yang penting jalan terus.</span></div>
+      <div className="tip"><Star fill="var(--gold-deep)"/> <span><b>Pelan saja</b><br/>Tidak harus sempurna. Yang penting jalan terus.</span></div>
       <Link className="primary big tap" style={{marginTop:16}} to="/login">Login dengan email</Link>
     </>}
   </main>;
@@ -744,8 +744,30 @@ function ThemeApply(){
     if(skin==='momo') document.documentElement.removeAttribute('data-theme');
     else document.documentElement.setAttribute('data-theme',skin);
     applyChar(user?.characterId||'momo');
+    syncThemeColor();
   },[user?.theme,user?.characterId]);
+  // <meta name="theme-color"> mewarnai chrome BROWSER — bilah alamat Chrome Android,
+  // tint toolbar Safari iOS, layar percikan PWA. Nilainya dulu dipaku #ffd9e6, jadi
+  // user bertema biru mendapat bilah status merah muda di SETIAP halaman, di luar
+  // viewport aplikasi sehingga tidak akan pernah tertangkap audit CSS. Nilai statis
+  // apa pun salah untuk 4 dari 6 kombinasi tema x mode, jadi dibaca dari token hidup.
+  useEffect(()=>{
+    syncThemeColor();
+    // Mode gelap dipasang lewat applyDark di luar React, jadi tidak ada state yang
+    // bisa di-depend. MutationObserver menangkap dua-duanya: data-mode dan data-theme.
+    const obs = new MutationObserver(syncThemeColor);
+    obs.observe(document.documentElement,{attributes:true,attributeFilter:['data-mode','data-theme']});
+    return ()=>obs.disconnect();
+  },[]);
   return null;
+}
+function syncThemeColor(){
+  try{
+    const m = document.querySelector('meta[name="theme-color"]');
+    if(!m) return;
+    const v = getComputedStyle(document.documentElement).getPropertyValue('--pink-paler').trim();
+    if(v) m.setAttribute('content', v);
+  }catch{}
 }
 
 /* v8 (doc 50): gerbang sesi. Semua route belajar dibungkus sini; kalau belum login
