@@ -255,7 +255,24 @@ casually.
 
 Vercel, `framework: vite`, build `npm run build`, output `dist`. The build runs
 `scripts/build-glossary-index.mjs` before `vite build` to regenerate the committed glossary
-occurrence index. Pushing to `main` deploys.
+occurrence index.
+
+**Pushing to `main` does NOT deploy.** The Vercel project has no Git integration
+connected (`link: null`, zero deploy hooks) — every production release so far was
+pushed from a laptop with the Vercel CLI, which attaches commit metadata and so
+*looks* like a Git-triggered deploy in the dashboard. To release:
+
+```bash
+npx vercel deploy --prod --yes --token "$VERCEL_TOKEN"
+```
+
+Verify afterwards by fetching a file that only exists in the new build; a static
+asset that 200s with `content-type: text/html` and ~987 bytes is `index.html`
+coming back through the catch-all rewrite, which means the asset is not deployed.
+Comparing local `dist/` chunk hashes against production is not a valid check —
+`package.json` pins `vite`/`react` to `latest`, so Vercel resolves its own
+versions and emits different hashes for identical source. Read the chunk list out
+of the deployed `index.html` instead.
 
 ## Conventions
 

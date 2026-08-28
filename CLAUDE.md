@@ -110,6 +110,8 @@ casually.
 
 Vite + React SPA (`src/`) plus Vercel Functions (`api/`, ESM `.mjs`), deployed to Vercel with all
 routes rewritten to `index.html` (`vercel.json`; Vercel matches `api/` before the rewrite).
+**Deploys are manual**: the Vercel project has no Git integration, so pushing to `main` releases
+nothing — run `npx vercel deploy --prod --yes --token "$VERCEL_TOKEN"`. See README.md.
 Persistence is Neon Postgres via `@neondatabase/serverless`. Production: `https://kaigo.wyna.dev`.
 
 **Vercel needs one file per API path.** `api/final/local-merge.mjs` exists as its own file for that
