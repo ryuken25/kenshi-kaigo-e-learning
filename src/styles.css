@@ -326,9 +326,12 @@ nav a.active{color:var(--pink-deep)}
   .navEmoji{width:40px;height:40px;font-size:20px;border-radius:14px;background:color-mix(in srgb,var(--pink-pale) 50%,transparent)}
   nav a.active .navEmoji{transform:none;background:var(--card)}
   nav a.active{background:var(--pink-pale)}
-  /* Cahaya item aktif — hanya gelap, sesuai aturan glow di kontrak markup. */
-  :root[data-mode=dark] nav a.active{border-color:color-mix(in srgb,var(--pink) 50%,transparent);box-shadow:0 0 24px -8px var(--pink),inset 0 0 22px -14px var(--pink)}
-  :root[data-mode=dark] nav a.active .navEmoji{box-shadow:0 0 18px -6px var(--pink)}
+  /* Item aktif di mode gelap: BENTUKNYA sama dengan terang — pil berisi, tanpa
+     cincin & tanpa glow (user menolak sidebar yang beda bentuk antar mode).
+     Yang dinaikkan cuma kepekatan isiannya: --pink-pale di gelap nyaris sewarna
+     latar sidebar, jadi tanpa ini item aktif tidak terbaca sama sekali. */
+  :root[data-mode=dark] nav a.active{background:color-mix(in srgb,var(--pink) 22%,transparent)}
+  :root[data-mode=dark] nav a.active .navEmoji{background:color-mix(in srgb,var(--pink) 30%,transparent)}
   .skillPage,.page{max-width:1100px;margin:0 auto}
   .skillPath{max-width:650px;margin:0 auto}
 }
@@ -467,15 +470,13 @@ a.homeCard .homeCardArt{background:var(--lavender)}
   .nightPagoda{left:48%;right:auto;width:220px}
 }
 
-/* ---------- mode gelap desktop: panel mengambang (kanvas DeskMomoGelap) ----------
-   Sidebar dan isi jadi dua kartu membulat di atas latar gelap, bukan bidang rata.
-   Panel isi digambar lewat ::before ber-z-index -2, BUKAN background di main:
-   dengan begitu main tetap z-index:auto sehingga (a) .nightSky (-1) tetap tampak
-   di atas panel, dan (b) elemen position:fixed di dalam main tidak terkurung
-   stacking context dan tetap bisa menutupi header. */
+/* ---------- mode gelap desktop ----------
+   Kanvas DeskMomoGelap menggambar sidebar & isi sebagai dua kartu mengambang
+   (inset 12px, sudut 30px). Itu SUDAH DICOBA dan DITOLAK user: bentuk sidebar
+   jadi beda dengan mode terang, dan di rute non-beranda sidebar mengambang
+   sementara isinya rata sehingga terlihat timpang. Aturannya sekarang: kerangka
+   gelap = kerangka terang, cuma tokennya yang berganti. Jangan pasang lagi
+   border-radius/inset pada nav di mode gelap tanpa menanyakan user. */
 @media (min-width:960px){
   .appHome>main{padding-top:26px}
-  :root[data-mode=dark] nav{top:12px;bottom:12px;left:12px;height:auto;border-radius:30px;border:1px solid var(--line);background:var(--soft);box-shadow:none}
-  :root[data-mode=dark] .app{padding-left:292px;padding-right:12px}
-  :root[data-mode=dark] .appHome>main::before{content:'';position:absolute;inset:12px 0 -28px;border:1px solid var(--line);border-radius:30px;background:var(--soft);z-index:-2;pointer-events:none}
 }
