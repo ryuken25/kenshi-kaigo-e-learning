@@ -245,7 +245,7 @@ export default async function handler(req, res) {
       const upserted = await sql`
         INSERT INTO level_progress(user_id, section_id, level_id, status, best_score, last_score, stars, attempts, xp_earned, first_completed_at, last_attempt_at)
         VALUES (${user.id}, ${sectionId}, ${levelId}, ${isCompleted ? 'completed' : 'in_progress'}, ${bestScoreNew}, ${score}, ${stars}, 1, ${xpEarnedNew},
-                ${isCompleted ? sql`now()` : null}, now())
+                CASE WHEN ${isCompleted} THEN now() ELSE NULL END, now())
         ON CONFLICT (user_id, section_id, level_id) DO UPDATE SET
           status = CASE WHEN level_progress.status = 'completed' THEN 'completed' ELSE EXCLUDED.status END,
           best_score = GREATEST(level_progress.best_score, EXCLUDED.best_score),

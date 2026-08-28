@@ -56,12 +56,33 @@ function pgPool(url){
 // dengan .count/.command). Array.from() menyamakannya jadi array polos.
 const toArray = (r) => Array.isArray(r) ? Array.from(r) : (r && Array.isArray(r.rows) ? Array.from(r.rows) : []);
 
+// JEBAKAN PARITAS KEEMPAT — yang ini SUDAH MERUSAK PRODUKSI (2026-08-28).
+// Fragmen SQL yang DISARANGKAN sebagai nilai parameter, polanya:
+//     VALUES (..., <boolean> ? sql`now()` : null, ...)
+// jalan di neon — drivernya mengenali query bersarang dan menyusunnya jadi potongan
+// SQL — tapi MELEMPAR di jalur ini. Penyusunan fragmen postgres.js hanya bekerja
+// kalau yang disarangkan berasal dari instance sql POSTGRES.JS ASLI; `tag` di bawah
+// cuma fungsi biasa yang mengembalikan Promise, jadi sql`now()` malah dieksekusi
+// sebagai query tersendiri ("syntax error at or near now") dan query induknya
+// menerima Promise sebagai parameter timestamp ("Invalid time value").
+// Akibat nyatanya: SETIAP penyelesaian level resmi (score >= 60) gagal 500.
+// Perbaikannya ada di call site — tulis CASE WHEN <boolean> THEN now() ELSE NULL END
+// di dalam teks query, yang cuma mengirim satu boolean biasa dan identik di dua driver.
+// Penjaga di bawah mengubah kegagalan membingungkan itu jadi galat yang menyebut
+// sebabnya; scripts/validate-api-sql.mjs menangkapnya lebih awal, saat gate.
+const guardVals = (vals) => {
+  for (const v of vals) {
+    if (v && typeof v.then === 'function')
+      throw new Error('DB: parameter berupa Promise/thenable. Fragmen sql`...` yang disarangkan tidak didukung di jalur postgres.js — pakai CASE WHEN <boolean> THEN ... ELSE NULL END di dalam query.');
+  }
+};
+
 // Permukaan pemanggilan dibuat identik dengan neon(): tagged template + .query().
 // Jadi tidak ada satu pun call site lain yang perlu disunting.
 function pgSql(url){
-  const tag = (strings, ...vals) => pgPool(url).then(s => s(strings, ...vals)).then(toArray);
+  const tag = (strings, ...vals) => { guardVals(vals); return pgPool(url).then(s => s(strings, ...vals)).then(toArray); };
   // postgres.js tidak punya .query(text, params); padanannya .unsafe().
-  tag.query = (text, params) => pgPool(url).then(s => s.unsafe(text, params || [])).then(toArray);
+  tag.query = (text, params) => { guardVals(params || []); return pgPool(url).then(s => s.unsafe(text, params || [])).then(toArray); };
   tag.end = () => { const p = pools.get(url); if(!p) return Promise.resolve(); pools.delete(url); return p.then(s => s.end()); };
   return tag;
 }

@@ -18,9 +18,10 @@
     "validate:translation": "node scripts/audit-translation-quality.mjs --strict",
     "validate:furigana": "node scripts/qa/verify-furigana-headless.mjs",
     "validate:furigana:measure": "node scripts/qa/verify-furigana-headless.mjs --measure",
-    "validate": "npm run validate:glossary && npm run validate:final && npm run validate:sections && npm run validate:jsx && npm run validate:css-classes && npm run validate:ruby && npm run validate:romaji && npm run validate:translation && npm run validate:furigana",
+    "validate": "npm run validate:glossary && npm run validate:final && npm run validate:sections && npm run validate:jsx && npm run validate:api-sql && npm run validate:css-classes && npm run validate:ruby && npm run validate:romaji && npm run validate:translation && npm run validate:furigana",
     "prebuild": "npm run validate:translation",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "validate:api-sql": "node scripts/validate-api-sql.mjs"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",
