@@ -2,7 +2,7 @@ import React,{useEffect,useState} from 'react';
 import {Navigate} from 'react-router-dom';
 import {ChevronRight,Search,UserPlus,Check,X,Users,Trophy,Medal,Sparkles} from 'lucide-react';
 import {useAuth} from './context/AuthContext.jsx';
-import {THEMES,GENDERS,CHARACTERS,CHARACTER_IDS,GENDER_PAIRS,COMING_SOON,charPath,applyChar,CATEGORY_META,FRAME_META,HANDLE_RE,patchProfile,friendsAction,Avatar,useAchToast} from './lib/social.jsx';
+import {THEMES,GENDERS,CHARACTERS,CHARACTER_IDS,PICKABLE_CHARS,GENDER_PAIRS,COMING_SOON,charPath,applyChar,useDarkMode,CATEGORY_META,FRAME_META,HANDLE_RE,patchProfile,friendsAction,Avatar,useAchToast} from './lib/social.jsx';
 
 /* ============================================================================
    KOMPONEN SOSIAL — onboarding, teman, papan peringkat, achievement, editor profil.
@@ -108,6 +108,7 @@ export function OnboardingWizard({onDone}){
 
 /* ---------- Editor profil (dipakai halaman Profile saat login) ---------- */
 export function ProfileEditor(){
+  const [dark,setDark]=useDarkMode();
   const {refresh} = useAuth();
   const toast = useAchToast();
   const [data,setData] = useState(null);
@@ -157,13 +158,21 @@ export function ProfileEditor(){
     </div>
     {cooldownActive && <p className="cooldownNote">Handle bisa diganti lagi setelah {new Date(data.handleCooldownEndsAt).toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'})} (aturan 7 hari).</p>}
     <div><p className="muted" style={{margin:'4px 0 8px'}}>Karakter <small style={{fontWeight:400}}>· tema warna mengikuti karakter, ganti kapan saja</small></p>
-      <div className="charGrid">{CHARACTER_IDS.map(id=>{const unlocked=(p.charactersUnlocked||[]).includes(id),soon=COMING_SOON.includes(id);
+      <div className="charGrid">{PICKABLE_CHARS.map(id=>{const unlocked=(p.charactersUnlocked||[]).includes(id),soon=COMING_SOON.includes(id);
         return <button key={id} type="button" disabled={!unlocked} className={`charTile tap ${p.characterId===id?'on':''} ${!unlocked?'locked':''}`} onClick={()=>unlocked&&p.characterId!==id&&save({characterId:id},'Karakter')}>
           <img src={charPath(id,'idle')} alt={CHARACTERS[id].name}/>
           <b>{CHARACTERS[id].name}</b>
           <small>{unlocked?CHARACTERS[id].species:soon?'Segera hadir':'Belum terbuka'}</small>
         </button>;})}
       </div>
+    </div>
+    <div><p className="muted" style={{margin:'4px 0 8px'}}>Tampilan</p>
+      <button type="button" className={dark?'darkRow tap on':'darkRow tap'} onClick={()=>setDark(!dark)} aria-pressed={dark}>
+        <span className="darkRowIcon">{dark?'☀︎':'☾︎'}</span>
+        <span className="darkRowLabel">Mode gelap</span>
+        <span className="darkSwitch" aria-hidden="true"><i/></span>
+      </button>
+      <p className="cooldownNote">Tersimpan di perangkat ini saja — ponsel bisa gelap tanpa mengubah tampilan di laptop.</p>
     </div>
     <div><p className="muted" style={{margin:'4px 0 8px'}}>Visibilitas di papan peringkat global</p>
       <div className="visibilityToggle">

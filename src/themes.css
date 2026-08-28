@@ -1,74 +1,142 @@
 /* ============================================================================
-   SISTEM TEMA — 4 palet: kitty (default), sora, matcha, yozora.
-   Aktif lewat atribut data-theme di <html> (di-set main.jsx dari user.theme).
-   Semua komponen existing sudah baca var(--pink) dkk dari :root di styles.css,
-   jadi cukup timpa token-nya di sini. File ini WAJIB diimport SETELAH styles.css
-   supaya menang cascade. validate:css-classes juga scan file ini (masuk 6 file).
+   SISTEM TEMA — 3 palet (momo, yuki, luna) x 2 mode (terang & gelap).
+   Palet dipilih lewat atribut data-theme di <html>; mode gelap lewat atribut
+   TERPISAH data-mode="dark". Karena keduanya independen, 3 x 2 = 6 kombinasi
+   cukup ditulis sebagai 3 blok terang + 3 blok gelap, bukan 6 nama tema.
+   :root polos (belum ada data-theme) = momo terang, sama persis dengan default
+   di styles.css. Semua komponen sudah baca var(--pink) dkk dari :root, jadi di
+   sini cukup menimpa token-nya. File ini WAJIB diimport SETELAH styles.css
+   supaya menang cascade. validate:css-classes juga ikut scan file ini.
+
+   KOMPATIBILITAS BARIS DB LAMA — tidak perlu migrasi:
+   nilai theme lama dipetakan di sisi klien sebelum di-set ke data-theme —
+   kitty/sakura -> momo, sora -> yuki, matcha/yozora -> luna. Karena itu berkas
+   ini sudah TIDAK punya selektor matcha/yozora lagi.
    ========================================================================== */
 
-/* ---------- v8 (doc 49): token karakter via [data-char] ----------
-   Di-set applyChar() di lib/social.jsx dari user.characterId (momo default).
-   Warna tombol tiap karakter sudah lolos kontras >= 4.5:1 (btnContrast di
-   pack data/characters.json). applyChar menyalin --char-btn* ke --btn-* via
-   inline style di <html>; nilai di bawah ini sumber kanoniknya. */
-:root{--char-btn:#ff6f9c;--char-btn-shadow:#c22a5e}
-:root[data-char="momo"]{--char-btn:#ff6f9c;--char-btn-shadow:#c22a5e}
-:root[data-char="sora"]{--char-btn:#1f5f9e;--char-btn-shadow:rgba(0,0,0,.2)}
-:root[data-char="kinako"]{--char-btn:#d99a16;--char-btn-shadow:#8a6008}
-:root[data-char="kurumi"]{--char-btn:#5f42a8;--char-btn-shadow:rgba(0,0,0,.2)}
-:root[data-char="nagi"]{--char-btn:#136b58;--char-btn-shadow:rgba(0,0,0,.2)}
-:root[data-char="beni"]{--char-btn:#95300f;--char-btn-shadow:rgba(0,0,0,.2)}
+/* ---------- momo (default): pink kawaii ---------- */
+:root,:root[data-theme=momo]{
+  --ink:#5b3f52;--muted:#7a5f6c;
+  --pink:#ff7bab;--pink-deep:#ff5c9a;--pink-pale:#ffe3ef;--pink-paler:#fff2f8;
+  --lavender:#efe3ff;--gold:#ffcd6e;--gold-deep:#ffb84d;--mint:#c9f7e6;
+  --soft:#fff7fb;--card:#ffffff;--line:#f6def0;
+  --shadow-pink:0 10px 30px -8px rgba(255,110,160,.35);
+  --shadow-pink-lg:0 18px 45px -10px rgba(255,110,160,.4);
+  --kk-furi:#8a6e7c;--kk-pink-300:#ff9ec1;--kk-pink-50:#fff4f9;
+}
+:root body,:root[data-theme=momo] body{
+  background:
+    radial-gradient(circle at 10% 0%, #ffe9f4 0%, transparent 45%),
+    radial-gradient(circle at 90% 10%, #eee3ff 0%, transparent 40%),
+    linear-gradient(180deg,#fff8fc,#fffdfa 60%);
+}
 
-/* ---------- sora: langit biru ---------- */
-:root[data-theme=sora]{
-  --ink:#2e4a5c;--muted:#5c7a8c;
-  --pink:#6db9e8;--pink-deep:#3f96d4;--pink-pale:#d9edfb;--pink-paler:#eef7fe;
-  --lavender:#e3f0fa;--gold:#ffd47e;--gold-deep:#ffbf4f;--mint:#d3f3ee;
-  --soft:#f7fbff;--line:#dcebf7;
+/* ---------- yuki: biru salju ---------- */
+:root[data-theme=yuki]{
+  --ink:#27455e;--muted:#5b7a94;
+  --pink:#3aa7e8;--pink-deep:#1f8bd0;--pink-pale:#d6ecfb;--pink-paler:#edf7fe;
+  --lavender:#e0eefb;--gold:#ffd966;--gold-deep:#f0be3c;--mint:#d3f3ee;
+  --soft:#f6fbff;--card:#ffffff;--line:#d8e9f7;
   --shadow-pink:0 10px 30px -8px rgba(80,160,220,.32);
   --shadow-pink-lg:0 18px 45px -10px rgba(80,160,220,.38);
-  --kk-furi:#5f7d8f;--kk-pink-300:#8ecdf0;--kk-pink-50:#f0f9ff;
+  --kk-furi:#5d7d99;--kk-pink-300:#8ecdf0;--kk-pink-50:#f0f9ff;
 }
-:root[data-theme=sora] body{
+:root[data-theme=yuki] body{
   background:
-    radial-gradient(circle at 10% 0%, #e3f2fd 0%, transparent 45%),
-    radial-gradient(circle at 90% 10%, #e0f4f1 0%, transparent 40%),
-    linear-gradient(180deg,#f5fbff,#fdfffd 60%);
+    radial-gradient(circle at 10% 0%, #dcefff 0%, transparent 45%),
+    radial-gradient(circle at 90% 10%, #e6f6f4 0%, transparent 40%),
+    linear-gradient(180deg,#f4fbff,#fdfeff 60%);
 }
 
-/* ---------- matcha: hijau teh ---------- */
-:root[data-theme=matcha]{
-  --ink:#44543c;--muted:#6e7f66;
-  --pink:#8fc48a;--pink-deep:#5da55c;--pink-pale:#e2f2dc;--pink-paler:#f2f9ee;
-  --lavender:#eef5e6;--gold:#f2d489;--gold-deep:#e0b34f;--mint:#dff2d8;
-  --soft:#fafdf6;--line:#e0ecd8;
-  --shadow-pink:0 10px 30px -8px rgba(110,180,100,.3);
-  --shadow-pink-lg:0 18px 45px -10px rgba(110,180,100,.36);
-  --kk-furi:#71846a;--kk-pink-300:#a9d3a2;--kk-pink-50:#f4faf0;
+/* ---------- luna: ungu bulan ---------- */
+:root[data-theme=luna]{
+  --ink:#3a2f56;--muted:#6b6091;
+  --pink:#8b5cf6;--pink-deep:#7042d8;--pink-pale:#e7ddfd;--pink-paler:#f5f0ff;
+  --lavender:#ded4fa;--gold:#ffe08a;--gold-deep:#f2c65c;--mint:#dcd4f5;
+  --soft:#faf7ff;--card:#ffffff;--line:#e3dbf7;
+  --shadow-pink:0 10px 30px -8px rgba(120,90,200,.32);
+  --shadow-pink-lg:0 18px 45px -10px rgba(120,90,200,.38);
+  --kk-furi:#7d719f;--kk-pink-300:#b79bf5;--kk-pink-50:#f6f1ff;
 }
-:root[data-theme=matcha] body{
+:root[data-theme=luna] body{
   background:
-    radial-gradient(circle at 10% 0%, #ecf6e4 0%, transparent 45%),
-    radial-gradient(circle at 90% 10%, #f5f2dd 0%, transparent 40%),
-    linear-gradient(180deg,#fafdf6,#fffef8 60%);
+    radial-gradient(circle at 10% 0%, #e9deff 0%, transparent 45%),
+    radial-gradient(circle at 90% 10%, #f8e8f8 0%, transparent 40%),
+    linear-gradient(180deg,#f9f6ff,#fffcff 60%);
 }
 
-/* ---------- yozora: langit malam (pastel ungu — tetap light supaya kontras aman) ---------- */
-:root[data-theme=yozora]{
-  --ink:#46396b;--muted:#7a6f9c;
-  --pink:#a98fe0;--pink-deep:#7f5fd0;--pink-pale:#e8defc;--pink-paler:#f4efff;
-  --lavender:#ede6fb;--gold:#ffd47e;--gold-deep:#ffbf4f;--mint:#dcd6f5;
-  --soft:#faf8ff;--line:#e4dcf6;
-  --shadow-pink:0 10px 30px -8px rgba(140,110,220,.32);
-  --shadow-pink-lg:0 18px 45px -10px rgba(140,110,220,.38);
-  --kk-furi:#8a7ca8;--kk-pink-300:#c0a8ec;--kk-pink-50:#f6f1ff;
+/* ============================================================================
+   MODE GELAP — data-mode="dark" di <html>, dipasang bebas di atas tema apa pun.
+   Tiap blok menimpa SELURUH token supaya tidak ada sisa nilai terang yang bocor.
+   Selektor dua atribut ([data-mode][data-theme]) otomatis menang atas blok
+   terang yang cuma satu atribut, jadi urutan file tidak jadi jebakan.
+   --kk-pink-300 memakai pink tema apa adanya dan --kk-pink-50 memakai
+   pink-pale, supaya chip istilah tetap terbaca di latar gelap.
+   ========================================================================== */
+
+/* ---------- momo gelap ---------- */
+:root[data-mode=dark],:root[data-mode=dark][data-theme=momo]{
+  --ink:#f7eaf4;--muted:#a892b8;
+  --pink:#ff7bb0;--pink-deep:#ff5fa0;--pink-pale:#2a1a2e;--pink-paler:#1d1424;
+  --lavender:#2a1f3d;--gold:#ffd47e;--gold-deep:#f5bf5c;--mint:#1e3a35;
+  --soft:#120d1a;--card:#171020;--line:#2e2038;
+  --shadow-pink:0 14px 34px -12px rgba(0,0,0,.85);
+  --shadow-pink-lg:0 24px 54px -14px rgba(0,0,0,.9);
+  --kk-furi:#b89ac4;--kk-pink-300:#ff7bb0;--kk-pink-50:#2a1a2e;
 }
-:root[data-theme=yozora] body{
+:root[data-mode=dark] body,:root[data-mode=dark][data-theme=momo] body{
   background:
-    radial-gradient(circle at 10% 0%, #ece2fd 0%, transparent 45%),
-    radial-gradient(circle at 90% 10%, #fdeef7 0%, transparent 40%),
-    linear-gradient(180deg,#faf8ff,#fff9fc 60%);
+    radial-gradient(circle at 78% 6%, #2d1338 0%, transparent 46%),
+    radial-gradient(circle at 10% 2%, #1b1030 0%, transparent 40%),
+    linear-gradient(180deg,#0e0a13,#0a070f 65%);
 }
+
+/* ---------- yuki gelap ---------- */
+:root[data-mode=dark][data-theme=yuki]{
+  --ink:#e8f4fe;--muted:#8fadc8;
+  --pink:#4fb4f0;--pink-deep:#33a2e6;--pink-pale:#14263a;--pink-paler:#101c2b;
+  --lavender:#182c42;--gold:#ffd966;--gold-deep:#eec24c;--mint:#153b36;
+  --soft:#0b131d;--card:#101a26;--line:#20344a;
+  --shadow-pink:0 14px 34px -12px rgba(0,0,0,.85);
+  --shadow-pink-lg:0 24px 54px -14px rgba(0,0,0,.9);
+  --kk-furi:#86a6c2;--kk-pink-300:#4fb4f0;--kk-pink-50:#14263a;
+}
+:root[data-mode=dark][data-theme=yuki] body{
+  background:
+    radial-gradient(circle at 78% 6%, #103049 0%, transparent 46%),
+    radial-gradient(circle at 10% 2%, #0d2436 0%, transparent 40%),
+    linear-gradient(180deg,#080e16,#060a11 65%);
+}
+
+/* ---------- luna gelap ---------- */
+:root[data-mode=dark][data-theme=luna]{
+  --ink:#ece4fd;--muted:#9d90c2;
+  --pink:#a084f9;--pink-deep:#8b5cf6;--pink-pale:#241b3a;--pink-paler:#1b1430;
+  --lavender:#291f45;--gold:#ffe08a;--gold-deep:#efcb6e;--mint:#1f3446;
+  --soft:#0e0a18;--card:#151027;--line:#2c2246;
+  --shadow-pink:0 14px 34px -12px rgba(0,0,0,.85);
+  --shadow-pink-lg:0 24px 54px -14px rgba(0,0,0,.9);
+  --kk-furi:#9689bd;--kk-pink-300:#a084f9;--kk-pink-50:#241b3a;
+}
+:root[data-mode=dark][data-theme=luna] body{
+  background:
+    radial-gradient(circle at 78% 6%, #2a1650 0%, transparent 46%),
+    radial-gradient(circle at 10% 2%, #1a1038 0%, transparent 40%),
+    linear-gradient(180deg,#0c0916,#080611 65%);
+}
+
+/* ---------- token tombol per karakter via [data-char] ----------
+   Di-set applyChar() di lib/social.jsx dari user.characterId (momo default).
+   applyChar menyalin --char-btn* ke --btn-* lewat inline style di <html>;
+   nilai di bawah ini sumber kanoniknya. Warna tiap karakter sudah lolos
+   kontras >= 4.5:1 terhadap --char-btn-text, di terang maupun gelap. */
+:root{--char-btn:#ff6f9c;--char-btn-text:#3a2a33;--char-btn-shadow:#c22a5e}
+:root[data-char=momo]{--char-btn:#ff6f9c;--char-btn-text:#3a2a33;--char-btn-shadow:#c22a5e}
+:root[data-char=yuki]{--char-btn:#1a6fae;--char-btn-text:#ffffff;--char-btn-shadow:rgba(10,50,85,.45)}
+:root[data-char=luna]{--char-btn:#7c3aed;--char-btn-text:#ffffff;--char-btn-shadow:rgba(50,18,110,.45)}
+:root[data-mode=dark][data-char=momo]{--char-btn:#ff6f9c;--char-btn-text:#2a121c;--char-btn-shadow:rgba(0,0,0,.7)}
+:root[data-mode=dark][data-char=yuki]{--char-btn:#2b8fd4;--char-btn-text:#04161f;--char-btn-shadow:rgba(0,0,0,.7)}
+:root[data-mode=dark][data-char=luna]{--char-btn:#9d76f8;--char-btn-text:#150a2b;--char-btn-shadow:rgba(0,0,0,.7)}
 
 /* ============================================================================
    BINGKAI AVATAR — reward achievement. Gradient ring di ::before, avatar di atas.

@@ -7,7 +7,7 @@ import Furigana,{CompareTerm,stripRuby} from './Furigana.jsx';
 import s1l1Content from './content/s1l1.json';
 import s1l1Ja from './content/s1l1-ja.json';
 import glossaryData from './content/glossary.index.json';
-import {Avatar,ToastProvider,useLangMode,CHARACTERS,charPath,useCharExpr,applyChar,useAchToast} from './lib/social.jsx';
+import {Avatar,ToastProvider,useLangMode,CHARACTERS,charPath,useCharExpr,applyChar,applyDark,readDark,themeSkinOf,useAchToast} from './lib/social.jsx';
 import {AuthProvider, useAuth} from './context/AuthContext.jsx';
 import {ProgressProvider, useProgress} from './context/ProgressContext.jsx';
 import {dailyQuote} from './data/quotes.js';
@@ -562,10 +562,15 @@ function Profile(){
    skin). Keluar/di-logout → atribut dicabut (momo default). */
 function ThemeApply(){
   const {user} = useAuth();
+  // Mode gelap dipasang lebih dulu & tidak bergantung sesi: tamu di /login pun
+  // dapat mode yang sama, dan tidak ada kedipan terang saat profil selesai dimuat.
+  useEffect(()=>{applyDark(readDark())},[]);
   useEffect(()=>{
-    const t = user?.theme;
-    if(t && t!=='kitty') document.documentElement.setAttribute('data-theme',t);
-    else document.documentElement.removeAttribute('data-theme');
+    // themeSkinOf memetakan nilai DB lama (kitty/sakura/matcha/yozora) ke tiga
+    // palet yang ada sekarang, jadi baris lama tidak perlu dimigrasi.
+    const skin = themeSkinOf(user?.theme);
+    if(skin==='momo') document.documentElement.removeAttribute('data-theme');
+    else document.documentElement.setAttribute('data-theme',skin);
     applyChar(user?.characterId||'momo');
   },[user?.theme,user?.characterId]);
   return null;

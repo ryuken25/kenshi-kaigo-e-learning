@@ -34,3 +34,10 @@ backup-*.json
 
 # Smoke-test scratch dir (payload, token, header temp — jangan pernah ke-commit)
 .smoke/
+
+# Kanvas desain: sumbernya (kit/screens/build + chars/) di-commit, hasil generate tidak.
+# .dc.html dan halaman ter-seed dibangun ulang dengan `node docs/design/canvas/build.mjs`.
+docs/design/canvas/*.dc.html
+docs/design/canvas/canvas.json
+docs/design/canvas/kenshi-kaigo-semua-layar.html
+docs/design/canvas/_verify.png

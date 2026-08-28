@@ -12,18 +12,37 @@ export function useLangMode(initial='kanji'){
   return [mode,pick];
 }
 
-/* ===== v8 (doc 49): sistem karakter orisinal — aset di public/assets/characters/.
-   6 karakter × 6 ekspresi digenerate scripts/gen-characters.mjs (deterministik).
-   Tema tombol ikut karakter via <html data-char>; SANRIO TIDAK DIPAKAI di produk
-   publik (IP pihak ketiga). HARUS sinkron dengan api/_characters.mjs & migrasi 008. ===== */
+/* ===== v9: tiga karakter ilustrasi — aset PNG di public/assets/characters/<skin>/.
+   SANRIO TIDAK DIPAKAI di produk publik (IP pihak ketiga); ketiganya orisinal.
+
+   PENTING — KENAPA TIDAK ADA MIGRASI DB.
+   Yang berubah cuma NAMA TAMPILAN dan ASETNYA, bukan id-nya. Id di kolom
+   app_users.character_id tetap 'momo' / 'sora' / 'kurumi' — nilai yang sudah
+   diizinkan CHECK constraint migrasi 008 dan sudah divalidasi api/_characters.mjs.
+   Jadi tidak ada baris yang perlu ditulis ulang, tidak ada constraint yang perlu
+   diubah, dan rollback cukup dengan revert kode.
+
+     id DB    skin/aset   nama baru
+     momo  ->  momo       Momo   (kucing putih)
+     sora  ->  yuki       Yuki   (anjing awan)
+     kurumi -> luna       Luna   (kelinci malam)
+     kinako/nagi/beni -> dipetakan ke skin terdekat; tidak lagi ditawarkan di picker
+       tapi akun lama yang terlanjur memilikinya tetap render dengan benar.
+
+   HARUS sinkron dengan api/_characters.mjs & migrasi 008 untuk daftar ID-nya. ===== */
 export const CHARACTER_IDS=['momo','kurumi','sora','kinako','nagi','beni'];
+// Yang ditawarkan di onboarding & editor profil. Tiga id ini semuanya sudah sah di DB.
+export const PICKABLE_CHARS=['momo','sora','kurumi'];
+// id DB -> skin aset. Akun lama dengan kinako/nagi/beni tetap dapat gambar yang benar.
+export const CHAR_SKIN={momo:'momo',sora:'yuki',kurumi:'luna',kinako:'momo',nagi:'yuki',beni:'luna'};
+export const skinOf=(id)=>CHAR_SKIN[id]||'momo';
 export const CHARACTERS={
-  momo:   {name:'Momo',   species:'Kucing putih',  emoji:'🎀', desc:'Hangat & telaten',        btnText:'#3a2a33'},
-  kurumi: {name:'Kurumi', species:'Kelinci malam', emoji:'🌙', desc:'Jenaka & penuh akal',     btnText:'#ffffff'},
-  sora:   {name:'Sora',   species:'Anjing awan',   emoji:'☁️', desc:'Tenang & penyabar',       btnText:'#ffffff'},
-  kinako: {name:'Kinako', species:'Anjing kue',    emoji:'🍮', desc:'Santai & ramah',          btnText:'#3a3122'},
-  nagi:   {name:'Nagi',   species:'Pinguin laut',  emoji:'📋', desc:'Cermat & teliti',         btnText:'#ffffff'},
-  beni:   {name:'Beni',   species:'Rubah senja',   emoji:'🦊', desc:'Penuh semangat',          btnText:'#ffffff'},
+  momo:   {name:'Momo',   species:'Kucing putih',  desc:'Hangat & telaten',    btnText:'#3a2a33'},
+  sora:   {name:'Yuki',   species:'Anjing awan',   desc:'Tenang & penyabar',   btnText:'#ffffff'},
+  kurumi: {name:'Luna',   species:'Kelinci malam', desc:'Jenaka & penuh akal', btnText:'#ffffff'},
+  kinako: {name:'Momo',   species:'Kucing putih',  desc:'Hangat & telaten',    btnText:'#3a2a33'},
+  nagi:   {name:'Yuki',   species:'Anjing awan',   desc:'Tenang & penyabar',   btnText:'#ffffff'},
+  beni:   {name:'Luna',   species:'Kelinci malam', desc:'Jenaka & penuh akal', btnText:'#ffffff'},
 };
 // Pasangan awal onboarding (doc 49): perempuan → Momo+Kurumi, laki-laki →
 // Momo+Sora, lainnya → ketiganya, tidak isi → Momo saja.
@@ -33,7 +52,8 @@ export const CHAR_COMPLEMENTS={momo:['kurumi','sora'],kurumi:['sora','momo'],sor
 export const CHAR_EXPRS=['idle','happy','sad','sleepy','surprised','clap'];
 // Nagi & Beni "menyusul" (doc 49): tampil abu tanpa gembok, tidak ada jalur unlock.
 export const COMING_SOON=['nagi','beni'];
-export const charPath=(id,expr='idle')=>`/assets/characters/${CHARACTER_IDS.includes(id)?id:'momo'}/${CHAR_EXPRS.includes(expr)?expr:'idle'}.svg`;
+// PNG, bukan SVG lagi: ilustrasi berbayang lembut tidak bisa diwakili path vektor.
+export const charPath=(id,expr='idle')=>`/assets/characters/${skinOf(id)}/${CHAR_EXPRS.includes(expr)?expr:'idle'}.png`;
 
 /* Pasang data-char + variabel tombol karakter di <html>. Dipanggil ThemeApply
    (main.jsx) dari user.characterId DAN on-the-fly oleh useCharExpr (pilih
@@ -42,10 +62,35 @@ export function applyChar(c){
   if(typeof document==='undefined')return;
   const id=CHARACTER_IDS.includes(c)?c:'momo';
   const r=document.documentElement;
-  r.setAttribute('data-char',id);
-  r.style.setProperty('--btn-bg',getComputedStyle(r).getPropertyValue('--char-btn'));
-  r.style.setProperty('--btn-text',CHARACTERS[id].btnText);
-  r.style.setProperty('--btn-shadow',getComputedStyle(r).getPropertyValue('--char-btn-shadow'));
+  // data-char memakai SKIN, bukan id DB: themes.css cuma punya selektor
+  // [data-char=momo|yuki|luna]. id 'sora' -> skin 'yuki', 'kurumi' -> 'luna'.
+  r.setAttribute('data-char',skinOf(id));
+  // --btn-text ikut dibaca dari CSS (bukan konstanta JS) karena nilainya beda
+  // antara mode terang & gelap; membaca dari CSS bikin toggle mode langsung benar.
+  const cs=getComputedStyle(r);
+  r.style.setProperty('--btn-bg',cs.getPropertyValue('--char-btn'));
+  r.style.setProperty('--btn-text',cs.getPropertyValue('--char-btn-text')||CHARACTERS[id].btnText);
+  r.style.setProperty('--btn-shadow',cs.getPropertyValue('--char-btn-shadow'));
+}
+
+/* ===== Mode gelap — atribut data-mode di <html>, disimpan lokal per perangkat.
+   Sengaja TIDAK disimpan ke akun: preferensi terang/gelap itu milik perangkat
+   (ponsel di kamar gelap, laptop di kantor terang), bukan milik orang. Menyimpan
+   ke DB berarti butuh migrasi kolom + endpoint baru untuk hasil yang lebih buruk. */
+export const DARK_KEY='kk_dark_mode';
+export const readDark=()=>{try{return localStorage.getItem(DARK_KEY)==='1'}catch{return false}};
+export function applyDark(on){
+  if(typeof document==='undefined')return;
+  const r=document.documentElement;
+  if(on)r.setAttribute('data-mode','dark');else r.removeAttribute('data-mode');
+  try{localStorage.setItem(DARK_KEY,on?'1':'0')}catch{}
+  // Token tombol ikut berubah per mode, jadi salin ulang setelah atribut berganti.
+  applyChar(r.getAttribute('data-char')==='yuki'?'sora':r.getAttribute('data-char')==='luna'?'kurumi':'momo');
+}
+export function useDarkMode(){
+  const [on,setOn]=useState(readDark);
+  useEffect(()=>{applyDark(on)},[on]);
+  return [on,setOn];
 }
 
 /* Ekspresi karakter aktif yang reaktif terhadap data-char: pasang/bersihkan
@@ -67,12 +112,16 @@ export function useCharExpr(expr='idle'){
 /* ===== Konstanta sosial — HARUS sinkron dengan api/profile.mjs & migrasi 006/007.
    Kalau nambah tema/avatar di sini, tambah juga di DB constraint + AVATAR_KEYS server. ===== */
 
+/* Tema mengikuti pola yang sama: key DB tidak diubah (semuanya sudah sah di CHECK
+   migrasi 007), cuma nama & paletnya. matcha/yozora tidak ditawarkan lagi tapi akun
+   lama yang memakainya tetap dapat palet yang benar lewat THEME_SKIN. */
 export const THEMES = [
-  {key:'kitty',  name:'Kitty',  ja:'キティ', emoji:'🎀', desc:'Pink klasik — hangat & ceria'},
-  {key:'sora',   name:'Sora',   ja:'そら',   emoji:'☁️', desc:'Langit biru — tenang & sejuk'},
-  {key:'matcha', name:'Matcha', ja:'抹茶',   emoji:'🍵', desc:'Hijau lembut — fokus & adem'},
-  {key:'yozora', name:'Yozora', ja:'夜空',   emoji:'🌙', desc:'Ungu malam — tenang untuk belajar'},
+  {key:'kitty',  name:'Momo', ja:'もも',   desc:'Merah muda — hangat & ceria'},
+  {key:'sora',   name:'Yuki', ja:'ゆき',   desc:'Biru langit — tenang & sejuk'},
+  {key:'yozora', name:'Luna', ja:'るな',   desc:'Ungu malam — teduh untuk belajar'},
 ];
+export const THEME_SKIN={kitty:'momo',sakura:'momo',sora:'yuki',matcha:'luna',yozora:'luna'};
+export const themeSkinOf=(k)=>THEME_SKIN[k]||'momo';
 
 // Saran tema per gender (spec user: cowo → biru/sora, cewe → pink).
 // Cuma SARAN — user bebas pilih tema lain di step berikutnya.
