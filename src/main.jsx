@@ -115,9 +115,14 @@ function Shell({children}){
     {to:'/leaderboard', kind:'rank', label:'Peringkat', cls:'navRank', match:p=>p.startsWith('/leaderboard')},
     {to:'/profile', kind:'profile', label:'Profil', match:p=>p==='/profile'||p==='/login'},
   ];
-  /* appHome: beranda desktop mengikuti kanvas DeskMomo yang TIDAK punya header —
+  /* appBare: landing & login belum punya sesi, jadi keenam tautan nav semuanya
+     melempar balik ke /login — navigasi mati yang cuma menambah kebingungan. Nav &
+     header disembunyikan di sana, sekalian membebaskan padding sidebar 268px yang
+     bikin kartunya meleset 134px dari titik tengah jendela.
+     appHome: beranda desktop mengikuti kanvas DeskMomo yang TIDAK punya header —
      mereknya dibawa sidebar. Halaman lain tetap berheader (kanvas DesktopMateri). */
-  return <div className={loc.pathname==='/belajar'?"app appHome":"app"}>
+  const bare = loc.pathname==='/' || loc.pathname==='/login';
+  return <div className={bare?"app appBare":loc.pathname==='/belajar'?"app appHome":"app"}>
     <ScrollToTop/>
     <header>
       <Link to="/belajar" className="brand"><div className="kitty"><img src={brandSrc} alt="Kenshi Kaigo E-Learning"/></div><div><b>kenshi kaigo e-learning</b><small>belajar kaigo</small></div></Link>
