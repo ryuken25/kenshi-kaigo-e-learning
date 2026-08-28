@@ -35,7 +35,15 @@ export const CHARACTER_IDS=['momo','kurumi','sora','kinako','nagi','beni'];
 export const PICKABLE_CHARS=['momo','sora','kurumi'];
 // id DB -> skin aset. Akun lama dengan kinako/nagi/beni tetap dapat gambar yang benar.
 export const CHAR_SKIN={momo:'momo',sora:'yuki',kurumi:'luna',kinako:'momo',nagi:'yuki',beni:'luna'};
-export const skinOf=(id)=>CHAR_SKIN[id]||'momo';
+// Nama skin yang sah. DIBUTUHKAN terpisah dari CHARACTER_IDS: <html data-char> diisi
+// SKIN oleh applyChar, bukan id DB, jadi apa pun yang membaca atribut itu harus
+// mengukurnya terhadap daftar ini. 'momo' kebetulan ada di dua daftar sekaligus —
+// itulah kenapa tema merah muda tampak benar sementara Yuki & Luna diam-diam jatuh
+// ke Momo di SETIAP gambar karakter.
+export const CHAR_SKINS=['momo','yuki','luna'];
+// Idempoten: menerima id DB ('sora') maupun skin ('yuki'). Tanpa ini charPath('yuki')
+// jatuh ke 'momo' karena 'yuki' bukan kunci CHAR_SKIN.
+export const skinOf=(id)=>CHAR_SKIN[id]||(CHAR_SKINS.includes(id)?id:'momo');
 export const CHARACTERS={
   momo:   {name:'Momo',   species:'Kucing putih',  desc:'Hangat & telaten',    btnText:'#3a2a33'},
   sora:   {name:'Yuki',   species:'Anjing awan',   desc:'Tenang & penyabar',   btnText:'#ffffff'},
@@ -100,7 +108,10 @@ export function useCharExpr(expr='idle'){
   const [c,setC]=useState('momo');
   useEffect(()=>{
     const r=document.documentElement;
-    const read=()=>setC(CHARACTER_IDS.includes(r.getAttribute('data-char'))?r.getAttribute('data-char'):'momo');
+    // data-char berisi SKIN (momo/yuki/luna), bukan id DB. Dulu di sini diukur
+    // terhadap CHARACTER_IDS, jadi 'yuki' & 'luna' selalu gagal dan setiap maskot
+    // di seluruh app menampilkan Momo untuk tema biru & ungu.
+    const read=()=>{const v=r.getAttribute('data-char');setC(CHAR_SKINS.includes(v)||CHARACTER_IDS.includes(v)?v:'momo')};
     read();
     const mo=new MutationObserver(read);
     mo.observe(r,{attributes:true,attributeFilter:['data-char']});

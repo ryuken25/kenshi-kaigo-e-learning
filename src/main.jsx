@@ -8,7 +8,7 @@ import Furigana,{CompareTerm,stripRuby} from './Furigana.jsx';
 import s1l1Content from './content/s1l1.json';
 import s1l1Ja from './content/s1l1-ja.json';
 import glossaryData from './content/glossary.index.json';
-import {Avatar,ToastProvider,useLangMode,CHARACTERS,charPath,useCharExpr,applyChar,applyDark,readDark,themeSkinOf,useDarkMode,useAchToast} from './lib/social.jsx';
+import {Avatar,ToastProvider,useLangMode,CHARACTERS,useCharExpr,applyChar,applyDark,readDark,themeSkinOf,useDarkMode,useAchToast} from './lib/social.jsx';
 import {AuthProvider, useAuth} from './context/AuthContext.jsx';
 import {ProgressProvider, useProgress} from './context/ProgressContext.jsx';
 import {dailyQuote} from './data/quotes.js';
@@ -120,7 +120,7 @@ function Shell({children}){
   return <div className={loc.pathname==='/belajar'?"app appHome":"app"}>
     <ScrollToTop/>
     <header>
-      <Link to="/belajar" className="brand"><div className="kitty"><img src={charPath('momo')} alt="Kenshi Kaigo E-Learning"/></div><div><b>kenshi kaigo e-learning</b><small>belajar kaigo</small></div></Link>
+      <Link to="/belajar" className="brand"><div className="kitty"><img src={brandSrc} alt="Kenshi Kaigo E-Learning"/></div><div><b>kenshi kaigo e-learning</b><small>belajar kaigo</small></div></Link>
       <div className="topStats">
         <span><Flame size={16} fill="#ff718f"/> {loading && status==='authenticated' ? '…' : streakCurrent}<span className="statLabel">hari</span></span>
         <span className="xpStat"><Heart size={16} fill="#ff718f"/> {loading && status==='authenticated' ? '…' : totalXp}<span className="statLabel">XP</span></span>
