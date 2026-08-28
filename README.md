@@ -229,6 +229,7 @@ node scripts/verify-schema.mjs                        # dump columns + constrain
 node scripts/verify-consistency.mjs                   # total_xp vs SUM(xp_earned); must print []
 node scripts/backup-db.mjs .backup/dump.json          # dump SEMUA tabel publik ke JSON
 node scripts/restore-db.mjs .backup/dump.json --yes    # muat ulang dump itu ke DB kosong (tanpa --yes = uji coba)
+SRC_URL=.. DST_URL=.. node scripts/compare-schema.mjs # diff kolom/constraint/indeks dua database
 node scripts/e2e-make-token.mjs [email]               # mint a magic token for manual verification
 node scripts/cleanup-e2e-test.mjs                     # remove the e2e smoke-test user
 node scripts/gen-furigana.mjs                         # regenerate src/furigana.generated.js
@@ -278,13 +279,21 @@ lawan Supabase sungguhan**.
    DATABASE_URL=<supabase-pooler> node scripts/restore-db.mjs .backup/pindah.json        # uji coba
    DATABASE_URL=<supabase-pooler> node scripts/restore-db.mjs .backup/pindah.json --yes  # sungguhan
    ```
+4. Buktikan skemanya benar-benar mendarat:
+   ```bash
+   SRC_URL=<neon> DST_URL=<supabase> node scripts/compare-schema.mjs
+   ```
+   `verify-schema.mjs` hanya **mencetak**; berkas ini **membandingkan** dan keluar 1 kalau ada
+   selisih. Penting karena `run-migration.mjs` tidak atomik — migrasi yang gagal di tengah
+   meninggalkan skema separuh jadi tanpa satu pun galat di akhir.
+
    `restore-db.mjs` membaca tipe kolom dari `information_schema` **tujuan** untuk memutuskan
    mana yang dikirim sebagai array JS dan mana sebagai string JSON — menebak dari bentuk
    nilainya menghasilkan baris yang tersimpan tanpa galat tapi isinya salah. `ON CONFLICT
    DO NOTHING`, jadi restore yang gagal di tengah aman diulang.
-4. Ganti `DATABASE_URL` di Vercel (Production + Preview) ke URL pooler `6543`, lalu
+5. Ganti `DATABASE_URL` di Vercel (Production + Preview) ke URL pooler `6543`, lalu
    redeploy — env var Vercel baru berlaku di deployment baru.
-5. Rollback: kembalikan `DATABASE_URL` ke Neon dan redeploy, atau set `DB_DRIVER=neon`
+6. Rollback: kembalikan `DATABASE_URL` ke Neon dan redeploy, atau set `DB_DRIVER=neon`
    selama URL-nya masih Neon.
 
 Tiga hal yang bisa menggigit:
