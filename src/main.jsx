@@ -3,11 +3,12 @@ import {createRoot} from 'react-dom/client';
 import {BrowserRouter,Routes,Route,Link,useNavigate,useParams,useLocation,Navigate,Outlet} from 'react-router-dom';
 import {Heart,Lock,ChevronRight,BookOpen,Flame,Star,Check,X,Volume2,Info,Home as HomeIcon,ArrowLeft,RotateCcw,Shuffle,Users,Trophy,Medal} from 'lucide-react';
 import {sections,getSection,getLevel,glossary,allQuestions,randomQuestion,hashSeed} from './data.js';
+import {Icon} from './Icons.jsx';
 import Furigana,{CompareTerm,stripRuby} from './Furigana.jsx';
 import s1l1Content from './content/s1l1.json';
 import s1l1Ja from './content/s1l1-ja.json';
 import glossaryData from './content/glossary.index.json';
-import {Avatar,ToastProvider,useLangMode,CHARACTERS,charPath,useCharExpr,applyChar,applyDark,readDark,themeSkinOf,useAchToast} from './lib/social.jsx';
+import {Avatar,ToastProvider,useLangMode,CHARACTERS,charPath,useCharExpr,applyChar,applyDark,readDark,themeSkinOf,useDarkMode,useAchToast} from './lib/social.jsx';
 import {AuthProvider, useAuth} from './context/AuthContext.jsx';
 import {ProgressProvider, useProgress} from './context/ProgressContext.jsx';
 import {dailyQuote} from './data/quotes.js';
@@ -87,11 +88,25 @@ function NavIcon({kind}){
   return <svg className="navSvg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{paths[kind]}</svg>;
 }
 
+const NIGHT_STARS=[[6,8,1.4,.5],[12,22,1,.35],[17,5,1.8,.6],[21,34,1.1,.3],[26,12,1.3,.45],[31,27,1,.3],[34,6,1.6,.55],[39,18,1.2,.4],[43,31,1,.28],[47,9,1.5,.5],[52,24,1.1,.35],[56,4,1.7,.6],[59,16,1.2,.4],[63,29,1,.3],[66,8,1.4,.5],[70,20,1.1,.35],[74,33,1.3,.4],[77,6,1.6,.55],[81,26,1,.3],[85,14,1.4,.45],[88,30,1.1,.32],[91,5,1.5,.5],[94,21,1.2,.38],[97,11,1,.3]];
+const NIGHT_PETALS=[[22,14,13,18],[33,30,10,-24],[58,11,12,40],[72,26,14,-12],[83,9,10,28],[46,22,11,-38]];
+/* Dekorasi mode gelap. SELALU ada di DOM dan disembunyikan CSS saat terang —
+   kalau dilepas-pasang, toggle mode memicu remount seluruh subtree beranda. */
+function NightSky(){
+  return <div className="nightSky" aria-hidden="true">
+    {NIGHT_STARS.map(([x,y,r,o],i)=><i key={i} className="nightStar" style={{left:x+'%',top:y+'%',['--r']:r+'px',opacity:o}}/>)}
+    {NIGHT_PETALS.map(([x,y,sz,rot],i)=><i key={i} className="nightPetal" style={{left:x+'%',top:y+'%',width:sz,height:sz,transform:'rotate('+rot+'deg)'}}/>)}
+    <i className="nightMoon"/><i className="nightPagoda"/>
+  </div>;
+}
+
 function Shell({children}){
   const loc=useLocation();
   const {isAuthenticated, loading, streakCurrent, totalXp} = useProgress();
   const {status} = useAuth();
   const brandSrc=useCharExpr('idle');
+  const cheerSrc=useCharExpr('happy');
+  const [dark,setDark]=useDarkMode();
   const navItems = [
     {to:'/belajar', kind:'learn', label:'Belajar', match:p=>p==='/belajar'},
     {to:'/final', kind:'exam', label:'Ujian', match:p=>p.startsWith('/final')},
@@ -100,7 +115,9 @@ function Shell({children}){
     {to:'/leaderboard', kind:'rank', label:'Peringkat', cls:'navRank', match:p=>p.startsWith('/leaderboard')},
     {to:'/profile', kind:'profile', label:'Profil', match:p=>p==='/profile'||p==='/login'},
   ];
-  return <div className="app">
+  /* appHome: beranda desktop mengikuti kanvas DeskMomo yang TIDAK punya header —
+     mereknya dibawa sidebar. Halaman lain tetap berheader (kanvas DesktopMateri). */
+  return <div className={loc.pathname==='/belajar'?"app appHome":"app"}>
     <ScrollToTop/>
     <header>
       <Link to="/belajar" className="brand"><div className="kitty"><img src={charPath('momo')} alt="Kenshi Kaigo E-Learning"/></div><div><b>kenshi kaigo e-learning</b><small>belajar kaigo</small></div></Link>
@@ -111,7 +128,11 @@ function Shell({children}){
     </header>
     {children}
     <nav>
+      <Link to="/belajar" className="sideBrand"><span className="sideBrandArt"><img src={brandSrc} alt=""/></span><span><b className="sideBrandName">kenshi</b><small className="sideBrandSub">kaigo e-learning</small></span></Link>
       {navItems.map(n=><Link key={n.label} className={`tap ${n.cls||''} ${n.match(loc.pathname)?'active':''}`} to={n.to}><span className="navEmoji"><NavIcon kind={n.kind}/></span><span>{n.label}</span></Link>)}
+      <span className="sideSpacer"/>
+      <div className="sideCheer"><span className="sideCheerArt"><img src={cheerSrc} alt=""/></span><small className="sideCheerText">Sedikit setiap hari,<br/>hasil luar biasa!</small></div>
+      <div className="sideDark"><button type="button" className={dark?"darkRow tap on":"darkRow tap"} onClick={()=>setDark(!dark)} aria-pressed={dark}><span className="darkRowIcon">{dark?"☀︎":"☾︎"}</span><span className="darkRowLabel">Mode gelap</span><span className="darkSwitch" aria-hidden="true"><i/></span></button></div>
     </nav>
   </div>;
 }
@@ -140,29 +161,74 @@ function useSectionUnlockMap(){
 }
 
 function Home(){
-  const {completedCount, loading} = useProgress();
+  const {completedCount, streakCurrent, loading} = useProgress();
   const {user} = useAuth();
   const unlockMap = useSectionUnlockMap();
+  const heroSrc = useCharExpr('idle');
+  const napSrc = useCharExpr('sleepy');
   const totalLevels = sections.reduce((a,s)=>a+s.levelCount,0);
-  // v8: kutipan harian deterministik (tanggal+user) ganti slogan statis "Belajar merawat
-  // dengan hati". Hash lokal, bukan Math.random() — satu user lihat kutipan sama seharian.
+  // Kutipan harian deterministik (tanggal+user), bukan Math.random(): satu user
+  // melihat kutipan yang sama seharian penuh.
   const today=new Date().toISOString().slice(0,10);
-  const quote=dailyQuote(`${today}:${user?.id||'guest'}`);
+  const quote=dailyQuote(today+':'+(user?.id||'guest'));
+  const donePct = totalLevels ? Math.round((completedCount/totalLevels)*100) : 0;
+  const doneSections = sections.filter(x=>(unlockMap[x.id]?.completedLevels||0)>=x.levelCount).length;
+  const streak = streakCurrent ?? 0;
   if(loading) return <main><KawaiiLoader label="Menyiapkan materi…"/></main>;
-  return <main><section className="welcome"><div><p className="eyebrow">OHAYŌ, KENSHI 🌷</p><h1 className="quoteJa" lang={quote.note?'ja':undefined}>{quote.text}</h1>{quote.note&&<p className="quoteNote">{quote.note}</p>}<p className="muted">13 bab · {totalLevels} level · dikerjakan sedikit demi sedikit.</p></div><CharArt variant="home" size="md"/></section>
-    <div className="daily"><div><b>Hari ini</b><p>Satu kartu sekali duduk sudah cukup.</p><div className="progress"><i style={{width:`${Math.min(100,(completedCount/totalLevels)*100)}%`}}/></div></div><span className="badge">{completedCount} selesai</span></div>
-    <Link className="finalHomeBanner" to="/final"><div><b>Ujian Akhir</b><span>Soal asli 2021–2026 · 125 butir tiap tahun</span></div><ChevronRight/></Link>
-    <div className="sectionHead"><div><h2>Urutan belajar</h2><p>Mulai dari martabat, berakhir di studi kasus</p></div></div>
-    <div className="sectionGrid">{sections.map((s)=><SectionCard key={s.id} section={s} official={unlockMap[s.id]?.official ?? (s.id===1)} completedLevels={unlockMap[s.id]?.completedLevels||0}/>)}</div>
+  return <main>
+    <NightSky/>
+    <div className="homeTop"><span className="streakPill"><Flame size={16} fill="currentColor"/> {streak} hari berturut-turut</span></div>
+    <section className="welcome"><div>
+      <p className="eyebrow">OHAYŌ, KENSHI</p>
+      <h1 className="quoteJa" lang={quote.note?'ja':undefined}>{quote.text}</h1>
+      {quote.note&&<p className="quoteNote">{quote.note}</p>}
+      <p className="muted">13 bab · {totalLevels} level · dikerjakan sedikit demi sedikit.</p>
+    </div><span className="homeHeroArt"><img src={heroSrc} alt=""/></span></section>
+    <div className="homeCards">
+      <div className="homeCard">
+        <span className="homeCardArt"><Icon name="catatan" size={30} fill="var(--pink-deep)" tint="var(--card)"/></span>
+        <div className="homeCardBody"><b>Hari ini</b><p>Satu kartu sekali duduk sudah cukup.</p>
+          {/* sectionRow dipakai ulang di sini: bar + persen sebaris, sama seperti kartu bab. */}
+          <div className="sectionRow"><div className="homeBar"><i style={{width:donePct+'%'}}/></div><b className="homeBarPct">{donePct}%</b></div>
+        </div>
+        <span className="homeCardBadge"><Star size={18} fill="currentColor"/><b>{completedCount} selesai</b></span>
+      </div>
+      <Link className="homeCard tap" to="/final">
+        <span className="homeCardArt"><Icon name="stetoskop" size={30} fill="var(--pink-deep)" tint="var(--card)"/></span>
+        <div className="homeCardBody"><b>Ujian Akhir</b><p>Soal asli 2021–2026 · 125 butir tiap tahun</p></div>
+        <span className="homeCardGo"><ChevronRight size={18}/></span>
+      </Link>
+    </div>
+    <div className="sectionHead">
+      <div><h2>Urutan belajar <Icon name="kilau" size={19} fill="var(--gold)" tint="var(--gold-deep)"/></h2><p>Mulai dari martabat, berakhir di studi kasus</p></div>
+      <Link className="roadmapBtn tap" to="/glossary"><BookOpen size={17}/> Lihat roadmap</Link>
+    </div>
+    <div className="sectionGrid">{sections.map((x)=><SectionCard key={x.id} section={x} official={unlockMap[x.id]?.official ?? (x.id===1)} completedLevels={unlockMap[x.id]?.completedLevels||0}/>)}</div>
+    <section className="progressSummary">
+      <h3 className="summaryHead">Ringkasan progres <Icon name="kilau" size={16} fill="var(--gold)" tint="var(--gold-deep)"/></h3>
+      <div className="statRow">
+        <div className="statTile"><span className="statTileArt" style={{['--accent']:sections[0].accent}}><Icon name="catatan" size={26} fill="var(--accent)" tint="transparent"/></span><div><p className="statTileNum">{doneSections}<span className="statTileOf">/ 13</span></p><small className="statTileLabel">Bab selesai</small></div></div>
+        <div className="statTile"><span className="statTileArt" style={{['--accent']:sections[1].accent}}><Icon name="gelembung" size={26} fill="var(--accent)" tint="transparent"/></span><div><p className="statTileNum">{completedCount}<span className="statTileOf">/ {totalLevels}</span></p><small className="statTileLabel">Level selesai</small></div></div>
+        <div className="statTile"><span className="statTileArt" style={{['--accent']:'var(--gold-deep)'}}><Icon name="pita" size={26} fill="var(--accent)" tint="transparent"/></span><div><p className="statTileNum">{donePct}<span className="statTileOf">%</span></p><small className="statTileLabel">Kurikulum tercakup</small></div></div>
+        <div className="statTile"><span className="statTileArt" style={{['--accent']:sections[3].accent}}><Icon name="jantung" size={26} fill="var(--accent)" tint="transparent"/></span><div><p className="statTileNum">{streak}</p><small className="statTileLabel">Hari berturut-turut</small></div></div>
+      </div>
+      <span className="summaryArt"><img src={napSrc} alt=""/></span>
+    </section>
   </main>;
 }
-
 function SectionCard({section,official,completedLevels}){
-  return <Link to={`/section/${section.id}`} className={`sectionCard tap ${!official?'preview-only':''}`}>
+  const pct = section.levelCount ? Math.round((completedLevels/section.levelCount)*100) : 0;
+  return <Link to={'/section/'+section.id} className={'sectionCard tap '+(official?'':'preview-only')} style={{['--accent']:section.accent}}>
     {!official && <span className="previewPill"><Lock size={10}/> preview</span>}
-    <div className="sectionIcon">{section.icon}</div>
-    <div className="sectionCopy"><small>BAB {String(section.id).padStart(2,'0')}</small><b>{section.titleJa}</b><span>{section.titleId}</span><em className="sectionDesc">{section.descriptionId}</em><div className="miniProgress"><i style={{width:`${completedLevels/section.levelCount*100}%`}}/></div><em>{completedLevels}/{section.levelCount} level selesai</em></div>
-    <ChevronRight/>
+    <span className="sectionIcon"><Icon name={section.iconName} size={54} fill="var(--accent)" tint="var(--card)"/></span>
+    <div className="sectionCopy">
+      <small className="sectionBadge">BAB {String(section.id).padStart(2,'0')}</small>
+      <b lang="ja">{section.titleJa}</b>
+      <span>{section.titleId}</span>
+      <em className="sectionDesc">{section.descriptionId}</em>
+      <div className="sectionRow"><div className="miniProgress"><i style={{width:pct+'%'}}/></div><b className="sectionPct">{pct}%</b></div>
+    </div>
+    <span className="sectionGo"><ChevronRight size={17}/></span>
   </Link>;
 }
 

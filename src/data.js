@@ -127,7 +127,19 @@ function makeLevel(sectionId, plan, levelId, topic){
  return {id:levelId,titleJa:`${topic}`,titleId,objective:`${topic}の基本を理解し、事例に応用する`,objectiveId:`Memahami ${titleId} dan menerapkannya pada kasus.`,isReview,materi:[makeGeneratedJapaneseCard({sectionId,levelId,topic,titleId,cardIndex:0,type:'hook'}),makeGeneratedJapaneseCard({sectionId,levelId,topic,titleId,cardIndex:1,type:'explain'}),makeGeneratedJapaneseCard({sectionId,levelId,topic,titleId,cardIndex:2,type:'explain'}),makeGeneratedJapaneseCard({sectionId,levelId,topic,titleId,cardIndex:3,type:isReview?'tip':'explain'}),makeGeneratedJapaneseCard({sectionId,levelId,topic,titleId,cardIndex:4,type:'recap'}),{id:`generated-s${sectionId}l${levelId}m5`,type:'terms',heading:{ja:'関連用語',id:'Istilah terkait'},terms:levelTerms(sectionId,levelId)}],questions};
 }
 
-export const sections=plans.map(([titleJa,titleId,count,icon,topics],i)=>({id:i+1,titleJa,titleId,icon,levelCount:count,description:`${titleJa}を基礎から事例まで段階的に学びます。`,descriptionId:SECTION_ID_DESC[i],levels:topics.map((topic,j)=>makeLevel(i+1,[titleJa,titleId,count,icon,topics],j+1,topic))}));
+
+/* Warna & ikon per bab (v9, mengikuti kanvas desain).
+   13 bab yang semuanya sewarna bikin grid jadi dinding datar, dan warna itulah
+   yang dipakai orang untuk mengingat "bab yang biru". Warna DIPUTAR dari enam
+   rona supaya bab bertetangga tidak pernah kembar; nilainya sengaja bukan token
+   tema — tema menguasai latar, kartu, dan teks, warna bab menguasai kartunya.
+   Ikon menggantikan emoji: emoji dirender font sistem sehingga bentuknya beda di
+   Android/iOS/Windows dan warnanya tidak bisa ikut tema. Nama ikon harus ada di
+   SECTION_ICON_NAMES pada src/Icons.jsx. */
+export const SECTION_ACCENT=['#ff7bab','#9d8bf0','#e8a33c','#4d9fd8','#e8709a','#5fae90','#c07be0','#4fa8c9','#e5893f','#7f9be0','#d76b8f','#6ea86a','#b06fd8'];
+export const SECTION_ICON=['sakura','surat','rumah','jantung','tulip','otak','beruang','stetoskop','stroberi','gelembung','bak','catatan','pita'];
+
+export const sections=plans.map(([titleJa,titleId,count,icon,topics],i)=>({id:i+1,titleJa,titleId,icon,iconName:SECTION_ICON[i],accent:SECTION_ACCENT[i],levelCount:count,description:`${titleJa}を基礎から事例まで段階的に学びます。`,descriptionId:SECTION_ID_DESC[i],levels:topics.map((topic,j)=>makeLevel(i+1,[titleJa,titleId,count,icon,topics],j+1,topic))}));
 export const getSection=(id)=>sections.find(s=>String(s.id)===String(id));
 export const getLevel=(sid,lid)=>getSection(sid)?.levels.find(l=>String(l.id)===String(lid));
 

@@ -2,24 +2,24 @@
 .authPage>.mascotImg{margin:0 auto 16px}
 .authPage h1{font:600 26px Fredoka;margin:8px 0}
 .authForm{
-  max-width:390px;margin:22px auto;text-align:left;background:#fff;border:1px solid var(--line);
+  max-width:390px;margin:22px auto;text-align:left;background:var(--card);border:1px solid var(--line);
   border-radius:var(--radius-lg);padding:20px;box-shadow:var(--shadow-pink);
 }
-.authForm label{display:block;font-size:12px;color:#987d8b;font-weight:700}
+.authForm label{display:block;font-size:12px;color:var(--faint);font-weight:700}
 .authForm input{
-  display:block;width:100%;margin-top:8px;padding:14px;border:1.5px solid #efdfe5;
+  display:block;width:100%;margin-top:8px;padding:14px;border:1.5px solid var(--line);
   border-radius:14px;outline:none;font:inherit;transition:border-color .2s ease;
 }
 .authForm input:focus{border-color:var(--pink)}
 .authForm button{width:100%;margin-top:16px}
-.authError{display:block;color:#df5879;padding-top:10px;font-size:12px;font-weight:600}
-.authNote{font-size:11px;color:#b39aa8}
+.authError{display:block;color:var(--bad);padding-top:10px;font-size:12px;font-weight:600}
+.authNote{font-size:11px;color:var(--faint)}
 /* v8 (doc 50): landing publik — pintu masuk satu-satunya setelah mode tamu dihapus.
    Harus jelas dalam 5 detik: apa isinya, kenapa perlu email. */
 .landingPage{min-height:70vh;min-height:calc(100dvh - 130px);display:flex;align-items:center;justify-content:center;padding:30px 20px 44px}
-.landingCard{background:#fff;border-radius:22px;padding:26px 22px 24px;max-width:420px;width:100%;text-align:center;box-shadow:var(--shadow-pink)}
+.landingCard{background:var(--card);border-radius:22px;padding:26px 22px 24px;max-width:420px;width:100%;text-align:center;box-shadow:var(--shadow-pink)}
 .landingCard h1{font:600 26px/1.25 Fredoka;margin:8px 0 14px;color:var(--ink)}
 .landingPoints{list-style:none;padding:0;margin:0 0 18px;display:grid;gap:7px;text-align:left;font-size:13px;color:var(--muted)}
 .landingPoints li{padding-left:22px;position:relative}
 .landingPoints li:before{content:'🌸';position:absolute;left:0}
-.landingNote{font-size:11px;color:#b39aa8;margin-top:12px}
+.landingNote{font-size:11px;color:var(--faint);margin-top:12px}

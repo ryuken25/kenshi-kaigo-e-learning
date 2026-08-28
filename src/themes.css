@@ -125,6 +125,30 @@
     linear-gradient(180deg,#0c0916,#080611 65%);
 }
 
+/* ============================================================================
+   TOKEN SEMANTIK MODE GELAP — pasangan dari blok di styles.css.
+   Satu blok saja, tanpa varian per tema: hijau benar / merah salah / amber
+   preview adalah ARTI, bukan merek, jadi ketiganya tidak boleh ikut berubah
+   waktu user ganti tema. Selektor [data-mode=dark] cukup karena blok tema gelap
+   ([data-mode][data-theme]) hanya menimpa token merek, tidak menyentuh yang ini.
+   ========================================================================== */
+:root[data-mode=dark]{
+  --faint:#9a86a8;
+  --ok:#5fd08a;--ok-line:#2f8f63;--ok-bg:#12281d;--ok-strong:#2f9e63;--ok-soft:#46b377;
+  --bad:#ff7f9f;--bad-line:#8f3350;--bad-bg:#2a141c;--bad-ink:#ffb8c8;--bad-soft:#c4506d;--bad-strong:#a33355;
+  --warn-bg:#2b2114;--warn-line:#5c4526;--warn-ink:#f0c18e;--warn-pill:#d9a97f;--warn-lock:#c9a06d;
+  --amber-1:#241d10;--amber-2:#2c2415;--amber-line:#54431f;--amber-line-2:#4a3c1c;
+  --amber-ink:#e6cb9a;--amber-head:#f3d49a;--amber-soft:#d0ae72;--amber-on:#5c4820;--amber-on-ink:#ffe0a3;
+  --amber-link:#e0c489;--amber-mark:#6b5320;
+  --node-1:#e2bb63;--node-2:#c79a34;--node-sh:#8a6a1e;--node-ink:#3a2a08;
+  --node-todo-1:#4a1c35;--node-todo-2:#b03f70;--node-todo-sh:#2a0f1e;--node-todo-ink:#ffe6f0;
+  --node-ms-1:#7a2c52;--node-ms-2:#d1487f;--node-ms-sh:#3a1226;
+  --node-lock-1:#241c2c;--node-lock-2:#1c1622;--node-lock-sh:#120e17;--node-lock-ink:#6f6180;
+  --lav-ink:#c9b8e8;--lav-strong:#a98ce8;--lav-link:#b48ae8;--lav-line:#3a2d55;--lav-badge:#b79af0;
+  --tint-underline:#ff7bb0;--tint-listen:#ff9ec4;--tint-listen-line:#3a2432;--tint-listen-bg:#211722;
+  --info:#79b6e0;--info-bg:#14252f;--neutral-bg:#221d29;--neutral-ink:#8d8398;
+}
+
 /* ---------- token tombol per karakter via [data-char] ----------
    Di-set applyChar() di lib/social.jsx dari user.characterId (momo default).
    applyChar menyalin --char-btn* ke --btn-* lewat inline style di <html>;

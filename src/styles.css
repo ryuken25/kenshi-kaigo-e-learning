@@ -29,6 +29,33 @@
   --kk-furi:#8a6e7c;
   --kk-pink-300:#ff9ec1;
   --kk-pink-50:#fff4f9;
+  /* Siluet langit malam (.nightPetal / .nightMoon / .nightPagoda). Dipakai
+     sebagai mask, bukan gambar: path-nya sama persis dengan
+     docs/design/canvas/nightsky.mjs, tapi warnanya ikut token tema karena yang
+     dicat adalah background elemennya. fill='%23000' cuma penanda area mask. */
+  --petal:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2c3.4 3.6 5 7 5 9.6 0 3.6-2.4 6.4-5 6.4s-5-2.8-5-6.4C7 9 8.6 5.6 12 2Z' fill='%23000'/%3E%3C/svg%3E");
+  --moon:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M46 40A22 22 0 0 1 24 10a24 24 0 1 0 26 26 22 22 0 0 1-4 4Z' fill='%23000'/%3E%3C/svg%3E");
+
+  /* ---- token semantik: status & aksen dekoratif ----
+     Nilai TERANG di sini sama persis dengan literal yang digantikannya, jadi
+     mode terang tidak bergeser sedikit pun; yang berubah cuma mode gelap
+     (blok :root[data-mode=dark] di themes.css). Warna status sengaja TIDAK ikut
+     tema — hijau benar / merah salah / amber preview adalah arti, bukan merek. */
+  --faint:#9f8191;
+  --ok:#4cba89;--ok-line:#63c89a;--ok-bg:#effcf5;--ok-strong:#3bbf72;--ok-soft:#5fd68a;
+  --bad:#e0577c;--bad-line:#f4849b;--bad-bg:#fff1f3;--bad-ink:#8a3049;--bad-soft:#ff8fa8;--bad-strong:#ff5c8a;
+  --warn-bg:#fff3e2;--warn-line:#f4dcb8;--warn-ink:#a1723f;--warn-pill:#b98a6d;--warn-lock:#c9a06d;
+  --amber-1:#fff9e8;--amber-2:#fff3d3;--amber-line:#f8e3b4;--amber-line-2:#f6dfa3;
+  --amber-ink:#8a6a3a;--amber-head:#9a6b1f;--amber-soft:#b8934a;--amber-on:#ffdd8f;--amber-on-ink:#7a5310;
+  --amber-link:#987744;--amber-mark:#ffe29b;
+  --node-1:#ffe27a;--node-2:#ffc94d;--node-sh:#d9a53a;--node-ink:#7a4a15;
+  --node-todo-1:#ffd2e4;--node-todo-2:#ff9fbf;--node-todo-sh:#e0729a;--node-todo-ink:#ffffff;
+  --node-ms-1:#ffb3d4;--node-ms-2:#ff6fa0;--node-ms-sh:#d64d80;
+  --node-lock-1:#f1e4ea;--node-lock-2:#e6d5df;--node-lock-sh:#d3bcc8;--node-lock-ink:#b79aa9;
+  --lav-ink:#7d6a9a;--lav-strong:#9b7ae0;--lav-link:#9b5fd6;--lav-line:#e4d3ff;--lav-badge:#8354c9;
+  --tint-underline:#ff78a3;--tint-listen:#ff7393;--tint-listen-line:#f5dbe4;--tint-listen-bg:#fff7fa;
+  --info:#3f7fb0;--info-bg:#e3f0fa;--neutral-bg:#f0f0f2;--neutral-ink:#8a8a94;
+  --pagoda:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 180'%3E%3Cg fill='%23000'%3E%3Cpath d='M110 4 150 26H70Z'/%3E%3Crect x='96' y='26' width='28' height='14'/%3E%3Cpath d='M60 44h100l16 12H44Z'/%3E%3Crect x='86' y='56' width='48' height='20'/%3E%3Cpath d='M46 80h128l20 13H26Z'/%3E%3Crect x='78' y='93' width='64' height='26'/%3E%3Cpath d='M32 123h156l22 14H10Z'/%3E%3Crect x='66' y='137' width='88' height='43'/%3E%3C/g%3E%3C/svg%3E");
 }
 
 *{box-sizing:border-box}
@@ -51,18 +78,26 @@ button:active,.tap:active{transform:scale(.94)}
 @media(hover:hover){button:not(:disabled):hover,.tap:not(:disabled):hover{transform:translateY(-2px);filter:brightness(1.04)}}
 
 .app{max-width:720px;margin:auto;min-height:100vh;padding-bottom:92px;position:relative;overflow-x:hidden}
+/* position:relative saja — JANGAN tambah z-index/isolation di sini. main harus
+   tetap z-index:auto supaya .nightSky (z-index:-1) naik ke stacking context root
+   dan .confettiLayer/backdrop position:fixed di dalamnya tidak ikut terkurung. */
+.app>main{position:relative}
 
 /* ---------- header ---------- */
 header{
   height:76px;display:flex;align-items:center;justify-content:space-between;
   padding:0 20px;border-bottom:1px solid var(--line);position:sticky;top:0;
-  background:#fffbfdd9;backdrop-filter:blur(18px);z-index:40;gap:10px;
+  background:color-mix(in srgb,var(--pink-paler) 85%,transparent);backdrop-filter:blur(18px);z-index:40;gap:10px;
 }
-.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit;flex:1;min-width:0;overflow:hidden}
-.brand b{display:block;font:700 20px Fredoka;color:var(--pink-deep);letter-spacing:-.4px;white-space:nowrap}
-.brand small{font-size:9px;color:#7a5f6c;letter-spacing:1.4px;text-transform:uppercase;white-space:nowrap}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit;flex:1;min-width:0;min-height:44px;overflow:hidden}
+.brand>span{min-width:0}
+/* clamp, bukan nowrap 20px mati: 'kenshi kaigo e-learning' selebar 271px di
+   Fredoka 20px sementara kolom merek di 320px cuma 240px — teksnya terpotong
+   senyap oleh .app{overflow-x:hidden}. 5vw bikin muat sampai 320px. */
+.brand b{display:block;font:700 20px Fredoka;font-size:clamp(15px,4.4vw,20px);color:var(--pink-deep);letter-spacing:-.4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand small{font-size:9px;color:var(--muted);letter-spacing:1.4px;text-transform:uppercase;white-space:nowrap}
 .kitty{
-  width:42px;height:42px;border-radius:15px;background:linear-gradient(145deg,#ffe6f1,#ffd3e7);
+  width:42px;height:42px;border-radius:15px;background:linear-gradient(145deg,var(--pink-pale),color-mix(in srgb,var(--pink) 33%,transparent));
   display:grid;place-items:center;box-shadow:0 4px 14px -3px rgba(255,120,170,.5);
   transform:rotate(-4deg);overflow:hidden;flex:none;
 }
@@ -108,7 +143,7 @@ header{
 
 .daily{
   margin:0 20px 26px;padding:18px 20px;border:1px solid var(--line);
-  background:linear-gradient(135deg,#fff,#fff7fb);border-radius:var(--radius-lg);
+  background:linear-gradient(135deg,var(--card),var(--pink-paler));border-radius:var(--radius-lg);
   display:flex;justify-content:space-between;align-items:center;box-shadow:var(--shadow-pink);
   gap:10px;flex-wrap:wrap;
 }
@@ -117,62 +152,79 @@ header{
 .progress{height:10px;width:190px;max-width:100%;background:var(--pink-pale);border-radius:999px;overflow:hidden;position:relative}
 .progress i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--pink) 0%,var(--pink-deep) 55%,var(--gold) 100%);transition:width .5s cubic-bezier(.34,1.4,.6,1);position:relative}
 .progress i::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.6),transparent);animation:shimmer 2.2s linear infinite;background-size:200% 100%}
-.badge{background:linear-gradient(135deg,var(--gold),var(--gold-deep));color:#7a4a15;font:700 12px Fredoka;padding:8px 14px;border-radius:999px;box-shadow:0 6px 16px -4px rgba(255,180,80,.6);white-space:nowrap}
+.badge{background:linear-gradient(135deg,var(--gold),var(--gold-deep));color:var(--node-ink);font:700 12px Fredoka;padding:8px 14px;border-radius:999px;box-shadow:0 6px 16px -4px rgba(255,180,80,.6);white-space:nowrap}
 
-.objective{display:flex;gap:12px;padding:15px 16px;background:var(--lavender);border-radius:var(--radius-md);margin:0 20px 18px;align-items:flex-start;border:1px solid #e4d3ff}
-.objective svg{flex:none;color:#9b7ae0;margin-top:2px}
+.objective{display:flex;gap:12px;padding:15px 16px;background:var(--lavender);border-radius:var(--radius-md);margin:0 20px 18px;align-items:flex-start;border:1px solid var(--lav-line)}
+.objective svg{flex:none;color:var(--lav-strong);margin-top:2px}
 .objective b{font:600 14px Fredoka;display:block;margin-bottom:2px}
-.objective p{margin:0;font-size:12.5px;color:#7d6a9a;line-height:1.5}
-.objective a{color:#9b5fd6;font-weight:700}
+.objective p{margin:0;font-size:12.5px;color:var(--lav-ink);line-height:1.5}
+.objective a{color:var(--lav-link);font-weight:700}
 
 .sectionHead{display:flex;justify-content:space-between;align-items:center;padding:2px 20px 14px}
-.sectionHead h2{font:600 22px Fredoka;margin:0}
+.sectionHead h2{display:flex;align-items:center;gap:9px;font:600 22px Fredoka;margin:0}
 .sectionHead p{margin:2px 0 0;font-size:12px;color:var(--muted)}
-.round{background:#fff;border:1px solid var(--line);width:38px;height:38px;border-radius:13px;display:grid;place-items:center;color:var(--pink-deep);box-shadow:0 4px 12px -4px rgba(255,120,170,.4)}
+.round{background:var(--card);border:1px solid var(--line);width:38px;height:38px;border-radius:13px;display:grid;place-items:center;color:var(--pink-deep);box-shadow:0 4px 12px -4px rgba(255,120,170,.4)}
 
-/* ---------- section grid / cards ---------- */
+/* ---------- section grid / cards ----------
+   Tiap kartu membawa --accent sendiri lewat inline style (SECTION_ACCENT di
+   src/data.js). 13 bab yang semuanya sewarna bikin grid jadi dinding datar, dan
+   warna itulah yang dipakai orang untuk mengingat bab mana. SELURUH warna di
+   dalam kartu diturunkan dari --accent lewat color-mix, jadi CSS di sini tidak
+   perlu tahu ada 13 warna — tambah bab = tambah satu hex di data.js, selesai.
+   Fallback var(--accent,var(--pink)) menjaga kartu tetap waras kalau sebuah
+   pemanggil lupa mengoper aksennya. */
 .sectionGrid{padding:2px 20px 30px;display:grid;gap:13px;grid-template-columns:minmax(0,1fr);grid-auto-rows:1fr}
 .sectionCard{
-  display:flex;align-items:center;gap:13px;padding:16px;border:1px solid var(--line);
-  background:#fff;border-radius:var(--radius-lg);box-shadow:var(--shadow-pink);
-  text-decoration:none;color:inherit;position:relative;
+  display:flex;align-items:center;gap:13px;padding:16px;position:relative;
+  border:1px solid color-mix(in srgb,var(--accent,var(--pink)) 18%,transparent);
+  background:linear-gradient(150deg,var(--card,#fff),color-mix(in srgb,var(--accent,var(--pink)) 5%,var(--card,#fff)));
+  border-radius:var(--radius-lg);box-shadow:var(--shadow-pink);
+  text-decoration:none;color:inherit;
 }
 .sectionCard:hover{transform:translateY(-2px);box-shadow:var(--shadow-pink-lg)}
-.sectionCard.preview-only{background:linear-gradient(135deg,#fff,#faf6fb);border-style:dashed;border-color:#e7cede}
+.sectionCard.preview-only{border-style:dashed}
 .sectionCard.preview-only .sectionIcon{opacity:.75}
-.previewPill{position:absolute;top:10px;right:14px;display:flex;align-items:center;gap:4px;font-size:9.5px;font-weight:700;color:#b98a6d;background:#fff3e2;border:1px solid #f4dcb8;padding:3px 8px;border-radius:999px;letter-spacing:.4px}
-.sectionIcon{width:52px;height:52px;border-radius:18px;background:linear-gradient(145deg,var(--pink-pale),#ffd7e8);display:grid;place-items:center;font-size:26px;flex:none}
-.sectionCopy{flex:1;min-width:0}
-.sectionCopy small{display:block;color:#c2a7bb;font-size:9px;letter-spacing:1.2px;font-weight:700}
-.sectionCopy b,.sectionCopy span,.sectionCopy em{display:block}
-.sectionCopy b{font:600 17px Fredoka;margin:2px 0}
-.sectionCopy span{font-size:11.5px;color:#7a5f6c;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.sectionCopy em{font-size:10px;color:#c39cac;font-style:normal;margin-top:5px}
-/* v8: deskripsi penuh bab di kartu section. Line-clamp 2 (bukan ellipsis 1 baris)
-   karena grid-auto-rows:1fr sudah menyamakan tinggi kartu. */
-.sectionCopy em.sectionDesc{white-space:normal;overflow:visible;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;line-height:1.5;margin-top:2px}
-.miniProgress{height:6px;background:var(--pink-pale);border-radius:6px;margin-top:8px;overflow:hidden}
-.miniProgress i{display:block;height:100%;background:linear-gradient(90deg,var(--pink),var(--gold));border-radius:6px}
-.sectionCard>svg{color:#d0bbc5;flex:none}
+.previewPill{position:absolute;top:10px;right:14px;display:flex;align-items:center;gap:4px;font-size:9.5px;font-weight:700;color:var(--warn-pill);background:var(--warn-bg);border:1px solid var(--warn-line);padding:3px 8px;border-radius:999px;letter-spacing:.4px;z-index:1}
+.sectionIcon{width:56px;height:56px;border-radius:20px;background:color-mix(in srgb,var(--accent,var(--pink)) 12%,transparent);display:grid;place-items:center;flex:none}
+/* Icon dirender dengan atribut width/height dari JSX; CSS menang atas atribut,
+   jadi satu <Icon size={54}/> bisa dipakai di dua breakpoint tanpa cabang React. */
+.sectionIcon svg{width:32px;height:32px}
+.sectionCopy{flex:1;min-width:0;display:flex;flex-direction:column}
+.sectionBadge{align-self:flex-start;font:700 11px 'DM Sans';letter-spacing:.9px;color:var(--accent,var(--pink-deep));background:color-mix(in srgb,var(--accent,var(--pink)) 14%,transparent);padding:4px 10px;border-radius:8px;margin-bottom:6px}
+.sectionCopy b{display:block;font-family:var(--font-jp);font-size:16px;font-weight:700;line-height:1.35;color:var(--ink)}
+.sectionCopy span{display:block;font-size:12px;color:var(--muted);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* Deskripsi penuh bab. Line-clamp 2 (bukan ellipsis 1 baris) karena
+   grid-auto-rows:1fr sudah menyamakan tinggi kartu. */
+.sectionCopy em.sectionDesc{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;flex:1;font-size:11.5px;color:var(--muted);font-style:normal;line-height:1.55;margin-top:5px}
+.sectionRow{display:flex;align-items:center;gap:10px;margin-top:10px}
+.miniProgress{flex:1;height:8px;border-radius:999px;background:color-mix(in srgb,var(--accent,var(--pink)) 16%,transparent);overflow:hidden}
+.miniProgress i{display:block;height:100%;border-radius:999px;background:var(--accent,var(--pink));transition:width .5s cubic-bezier(.34,1.4,.6,1)}
+.sectionPct{flex:none;font:700 13px 'DM Sans';color:var(--accent,var(--pink-deep))}
+.sectionGo{flex:none;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;border:1.5px solid color-mix(in srgb,var(--accent,var(--pink)) 35%,transparent);color:var(--accent,var(--pink-deep));background:var(--card,#fff)}
+/* Cahaya aksen hanya di mode gelap; di terang --shadow-pink sudah cukup dan
+   glow di latar putih cuma bikin kartu terlihat kotor. */
+:root[data-mode=dark] .sectionCard{background:var(--card);border-color:color-mix(in srgb,var(--accent,var(--pink)) 35%,transparent);box-shadow:0 0 30px -10px var(--accent,var(--pink)),var(--shadow-pink)}
+:root[data-mode=dark] .sectionIcon{background:color-mix(in srgb,var(--accent,var(--pink)) 15%,transparent);box-shadow:0 0 28px -6px color-mix(in srgb,var(--accent,var(--pink)) 70%,transparent),inset 0 0 26px -14px var(--accent,var(--pink))}
+:root[data-mode=dark] .miniProgress i{box-shadow:0 0 12px var(--accent,var(--pink))}
 
 /* ---------- glossary ---------- */
 .pageTitle{font:600 26px Fredoka;display:flex;align-items:baseline;gap:8px;margin:22px 0 16px}
 .pageTitle span{font-size:12px;color:var(--muted);font-weight:400}
-.search{width:100%;padding:14px 16px;border:1px solid var(--line);border-radius:var(--radius-md);font:inherit;outline:none;margin-bottom:16px;background:#fff}
+.search{width:100%;padding:14px 16px;border:1px solid var(--line);border-radius:var(--radius-md);font:inherit;outline:none;margin-bottom:16px;background:var(--card)}
 .search:focus{border-color:var(--pink)}
-.glossaryRow{display:flex;align-items:center;gap:12px;padding:14px 15px;border:1px solid var(--line);background:#fff;border-radius:var(--radius-md);margin-bottom:10px;text-decoration:none;color:inherit;box-shadow:0 5px 16px -8px rgba(255,130,170,.3)}
+.glossaryRow{display:flex;align-items:center;gap:12px;padding:14px 15px;border:1px solid var(--line);background:var(--card);border-radius:var(--radius-md);margin-bottom:10px;text-decoration:none;color:inherit;box-shadow:0 5px 16px -8px rgba(255,130,170,.3)}
 .glossaryRow b{font:600 15px Fredoka;display:block}
 .glossaryRow small{color:var(--muted);font-size:11px}
-.glossaryRow span{margin-left:auto;color:#c48fa3;font-size:12px}
+.glossaryRow span{margin-left:auto;color:var(--faint);font-size:12px}
 
 /* ---------- profile ---------- */
-.profileCard{text-align:center;background:linear-gradient(160deg,#fff,var(--pink-paler));border:1px solid var(--line);border-radius:var(--radius-lg);padding:28px 20px;margin:20px 0;box-shadow:var(--shadow-pink)}
+.profileCard{text-align:center;background:linear-gradient(160deg,var(--card),var(--pink-paler));border:1px solid var(--line);border-radius:var(--radius-lg);padding:28px 20px;margin:20px 0;box-shadow:var(--shadow-pink)}
 .profileCard h1{font:600 24px Fredoka;margin:12px 0 4px}
 .stats{display:flex;justify-content:center;gap:26px;margin-top:18px}
 .stats div{display:flex;flex-direction:column;align-items:center}
 .stats b{font:700 22px Fredoka;color:var(--pink-deep)}
 .stats small{font-size:10px;color:var(--muted);letter-spacing:.5px}
-.tip{display:flex;gap:10px;background:#fffaf0;border:1px solid #f8e6bc;border-radius:var(--radius-md);padding:14px 16px;margin-top:16px}
+.tip{display:flex;gap:10px;background:var(--amber-1);border:1px solid var(--amber-line);border-radius:var(--radius-md);padding:14px 16px;margin-top:16px}
 .tip svg{flex:none}
 
 /* ---------- primary / secondary buttons ---------- */
@@ -185,7 +237,7 @@ header{
 .primary:hover{filter:brightness(1.06);box-shadow:0 12px 28px -6px rgba(255,90,150,.7);transform:translateY(-1px)}
 .primary:active{transform:scale(.96) translateY(0);filter:brightness(.98)}
 .primary:disabled{opacity:.55;box-shadow:none;cursor:not-allowed;transform:none}
-.secondary{background:#fff;color:var(--pink-deep);border:1.5px solid var(--pink-pale);box-shadow:0 4px 14px -6px rgba(255,120,170,.3)}
+.secondary{background:var(--card);color:var(--pink-deep);border:1.5px solid var(--pink-pale);box-shadow:0 4px 14px -6px rgba(255,120,170,.3)}
 .secondary:hover{background:var(--pink-paler);border-color:var(--pink);transform:translateY(-1px)}
 .secondary:active{transform:scale(.96) translateY(0)}
 .big{width:100%;padding:16px}
@@ -198,7 +250,7 @@ header{
 .kawaiiLoader{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:60px 20px;text-align:center}
 .kawaiiLoader .loaderBow{font-size:40px;animation:wiggle 1.1s ease-in-out infinite}
 .kawaiiLoader p{color:var(--muted);font-size:13px;font-weight:600}
-.skeleton{border-radius:var(--radius-md);background:linear-gradient(90deg,#fbe9f1 25%,#fff5fa 37%,#fbe9f1 63%);background-size:400% 100%;animation:shimmer 1.4s ease infinite}
+.skeleton{border-radius:var(--radius-md);background:linear-gradient(90deg,var(--pink-pale) 25%,var(--pink-paler) 37%,var(--pink-pale) 63%);background-size:400% 100%;animation:shimmer 1.4s ease infinite}
 .skelCard{height:84px;margin:0 20px 12px;border-radius:var(--radius-lg)}
 .skelLine{height:14px;border-radius:8px;margin:6px 20px}
 
@@ -212,10 +264,10 @@ header{
 /* ---------- bottom nav (4 items, emoji bubble, kawaii) ---------- */
 nav{
   position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(720px,100%);
-  height:76px;background:#fffdfeee;backdrop-filter:blur(16px);border-top:1px solid var(--line);
+  height:76px;background:color-mix(in srgb,var(--pink-paler) 93%,transparent);backdrop-filter:blur(16px);border-top:1px solid var(--line);
   display:flex;justify-content:space-around;z-index:30;padding-top:6px;box-shadow:0 -8px 24px -12px rgba(255,120,170,.25);
 }
-nav a{background:none;color:#7a5f6c;display:flex;flex-direction:column;gap:3px;align-items:center;font-size:10.5px;text-decoration:none;font-weight:700;padding-top:2px;flex:1}
+nav a{background:none;color:var(--muted);display:flex;flex-direction:column;gap:3px;align-items:center;font-size:10.5px;text-decoration:none;font-weight:700;padding-top:2px;flex:1}
 .navEmoji{width:34px;height:34px;display:grid;place-items:center;font-size:18px;border-radius:12px;background:transparent;transition:transform .2s cubic-bezier(.34,1.56,.64,1), background .2s ease}
 nav a:active .navEmoji{transform:scale(.82)}
 nav a.active .navEmoji{background:var(--pink-pale);transform:translateY(-2px);box-shadow:0 4px 10px -3px rgba(255,120,170,.5);animation:bounceIn .4s ease}
@@ -243,26 +295,187 @@ nav a.active{color:var(--pink-deep)}
   /* 60px bikin istilah 8 kanji (8.8em = 527px) luber dari kartu 506px; 56px = 493px, muat. */
   .richMateriCard .japaneseTerm{font-size:56px}
   .richMateriCard .compareTerm{font-size:28px}
-  header{position:sticky;top:0;padding:0 34px;z-index:40;width:min(100%,1100px);margin:0 auto}
-  .app>main{width:min(100%,1100px);max-width:1100px;margin-left:auto;margin-right:auto}
-  .app>main.page{max-width:1100px}
-  .welcome{padding-left:30px;padding-right:30px}
-  .daily{margin-left:30px;margin-right:30px}
-  .objective{margin-left:30px;margin-right:30px}
-  .sectionHead{padding-left:30px;padding-right:30px}
-  .sectionGrid{grid-template-columns:repeat(2,minmax(0,1fr));padding-left:30px;padding-right:30px;gap:16px}
+  /* Sidebar itu position:fixed, jadi .app harus menyisakan tempatnya sendiri.
+     Tanpa padding-left ini .app tetap terkunci 720px dan ditengahkan viewport,
+     sehingga di 960–1250px kolom isi tertimpa sidebar — dan seluruh aturan
+     "max-width:1100px" di bawah tidak pernah kepakai karena induknya 720px. */
+  .app{max-width:none;padding-left:268px;padding-bottom:40px}
+  /* LEBAR PENUH. Kanvas DesktopDashboard tidak punya kolom terbatas: main mengisi
+     seluruh sisa layar di kanan sidebar dengan padding 32px. Cap 1100px yang lama
+     bikin tampilan desktop jauh lebih sempit dari desainnya. Halaman yang memang
+     butuh kolom baca (.page, .skillPage, .richMateriPage) memasang capnya sendiri. */
+  header{position:sticky;top:0;padding:0 32px;z-index:40;width:100%;margin:0}
+  .app>main{width:100%;max-width:none;margin-left:0;margin-right:0}
+  .welcome{padding:26px 32px 20px}
+  .welcome .quoteJa{font-size:44px;line-height:1.3}
+  .eyebrow{font-size:12px;letter-spacing:1.7px}
+  .daily{margin-left:32px;margin-right:32px}
+  .objective{margin-left:32px;margin-right:32px}
+  .sectionHead{padding-left:32px;padding-right:32px}
+  .sectionGrid{grid-template-columns:repeat(2,minmax(0,1fr));padding-left:32px;padding-right:32px;gap:16px}
   .sectionCard{min-height:126px}
   nav{
-    left:0;top:0;bottom:0;transform:none;width:228px;height:100vh;
-    flex-direction:column;justify-content:flex-start;align-items:stretch;gap:8px;
-    padding:28px 16px;background:#fffafd;border-top:0;border-right:1px solid var(--line);
-    box-shadow:8px 0 28px -18px rgba(255,120,170,.45)
+    left:0;top:0;bottom:0;transform:none;width:268px;height:100vh;
+    flex-direction:column;justify-content:flex-start;align-items:stretch;gap:5px;
+    padding:26px 20px;background:color-mix(in srgb,var(--card) 70%,transparent);
+    backdrop-filter:blur(16px);border-top:0;border-right:1px solid var(--line);
+    box-shadow:8px 0 28px -18px rgba(255,120,170,.45);overflow-y:auto
   }
-  nav a{flex:none;flex-direction:row;justify-content:flex-start;gap:12px;padding:12px 14px;border-radius:16px;font-size:13px}
+  nav a{flex:none;flex-direction:row;justify-content:flex-start;gap:13px;padding:11px 13px;border-radius:18px;font:600 15px 'DM Sans';border:1px solid transparent}
   nav a:hover{background:var(--pink-paler);transform:translateX(2px)}
-  .navEmoji{width:36px;height:36px;font-size:20px;background:var(--pink-paler)}
-  nav a.active .navEmoji{transform:none}
+  .navEmoji{width:40px;height:40px;font-size:20px;border-radius:14px;background:color-mix(in srgb,var(--pink-pale) 50%,transparent)}
+  nav a.active .navEmoji{transform:none;background:var(--card)}
   nav a.active{background:var(--pink-pale)}
+  /* Cahaya item aktif — hanya gelap, sesuai aturan glow di kontrak markup. */
+  :root[data-mode=dark] nav a.active{border-color:color-mix(in srgb,var(--pink) 50%,transparent);box-shadow:0 0 24px -8px var(--pink),inset 0 0 22px -14px var(--pink)}
+  :root[data-mode=dark] nav a.active .navEmoji{box-shadow:0 0 18px -6px var(--pink)}
   .skillPage,.page{max-width:1100px;margin:0 auto}
   .skillPath{max-width:650px;margin:0 auto}
+}
+
+/* ============================================================================
+   PORT KANVAS v9 — beranda dashboard, sidebar desktop, langit malam.
+   Referensi: docs/design/canvas/screens-desktop.mjs (DesktopDashboard) &
+   screens-flow.mjs (Main). Kontrak nama class: docs/design/MARKUP-CONTRACT.md.
+   ========================================================================== */
+
+/* ---------- sidebar desktop (>=960px) ----------
+   Semua display:none di sini; blok @media (min-width:960px) di atas yang
+   menghidupkannya. Ditulis begini supaya markup sidebar tetap ada di DOM di
+   mobile (tidak ada cabang React), cuma tak terlihat. */
+.sideBrand,.sideSpacer,.sideCheer,.sideDark{display:none}
+.sideBrand{align-items:center;gap:12px;margin:0 6px 26px;text-decoration:none;color:inherit;min-height:56px}
+.sideBrandArt{width:56px;height:56px;flex:none;border-radius:20px;background:var(--pink-pale);display:grid;place-items:center;overflow:hidden}
+.sideBrandArt img{display:block;width:46px;height:auto}
+.sideBrandName{display:block;font:700 26px Fredoka;color:var(--pink-deep);letter-spacing:-.5px;line-height:1}
+.sideBrandSub{display:block;font-size:12px;color:var(--muted)}
+.sideCheer{align-items:center;gap:11px;padding:12px 14px;border-radius:var(--radius-md);background:var(--pink-paler);border:1px solid var(--line);margin-bottom:12px}
+.sideCheerArt{flex:none;display:block}
+.sideCheerArt img{display:block;width:46px;height:auto}
+.sideCheerText{font-size:12px;line-height:1.4;color:var(--ink);font-weight:600}
+.sideDark .darkRow{min-height:52px;padding:13px 15px;border-radius:var(--radius-md)}
+
+/* ---------- beranda: baris atas & hero ---------- */
+/* Pill runtun disembunyikan di mobile: di sana header sudah membawa angka yang
+   sama, dan kanvas mobile (Main) memang tidak punya pill ini di badan halaman. */
+.homeTop{display:none;justify-content:flex-end;margin:0 20px 6px}
+.streakPill{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:999px;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow-pink);font:700 13.5px 'DM Sans';color:var(--pink-deep)}
+:root[data-mode=dark] .streakPill{border-color:color-mix(in srgb,var(--pink) 35%,transparent);box-shadow:0 0 26px -8px var(--pink)}
+.homeHeroArt{flex:none;display:block;filter:drop-shadow(0 14px 18px color-mix(in srgb,var(--pink) 45%,transparent))}
+.homeHeroArt img{display:block;width:clamp(92px,25vw,240px);height:auto}
+
+/* ---------- beranda: dua kartu (Hari ini + Ujian Akhir) ---------- */
+.homeCards{display:grid;grid-template-columns:minmax(0,1fr);gap:14px;margin:0 20px 22px}
+/* flex-wrap wajib: badge emas itu flex:none dan nowrap, jadi di 320px ia menyisakan
+   15px untuk kolom teks dan persen keluar dari kartu (terukur di check-overflow).
+   Basis 150px pada body memaksa badge turun ke baris kedua sebelum itu terjadi. */
+.homeCard{display:flex;flex-wrap:wrap;align-items:center;gap:15px;padding:20px 22px;border-radius:24px;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow-pink);text-decoration:none;color:inherit;position:relative}
+.homeCardArt{width:56px;height:56px;flex:none;border-radius:18px;background:var(--pink-pale);display:grid;place-items:center}
+a.homeCard .homeCardArt{background:var(--lavender)}
+.homeCardBody{flex:1 1 150px;min-width:0}
+.homeCardBody b{display:block;font:600 17px Fredoka;color:var(--ink)}
+.homeCardBody p{margin:3px 0 0;font-size:13px;color:var(--muted);line-height:1.45}
+.homeBar{flex:1;height:9px;border-radius:999px;background:var(--pink-pale);overflow:hidden}
+.homeBar i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--pink),var(--pink-deep));transition:width .5s cubic-bezier(.34,1.4,.6,1)}
+.homeBarPct{flex:none;font:700 13px 'DM Sans';color:var(--pink-deep)}
+.homeCardBadge{display:flex;flex-direction:column;align-items:center;gap:3px;flex:none;margin-left:auto;padding:12px 16px;border-radius:18px;background:color-mix(in srgb,var(--gold) 33%,transparent);color:var(--gold-deep)}
+.homeCardBadge b{font:700 12.5px Fredoka;color:var(--gold-deep);white-space:nowrap}
+:root[data-mode=dark] .homeCardBadge{background:color-mix(in srgb,var(--gold) 12%,transparent);border:1px solid color-mix(in srgb,var(--gold) 40%,transparent);box-shadow:0 0 22px -8px var(--gold)}
+.homeCardGo{width:34px;height:34px;flex:none;border-radius:50%;display:grid;place-items:center;border:1.5px solid color-mix(in srgb,var(--pink) 35%,transparent);color:var(--pink-deep)}
+
+/* ---------- beranda: tombol roadmap ----------
+   min-height 44px wajib: ini <a>, dan check-overflow.mjs mengukur tiap
+   <a>/<button> di dalam .app terhadap ambang target sentuh 44px. */
+.roadmapBtn{display:inline-flex;align-items:center;gap:9px;flex:none;padding:11px 18px;min-height:44px;border-radius:999px;background:var(--card);border:1px solid var(--line);color:var(--pink-deep);font:700 13.5px 'DM Sans';box-shadow:var(--shadow-pink);text-decoration:none}
+
+/* ---------- ringkasan progres ---------- */
+.progressSummary{position:relative;overflow:hidden;margin:0 20px 30px;padding:20px 24px;border-radius:var(--radius-lg);background:linear-gradient(135deg,var(--card),var(--pink-paler));border:1px solid var(--line);box-shadow:var(--shadow-pink)}
+:root[data-mode=dark] .progressSummary{background:var(--soft)}
+.summaryHead{display:flex;align-items:center;gap:8px;font:600 16px Fredoka;color:var(--ink);margin:0 0 14px}
+/* Satu kolom di bawah 420px: dua kolom di sana cuma menyisakan 23px untuk angka
+   (ubin 88px dikurangi kotak ikon 52px + jarak 13px), dan pembaginya luber. */
+.statRow{display:grid;grid-template-columns:minmax(0,1fr);gap:14px}
+.statTile{display:flex;align-items:center;gap:13px;min-width:0}
+.statTile>div{min-width:0}
+/* Ukuran mengalir, bukan breakpoint: di 402px kolomnya cuma ~150px, dan ubin
+   52px + angka 26px menyisakan tiga baris teks yang pecah-pecah. */
+.statTileArt{width:clamp(44px,12vw,52px);height:clamp(44px,12vw,52px);flex:none;border-radius:18px;display:grid;place-items:center;background:color-mix(in srgb,var(--accent,var(--pink)) 15%,transparent)}
+/* Flex + wrap, bukan blok: "/ 152" boleh turun baris kalau kolomnya sempit,
+   sedangkan sebagai <span> inline ia melebar melewati induknya tanpa mau pecah. */
+.statTileNum{display:flex;flex-wrap:wrap;align-items:baseline;column-gap:4px;margin:0;font:700 26px Fredoka;font-size:clamp(21px,5.4vw,26px);color:var(--ink);line-height:1.1}
+.statTileOf{font-size:14px;color:var(--muted);font-weight:600}
+.statTileLabel{display:block;margin-top:2px;font-size:12px;color:var(--muted)}
+/* Karakter tidur cuma muat kalau statistik sudah 4 kolom; di 2x2 ia menimpa
+   ubin kanan-bawah, jadi disembunyikan sampai lebarnya cukup. */
+.summaryArt{display:none;position:absolute;right:18px;bottom:-6px;pointer-events:none}
+.summaryArt img{display:block;width:150px;height:auto}
+
+/* ---------- langit malam (hanya mode gelap) ----------
+   Lapisan SELALU ada di DOM; kalau dilepas-pasang, toggle mode memicu remount
+   seluruh subtree beranda. z-index -1 menaruhnya di bawah isi halaman tapi di
+   atas gradasi body — .app tidak membuat stacking context sendiri.
+   Bentuk kelopak/bulan/pagoda dipakai sebagai mask, bukan <svg> di JSX: path-nya
+   sama persis dengan docs/design/canvas/nightsky.mjs, tapi warnanya jadi ikut
+   token tema karena yang dicat adalah background elemennya. */
+.nightSky{display:none;position:absolute;inset:0 0 auto;height:min(680px,100%);overflow:hidden;pointer-events:none;z-index:-1}
+:root[data-mode=dark] .nightSky{display:block}
+.nightStar{position:absolute;width:calc(var(--r)*2);height:calc(var(--r)*2);border-radius:50%;background:var(--ink);box-shadow:0 0 calc(var(--r)*4) var(--pink)}
+.nightPetal{position:absolute;background:var(--pink);opacity:.3;-webkit-mask:var(--petal) center/100% 100% no-repeat;mask:var(--petal) center/100% 100% no-repeat}
+.nightMoon{position:absolute;top:4%;right:16%;width:64px;height:64px;background:var(--gold);opacity:.85;filter:drop-shadow(0 0 18px color-mix(in srgb,var(--gold) 40%,transparent));-webkit-mask:var(--moon) center/100% 100% no-repeat;mask:var(--moon) center/100% 100% no-repeat}
+.nightPagoda{position:absolute;top:9%;right:4%;width:min(220px,42vw);aspect-ratio:220/180;background:var(--pink-pale);opacity:.5;-webkit-mask:var(--pagoda) center/100% 100% no-repeat;mask:var(--pagoda) center/100% 100% no-repeat}
+
+@media (min-width:360px){
+  .statRow{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+/* Empat kolom + ruang 170px untuk karakter tidur baru muat mulai ~1100px; di bawah
+   itu tiap ubin tinggal <75px dan angkanya mulai pecah baris. */
+@media (min-width:1100px){
+  .statRow{grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;padding-right:170px}
+  .summaryArt{display:block}
+}
+/* Blok desktop ini SENGAJA ditaruh paling akhir. Aturan display:none sidebar di
+   atas punya spesifisitas sama, jadi kalau penyalaannya ditulis di @media yang
+   lebih awal, yang menang justru yang belakangan — sidebar ikut hilang di 1440px
+   (ketahuan waktu tangkapan layar pertama). Urutan file yang menentukan. */
+@media (min-width:960px){
+  .sideBrand,.sideCheer,.sideDark{display:flex}
+  .sideSpacer{display:block;flex:1}
+  /* Beranda desktop = kanvas DeskMomo: tanpa header. Mereknya sudah di sidebar,
+     dan runtun harian pindah ke .homeTop. Halaman lain tetap berheader. */
+  .appHome>header{display:none}
+  .homeTop{display:flex;margin-left:32px;margin-right:32px}
+  .homeCards{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-left:32px;margin-right:32px}
+  .progressSummary{margin-left:32px;margin-right:32px}
+  .homeCard{min-height:118px}
+  /* Karakter hero keluar dari alur seperti di kanvas: tanpa ini blok sambutan
+     setinggi 240px dan kartu-kartu terdorong jauh ke bawah lipatan. */
+  .homeHeroArt{position:absolute;right:26px;top:-12px;z-index:1;pointer-events:none}
+  /* Kartu bab versi desktop: kotak ikon 96px, judul 21px — ukuran kanvas
+     DesktopDashboard. Di mobile tetap 56px/16px seperti kanvas Main. */
+  /* align-items:flex-start + chevron absolut = anatomi kanvas: kotak ikon menempel
+     di atas, chevron tetap di tengah tinggi kartu. Di mobile chevron tetap flex item
+     biasa supaya tidak menabrak teks di 320px. */
+  .sectionCard{padding:20px;gap:16px;align-items:flex-start}
+  .sectionCopy{padding-right:44px}
+  .sectionGo{position:absolute;right:18px;top:50%;transform:translateY(-50%)}
+  .sectionIcon{width:96px;height:96px;border-radius:24px}
+  .sectionIcon svg{width:54px;height:54px}
+  .sectionCopy b{font-size:21px}
+  .sectionCopy span{font-size:13px}
+  .sectionCopy em.sectionDesc{font-size:12.5px}
+  .nightMoon{left:62%;right:auto}
+  .nightPagoda{left:48%;right:auto;width:220px}
+}
+
+/* ---------- mode gelap desktop: panel mengambang (kanvas DeskMomoGelap) ----------
+   Sidebar dan isi jadi dua kartu membulat di atas latar gelap, bukan bidang rata.
+   Panel isi digambar lewat ::before ber-z-index -2, BUKAN background di main:
+   dengan begitu main tetap z-index:auto sehingga (a) .nightSky (-1) tetap tampak
+   di atas panel, dan (b) elemen position:fixed di dalam main tidak terkurung
+   stacking context dan tetap bisa menutupi header. */
+@media (min-width:960px){
+  .appHome>main{padding-top:26px}
+  :root[data-mode=dark] nav{top:12px;bottom:12px;left:12px;height:auto;border-radius:30px;border:1px solid var(--line);background:var(--soft);box-shadow:none}
+  :root[data-mode=dark] .app{padding-left:292px;padding-right:12px}
+  :root[data-mode=dark] .appHome>main::before{content:'';position:absolute;inset:12px 0 -28px;border:1px solid var(--line);border-radius:30px;background:var(--soft);z-index:-2;pointer-events:none}
 }

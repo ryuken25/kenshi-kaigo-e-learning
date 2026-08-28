@@ -11,21 +11,54 @@ import os from 'node:os';
 import { spawn } from 'node:child_process';
 
 const ROOT = process.cwd();
-const CSS = ['src/styles.css', 'src/routing.css', 'src/translation.css', 'src/auth.css']
+// themes.css & social.css ikut dibaca: sejak port kanvas v9 beranda memakai token
+// --card/--accent (themes.css) dan sakelar .darkRow di sidebar (social.css). Tanpa
+// keduanya elemen baru terukur dengan nilai fallback, bukan yang benar-benar tampil.
+const CSS = ['src/styles.css', 'src/routing.css', 'src/translation.css', 'src/auth.css', 'src/themes.css', 'src/social.css']
   .filter(f => fs.existsSync(path.join(ROOT, f)))
   .map(f => fs.readFileSync(path.join(ROOT, f), 'utf8')).join('\n');
+
+// Ikon bab/statistik dirender <Icon> sebagai <svg viewBox="0 0 32 32"> dengan atribut
+// width/height dari JSX; CSS boleh menimpanya. Kotak kosong sudah cukup untuk diukur.
+const svgBox = (n) => `<svg viewBox="0 0 32 32" width="${n}" height="${n}"></svg>`;
+const SVG = svgBox(30), SVG26 = svgBox(26), SVG54 = svgBox(54);
 
 // Markup dicopy dari JSX yang asli, dengan isi TERPANJANG yang benar-benar ada di data.
 const HTML = `<!doctype html><html lang="id"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
-<style>${CSS}</style></head><body><div class="app">
+<style>${CSS}</style></head><body><div class="app appHome">
 <header><a class="brand"><span class="kitty"></span><span><b>kenshi kaigo e-learning</b><small>KAIGO FUKUSHISHI</small></span></a>
 <div class="topStats"><span>🔥 12</span><span class="xpStat">⭐ 1240 XP</span></div></header>
 <main class="page">
-<div class="sectionGrid">
-  <a class="sectionCard"><span class="sectionIcon">🌸</span><span class="sectionCopy"><b>人間の尊厳と自立</b><span>Soal Komprehensif &amp; Case Study</span></span></a>
-  <a class="sectionCard"><span class="sectionIcon">🧠</span><span class="sectionCopy"><b>認知症の理解</b><span>Dukungan Hidup Sehari-hari &amp; Komunikasi</span></span></a>
+<div class="nightSky"><i class="nightStar" style="left:6%;top:8%;--r:1.4px;opacity:0.5"></i><i class="nightStar" style="left:12%;top:22%;--r:1px;opacity:0.35"></i><i class="nightStar" style="left:17%;top:5%;--r:1.8px;opacity:0.6"></i><i class="nightStar" style="left:21%;top:34%;--r:1.1px;opacity:0.3"></i><i class="nightStar" style="left:26%;top:12%;--r:1.3px;opacity:0.45"></i><i class="nightStar" style="left:31%;top:27%;--r:1px;opacity:0.3"></i><i class="nightStar" style="left:34%;top:6%;--r:1.6px;opacity:0.55"></i><i class="nightStar" style="left:39%;top:18%;--r:1.2px;opacity:0.4"></i><i class="nightStar" style="left:43%;top:31%;--r:1px;opacity:0.28"></i><i class="nightStar" style="left:47%;top:9%;--r:1.5px;opacity:0.5"></i><i class="nightStar" style="left:52%;top:24%;--r:1.1px;opacity:0.35"></i><i class="nightStar" style="left:56%;top:4%;--r:1.7px;opacity:0.6"></i><i class="nightStar" style="left:59%;top:16%;--r:1.2px;opacity:0.4"></i><i class="nightStar" style="left:63%;top:29%;--r:1px;opacity:0.3"></i><i class="nightStar" style="left:66%;top:8%;--r:1.4px;opacity:0.5"></i><i class="nightStar" style="left:70%;top:20%;--r:1.1px;opacity:0.35"></i><i class="nightStar" style="left:74%;top:33%;--r:1.3px;opacity:0.4"></i><i class="nightStar" style="left:77%;top:6%;--r:1.6px;opacity:0.55"></i><i class="nightStar" style="left:81%;top:26%;--r:1px;opacity:0.3"></i><i class="nightStar" style="left:85%;top:14%;--r:1.4px;opacity:0.45"></i><i class="nightStar" style="left:88%;top:30%;--r:1.1px;opacity:0.32"></i><i class="nightStar" style="left:91%;top:5%;--r:1.5px;opacity:0.5"></i><i class="nightStar" style="left:94%;top:21%;--r:1.2px;opacity:0.38"></i><i class="nightStar" style="left:97%;top:11%;--r:1px;opacity:0.3"></i><i class="nightPetal" style="left:22%;top:14%;width:13px;height:13px;transform:rotate(18deg)"></i><i class="nightPetal" style="left:33%;top:30%;width:10px;height:10px;transform:rotate(-24deg)"></i><i class="nightPetal" style="left:58%;top:11%;width:12px;height:12px;transform:rotate(40deg)"></i><i class="nightPetal" style="left:72%;top:26%;width:14px;height:14px;transform:rotate(-12deg)"></i><i class="nightPetal" style="left:83%;top:9%;width:10px;height:10px;transform:rotate(28deg)"></i><i class="nightPetal" style="left:46%;top:22%;width:11px;height:11px;transform:rotate(-38deg)"></i><i class="nightMoon"></i><i class="nightPagoda"></i></div>
+<div class="homeTop"><span class="streakPill">🔥 12 hari berturut-turut</span></div>
+<section class="welcome"><div><p class="eyebrow">OHAYŌ, KENSHI</p>
+<h1 class="quoteJa" lang="ja">継続は力なり</h1><p class="quoteNote">Ketekunan itu sendiri adalah kekuatan. — pepatah Jepang</p>
+<p class="muted">13 bab · 152 level · dikerjakan sedikit demi sedikit.</p></div>
+<span class="homeHeroArt"><img alt=""></span></section>
+<div class="homeCards">
+  <div class="homeCard"><span class="homeCardArt">${SVG}</span>
+    <div class="homeCardBody"><b>Hari ini</b><p>Satu kartu sekali duduk sudah cukup.</p>
+      <div class="sectionRow"><div class="homeBar"><i style="width:66%"></i></div><b class="homeBarPct">66%</b></div></div>
+    <span class="homeCardBadge">⭐<b>128 selesai</b></span></div>
+  <a class="homeCard tap"><span class="homeCardArt">${SVG}</span>
+    <div class="homeCardBody"><b>Ujian Akhir</b><p>Soal asli 2021–2026 · 125 butir tiap tahun</p></div>
+    <span class="homeCardGo">›</span></a>
 </div>
+<div class="sectionHead"><div><h2>Urutan belajar</h2><p>Mulai dari martabat, berakhir di studi kasus</p></div>
+<a class="roadmapBtn tap">📖 Lihat roadmap</a></div>
+<div class="sectionGrid">
+  <a class="sectionCard" style="--accent:#ff7bab"><span class="sectionIcon">${SVG54}</span><div class="sectionCopy"><small class="sectionBadge">BAB 01</small><b lang="ja">人間の尊厳と自立</b><span>Kenapa martabat jadi dasar tiap tindakan</span><em class="sectionDesc">Memahami martabat, hak asasi, dan kemandirian sebagai fondasi setiap tindakan perawatan.</em><div class="sectionRow"><div class="miniProgress"><i style="width:72%"></i></div><b class="sectionPct">72%</b></div></div><span class="sectionGo">›</span></a>
+  <a class="sectionCard preview-only" style="--accent:#9d8bf0"><span class="previewPill">🔒 preview</span><span class="sectionIcon">${SVG54}</span><div class="sectionCopy"><small class="sectionBadge">BAB 02</small><b lang="ja">人間関係とコミュニケーション</b><span>Membangun kepercayaan lewat cara bicara</span><em class="sectionDesc">Melatih cara membangun hubungan dan menyampaikan maksud tanpa melukai.</em><div class="sectionRow"><div class="miniProgress"><i style="width:0%"></i></div><b class="sectionPct">0%</b></div></div><span class="sectionGo">›</span></a>
+</div>
+<section class="progressSummary"><h3 class="summaryHead">Ringkasan progres</h3>
+<div class="statRow">
+  <div class="statTile" style="--accent:#ff7bab"><span class="statTileArt">${SVG26}</span><div><p class="statTileNum">4<span class="statTileOf">/ 13</span></p><small class="statTileLabel">Bab selesai</small></div></div>
+  <div class="statTile" style="--accent:#9d8bf0"><span class="statTileArt">${SVG26}</span><div><p class="statTileNum">128<span class="statTileOf">/ 152</span></p><small class="statTileLabel">Level selesai</small></div></div>
+  <div class="statTile" style="--accent:#ffb84d"><span class="statTileArt">${SVG26}</span><div><p class="statTileNum">84<span class="statTileOf">%</span></p><small class="statTileLabel">Kurikulum tercakup</small></div></div>
+  <div class="statTile" style="--accent:#4d9fd8"><span class="statTileArt">${SVG26}</span><div><p class="statTileNum">12</p><small class="statTileLabel">Hari berturut-turut</small></div></div>
+</div>
+<span class="summaryArt"><img alt=""></span></section>
 <div class="materiTop"><a class="back">← Kembali</a><div class="materiDots">
 ${Array.from({length:10},()=>'<button></button>').join('')}
 </div><div class="langSwitch"><button>漢字</button><button>ふり</button><button>ID</button></div></div>
@@ -44,7 +77,11 @@ ${Array.from({length:10},()=>'<button></button>').join('')}
 <div class="finalQuizNav"><button>Sebelumnya</button><button>Berikutnya</button></div>
 <div class="daily"><div><b>Target harian</b><p>2 dari 3 level selesai</p><div class="progress"><i style="width:66%"></i></div></div><span class="badge">+120 XP</span></div>
 </main>
-<nav><a>Belajar</a><a>Ujian</a><a>Istilah</a><a>Profil</a></nav>
+<nav><a class="sideBrand"><span class="sideBrandArt"><img alt=""></span><span><b class="sideBrandName">kenshi</b><small class="sideBrandSub">kaigo e-learning</small></span></a>
+<a class="active"><span class="navEmoji"><svg class="navSvg" viewBox="0 0 24 24" width="22" height="22"></svg></span><span>Belajar</span></a><a class=""><span class="navEmoji"><svg class="navSvg" viewBox="0 0 24 24" width="22" height="22"></svg></span><span>Ujian</span></a><a class=""><span class="navEmoji"><svg class="navSvg" viewBox="0 0 24 24" width="22" height="22"></svg></span><span>Istilah</span></a><a class="navFriends"><span class="navEmoji"><svg class="navSvg" viewBox="0 0 24 24" width="22" height="22"></svg></span><span>Teman</span></a><a class="navRank"><span class="navEmoji"><svg class="navSvg" viewBox="0 0 24 24" width="22" height="22"></svg></span><span>Peringkat</span></a><a class=""><span class="navEmoji"><svg class="navSvg" viewBox="0 0 24 24" width="22" height="22"></svg></span><span>Profil</span></a>
+<span class="sideSpacer"></span>
+<div class="sideCheer"><span class="sideCheerArt"><img alt=""></span><small class="sideCheerText">Sedikit setiap hari,<br>hasil luar biasa!</small></div>
+<div class="sideDark"><button class="darkRow tap"><span class="darkRowIcon">☾︎</span><span class="darkRowLabel">Mode gelap</span><span class="darkSwitch"><i></i></span></button></div></nav>
 </div></body></html>`;
 
 const EXPR = `(()=>{const vw=document.documentElement.clientWidth;const out=[];
@@ -58,7 +95,11 @@ document.querySelectorAll('.app *').forEach(el=>{const r=el.getBoundingClientRec
  const p=el.parentElement;if(p){const pr=p.getBoundingClientRect();
   if(pr.width>0&&r.right>pr.right+0.5)out.push({sel:cls,right:+r.right.toFixed(1),parent:+pr.right.toFixed(1),over:+(r.right-pr.right).toFixed(1),kind:'lewat-induk'});}});
 const tap=[];document.querySelectorAll('.app button,.app a').forEach(el=>{const r=el.getBoundingClientRect();
- if(r.width===0&&r.height===0)return;if(r.height<44||r.width<44){tap.push({sel:name(el),w:+r.width.toFixed(1),h:+r.height.toFixed(1)})}});
+ if(r.width===0&&r.height===0)return;
+ // Titik progres materi: LEBARNYA memang fungsi — sepuluh titik membagi satu batang,
+ // 44px per titik butuh 440px. Tingginya tetap wajib >=44px.
+ const seg=el.parentElement&&el.parentElement.classList.contains('materiDots');
+ if(r.height<44||(!seg&&r.width<44)){tap.push({sel:name(el),w:+r.width.toFixed(1),h:+r.height.toFixed(1)})}});
 return JSON.stringify({vw,overflow:out,tap})})()`;
 
 function findChrome() {
