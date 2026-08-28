@@ -155,7 +155,12 @@ try {
     await send('Emulation.setDeviceMetricsOverride',
       { width: w, height: 900, deviceScaleFactor: 1, mobile: w < 700 }, sessionId);
     await send('Page.navigate', { url: 'file:///' + page.replace(/\\/g, '/') + '?w=' + w }, sessionId);
-    await sleep(700);
+    // 1800ms, bukan 700: animasi riseIn (src/social.css) punya delay bertingkat sampai
+    // .25s + durasi .32s = .57s, dan .currentPing beranimasi terus. Sampel di 700ms
+    // menangkap elemen MID-ANIMASI sehingga gate ini melaporkan target sentuh <44px
+    // yang sebenarnya tidak ada — kegagalan yang hilang sendiri kalau dijalankan ulang.
+    // Gate yang kadang merah tanpa sebab lebih buruk daripada gate yang lambat.
+    await sleep(1800);
     const r = await send('Runtime.evaluate', { expression: EXPR, returnByValue: true }, sessionId);
     const v = r.result?.result?.value;
     if (!v) { console.log(`${String(w).padStart(5)}px  — gagal evaluasi`); continue; }
