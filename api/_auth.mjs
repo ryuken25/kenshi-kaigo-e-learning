@@ -11,8 +11,15 @@ export function clearCookieHeader(name) {
   return cookieHeader(name, '', 0);
 }
 
+// Batas kiri (?:^|;\s*) WAJIB. Tanpa itu regexnya cocok di TENGAH nama cookie lain:
+//   "lain_kaigo_session=SALAH; kaigo_session=BENAR"  ->  menangkap SALAH
+// Cookie induk .wyna.dev ikut terkirim ke kaigo.wyna.dev, jadi satu cookie dari
+// subdomain lain yang namanya kebetulan berakhiran kaigo_session cukup untuk bikin
+// requireUser mencari hash token yang salah, tidak menemukannya, dan mengembalikan
+// null — user terlihat "keluar sendiri" dan tidak bisa masuk lagi sampai cookienya
+// dibersihkan manual. Gagalnya senyap: tidak ada galat, cuma 401 terus-menerus.
 export function getSessionToken(req) {
-  const raw = (req.headers.cookie || '').match(/kaigo_session=([^;]+)/)?.[1];
+  const raw = (req.headers.cookie || '').match(/(?:^|;\s*)kaigo_session=([^;]+)/)?.[1];
   return raw ? decodeURIComponent(raw) : null;
 }
 
