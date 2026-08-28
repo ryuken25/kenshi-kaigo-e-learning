@@ -8,7 +8,7 @@
 // ============================================================================
 import fs from 'node:fs';
 import crypto from 'node:crypto';
-import { neon } from '@neondatabase/serverless';
+import { scriptDb } from '../api/_db.mjs';
 
 import profileHandler from '../api/profile.mjs';
 import friendsHandler from '../api/friends.mjs';
@@ -17,7 +17,7 @@ import achievementsHandler from '../api/achievements.mjs';
 import progressHandler from '../api/progress.mjs';
 
 const url = process.env.DATABASE_URL || fs.readFileSync('.git/dburl', 'utf8').trim();
-const sql = neon(url);
+const sql = scriptDb(url);
 const hash = (v) => crypto.createHash('sha256').update(v).digest('hex');
 
 const EMAIL_A = 'e2e-smoke-test@kaigokitty.internal';
@@ -188,5 +188,6 @@ try {
   await sql`DELETE FROM magic_tokens WHERE email IN (${EMAIL_A}, ${EMAIL_B})`;
 }
 
+await sql.end(); // postgres.js: tanpa ini proses menggantung (neon: no-op)
 console.log(`\n━━━━━━━━ HASIL: ${pass} PASS, ${fail} FAIL ━━━━━━━━`);
 process.exit(fail ? 1 : 0);

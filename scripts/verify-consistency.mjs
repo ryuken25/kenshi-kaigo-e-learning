@@ -1,5 +1,5 @@
-import { neon } from '@neondatabase/serverless';
-const sql = neon(process.env.DATABASE_URL);
+import { scriptDb } from '../api/_db.mjs';
+const sql = scriptDb();
 
 // Consistency check per 01-DATABASE.md — must return 0 rows.
 // Sejak api/final.mjs membayar XP ujian, total_xp = SUM(level_progress.xp_earned)
@@ -23,3 +23,6 @@ console.log('level_attempts rows (idempotency cache):', JSON.stringify(levelAtte
 
 const finalAttemptsCount = await sql`SELECT count(*)::int AS c FROM final_attempts`;
 console.log('final_attempts rows (idempotency cache):', JSON.stringify(finalAttemptsCount));
+
+// postgres.js menahan socket tetap hidup; tanpa end() skrip ini menggantung.
+await sql.end();

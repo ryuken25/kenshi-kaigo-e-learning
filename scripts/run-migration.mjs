@@ -1,15 +1,21 @@
-import { neon } from '@neondatabase/serverless';
+import { scriptDb, isNeonUrl } from '../api/_db.mjs';
 import fs from 'node:fs';
 
-const url = process.env.DATABASE_URL;
+// Migrasi harus lewat koneksi LANGSUNG, bukan pooler: Supavisor transaction mode
+// (port 6543) tidak cocok untuk DDL panjang/advisory lock, dan README memang
+// menyuruh pakai DATABASE_URL_UNPOOLED. Jadi UNPOOLED didahulukan kalau ada;
+// kalau tidak, jatuh ke DATABASE_URL seperti perilaku lama.
+const url = process.env.DATABASE_URL_UNPOOLED || process.env.DATABASE_URL;
 if (!url) { console.error('DATABASE_URL missing'); process.exit(1); }
-const sql = neon(url);
+console.log(`Koneksi: ${process.env.DATABASE_URL_UNPOOLED ? 'DATABASE_URL_UNPOOLED' : 'DATABASE_URL'} (driver: ${isNeonUrl(url) ? 'neon-http' : 'postgres.js'})`);
+const sql = scriptDb(url);
 
 const file = process.argv[2];
 if (!file) { console.error('usage: node run-migration.mjs <sqlfile>'); process.exit(1); }
 let text = fs.readFileSync(file, 'utf8');
 
-// Strip BEGIN/COMMIT — neon http driver auto-commits per statement anyway.
+// Strip BEGIN/COMMIT — driver neon http auto-commit per statement; jalur postgres.js
+// juga dijalankan per-statement lewat .query(), jadi berkas ini TIDAK atomik di keduanya.
 text = text.replace(/^\s*BEGIN;\s*$/gm, '').replace(/^\s*COMMIT;\s*$/gm, '');
 
 // Strip komentar `--` SEBELUM split: titik koma di dalam komentar pernah
@@ -66,4 +72,5 @@ for (const [idx, stmt] of statements.entries()) {
   }
 }
 console.log(`\nDone. OK=${ok} FAILED=${failed}`);
+await sql.end(); // postgres.js: tanpa ini proses menggantung (neon: no-op)
 if (failed > 0) process.exit(1);

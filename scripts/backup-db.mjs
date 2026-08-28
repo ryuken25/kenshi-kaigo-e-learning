@@ -10,7 +10,7 @@
 //
 // Urutan tabel di keluaran = urutan aman untuk RESTORE (induk sebelum anak), bukan
 // abjad: app_users harus ada sebelum baris apa pun yang menunjuk user_id.
-import { neon } from '@neondatabase/serverless';
+import { scriptDb } from '../api/_db.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -19,7 +19,7 @@ if (!url) { console.error('DATABASE_URL kosong'); process.exit(1); }
 const dest = process.argv[2];
 if (!dest) { console.error('Pakai: node scripts/backup-db.mjs <berkas.json>'); process.exit(1); }
 
-const sql = neon(url);
+const sql = scriptDb(url);
 
 // Induk dulu, lalu anak. Tabel yang tidak terdaftar di sini diletakkan di belakang
 // menurut abjad — aman untuk dump, dan untuk restore tinggal cek FK-nya.
@@ -55,4 +55,5 @@ out.rowCounts = Object.fromEntries(tables.map(t => [t, Array.isArray(out.tables[
 fs.mkdirSync(path.dirname(path.resolve(dest)), { recursive: true });
 fs.writeFileSync(dest, JSON.stringify(out, null, 2));
 console.log(`\n${tables.length} tabel, ${total} baris -> ${dest}`);
+await sql.end(); // postgres.js: tanpa ini proses menggantung (neon: no-op)
 if (failed) { console.error(`${failed} tabel GAGAL dibaca — backup TIDAK lengkap`); process.exit(1); }

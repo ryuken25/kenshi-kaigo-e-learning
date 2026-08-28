@@ -1,5 +1,5 @@
-import { neon } from '@neondatabase/serverless';
-const sql = neon(process.env.DATABASE_URL);
+import { scriptDb } from '../api/_db.mjs';
+const sql = scriptDb();
 const tables = ['app_users','app_sessions','magic_tokens','level_progress','daily_activity','question_attempts','level_attempts','progress_merges'];
 for (const t of tables) {
   const cols = await sql.query(`SELECT column_name, data_type FROM information_schema.columns WHERE table_name=$1 ORDER BY ordinal_position`, [t]);
@@ -13,3 +13,6 @@ for (const t of tables) {
 const constraints = await sql.query(`SELECT conname, conrelid::regclass::text AS tbl, contype, pg_get_constraintdef(oid) AS def FROM pg_constraint WHERE conrelid::regclass::text IN ('level_progress','app_users') ORDER BY tbl, conname`);
 console.log(`\nConstraints (${constraints.length}):`);
 for (const c of constraints) console.log(`  [${c.contype}] ${c.tbl}.${c.conname}\n      ${c.def}`);
+
+// postgres.js menahan socket tetap hidup; tanpa end() skrip ini menggantung.
+await sql.end();

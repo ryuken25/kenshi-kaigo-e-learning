@@ -27,6 +27,7 @@
     "@vitejs/plugin-react": "latest",
     "lucide-react": "latest",
     "nodemailer": "^9.0.3",
+    "postgres": "^3.4.9",
     "react": "latest",
     "react-dom": "latest",
     "react-router-dom": "latest",
