@@ -228,6 +228,7 @@ node scripts/run-migration.mjs scripts/001_init.sql   # apply a migration (use t
 node scripts/verify-schema.mjs                        # dump columns + constraint definitions
 node scripts/verify-consistency.mjs                   # total_xp vs SUM(xp_earned); must print []
 node scripts/backup-db.mjs .backup/dump.json          # dump SEMUA tabel publik ke JSON
+node scripts/restore-db.mjs .backup/dump.json --yes    # muat ulang dump itu ke DB kosong (tanpa --yes = uji coba)
 node scripts/e2e-make-token.mjs [email]               # mint a magic token for manual verification
 node scripts/cleanup-e2e-test.mjs                     # remove the e2e smoke-test user
 node scripts/gen-furigana.mjs                         # regenerate src/furigana.generated.js
@@ -271,8 +272,16 @@ lawan Supabase sungguhan**.
    ```
    Berkas migrasi **tidak atomik** di skrip ini. Verifikasi dengan `verify-schema.mjs`
    dan `pg_get_constraintdef()`, jangan percaya "OK" dari skripnya.
-3. Pindahkan data. `backup-db.mjs` hanya **dump**; repo ini **belum punya skrip restore**,
-   jadi pakai `pg_dump`/`psql`.
+3. Pindahkan data:
+   ```bash
+   DATABASE_URL=<neon> node scripts/backup-db.mjs .backup/pindah.json
+   DATABASE_URL=<supabase-pooler> node scripts/restore-db.mjs .backup/pindah.json        # uji coba
+   DATABASE_URL=<supabase-pooler> node scripts/restore-db.mjs .backup/pindah.json --yes  # sungguhan
+   ```
+   `restore-db.mjs` membaca tipe kolom dari `information_schema` **tujuan** untuk memutuskan
+   mana yang dikirim sebagai array JS dan mana sebagai string JSON — menebak dari bentuk
+   nilainya menghasilkan baris yang tersimpan tanpa galat tapi isinya salah. `ON CONFLICT
+   DO NOTHING`, jadi restore yang gagal di tengah aman diulang.
 4. Ganti `DATABASE_URL` di Vercel (Production + Preview) ke URL pooler `6543`, lalu
    redeploy — env var Vercel baru berlaku di deployment baru.
 5. Rollback: kembalikan `DATABASE_URL` ke Neon dan redeploy, atau set `DB_DRIVER=neon`
