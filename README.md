@@ -14,9 +14,9 @@ Production: <https://kaigo.wyna.dev> (alias Vercel: `kaigo-kitty.vercel.app`)
 | --- | --- |
 | Frontend | Vite + React 18 SPA (`src/`), React Router |
 | Backend | Vercel Functions (`api/`, ESM `.mjs`) |
-| Database | Neon Postgres via `@neondatabase/serverless` (HTTP driver) |
+| Database | Postgres. Driver dipilih dari host di `DATABASE_URL`: `*.neon.tech` → `@neondatabase/serverless` (HTTP), selain itu → `postgres` (postgres.js, TCP). Lihat `api/_db.mjs` |
 | Email | nodemailer over SMTP |
-| Styling | Four hand-maintained CSS files, no preprocessor or utility framework |
+| Styling | Six hand-maintained CSS files (`styles`, `routing`, `translation`, `auth`, `themes`, `social`), no preprocessor or utility framework |
 
 No test runner, linter, or formatter. The `validate:*` scripts **are** the test suite.
 
@@ -45,12 +45,13 @@ Set these in Vercel (Project → Settings → Environment Variables). Never comm
 
 | Variable | Purpose |
 | --- | --- |
-| `DATABASE_URL` | Neon pooled connection string (runtime) |
-| `DATABASE_URL_UNPOOLED` | Direct endpoint; use for migrations, not runtime |
+| `DATABASE_URL` | Pooled connection string (runtime). Neon pooled, atau Supabase transaction pooler port `6543` |
+| `DATABASE_URL_UNPOOLED` | Direct/session endpoint; dipakai `run-migration.mjs`, bukan runtime. DDL lewat transaction pooler salah alamat |
 | `APP_URL` | Public origin, e.g. `https://kaigo.wyna.dev`; used to build magic-link URLs |
 | `SMTP_HOST` / `SMTP_PORT` / `SMTP_SECURE` | Mail transport (`587` / `false` for STARTTLS) |
 | `SMTP_USER` / `SMTP_PASS` | Mail credentials |
-| `SMTP_FROM` | From header, e.g. `Kenshi Kaigo E-Learning <no-reply@example.com>` |
+| `SMTP_FROM` | From header. **Harus alamat yang diizinkan provider SMTP-nya.** Gmail SMTP menulis ulang From ke akun terautentikasi kecuali alamatnya sudah diverifikasi sebagai "Send mail as" |
+| `DB_DRIVER` | Opsional, `postgres`\|`neon`. Menimpa deteksi host — dipakai untuk menguji cabang postgres.js lawan Neon, dan sebagai tuas rollback saat cutover. Kosongkan di produksi |
 | `CHROME_PATH` | Optional. Browser binary for `validate:furigana:measure` if auto-detection fails |
 
 `.env*` is gitignored. Database scripts read `DATABASE_URL` from the ambient environment —
@@ -61,7 +62,7 @@ there is no dotenv loader in them, so export it in your shell first.
 ## Validation gates
 
 ```bash
-npm run validate      # runs the eight gates below, in order — use before pushing
+npm run validate      # runs the nine gates below, in order — use before pushing
 ```
 
 | Gate | Asserts |
@@ -217,14 +218,16 @@ rewrite, so API routes are unaffected.
 
 ## Database
 
-Eight core tables: `app_users`, `app_sessions`, `magic_tokens`, `level_progress`,
-`daily_activity`, `question_attempts`, `level_attempts`, `progress_merges`.
+Fourteen tables: `app_users`, `app_sessions`, `magic_tokens`, `level_progress`,
+`daily_activity`, `question_attempts`, `level_attempts`, `progress_merges`,
+`final_progress`, `final_attempts`, `friendships`, `achievements`, `user_achievements`,
+`leaderboard_seen`.
 
 ```bash
 node scripts/run-migration.mjs scripts/001_init.sql   # apply a migration (use the unpooled URL)
 node scripts/verify-schema.mjs                        # dump columns + constraint definitions
 node scripts/verify-consistency.mjs                   # total_xp vs SUM(xp_earned); must print []
-node scripts/backup-db.mjs out.json                   # dump four tables to JSON
+node scripts/backup-db.mjs .backup/dump.json          # dump SEMUA tabel publik ke JSON
 node scripts/e2e-make-token.mjs [email]               # mint a magic token for manual verification
 node scripts/cleanup-e2e-test.mjs                     # remove the e2e smoke-test user
 node scripts/gen-furigana.mjs                         # regenerate src/furigana.generated.js
@@ -232,7 +235,7 @@ node scripts/gen-furigana.mjs                         # regenerate src/furigana.
 
 ### Migrations
 
-`001` through `005` are **applied**. Migrations are written to be idempotent and additive
+`001` through `008` are **applied**. Migrations are written to be idempotent and additive
 (`IF NOT EXISTS`, `ADD COLUMN IF NOT EXISTS`, `DO $$ … EXCEPTION WHEN duplicate_object`), so
 re-running them is safe.
 
@@ -246,8 +249,43 @@ because the Neon HTTP driver auto-commits per statement. A migration applied thi
 therefore **not atomic**, and a mid-file failure leaves partial state. Verify the result against
 `pg_get_constraintdef()` rather than trusting the script's own "OK".
 
-`scripts/drop-legacy.mjs` DROPs the four core tables CASCADE. It is destructive; do not run it
+`scripts/drop-legacy.mjs` DROPs core tables CASCADE. It is destructive; do not run it
 casually.
+
+---
+
+## Pindah ke Supabase
+
+Kodenya sudah siap-cutover: `api/_db.mjs` memilih driver dari HOST di `DATABASE_URL`,
+jadi perpindahan Neon → Supabase **tidak butuh deploy kode**, cukup ganti env var.
+Cabang postgres.js sudah terbukti lawan Neon lewat TCP, tapi **belum pernah diuji
+lawan Supabase sungguhan**.
+
+1. Ambil dua connection string dari Supabase (Project Settings → Database):
+   - **transaction pooler**, port `6543` → untuk `DATABASE_URL` (runtime)
+   - **session/direct**, port `5432` → untuk `DATABASE_URL_UNPOOLED` (migrasi)
+2. Terapkan migrasi berurutan:
+   ```bash
+   DATABASE_URL_UNPOOLED=<direct> node scripts/run-migration.mjs scripts/001_init.sql
+   # … sampai 008
+   ```
+   Berkas migrasi **tidak atomik** di skrip ini. Verifikasi dengan `verify-schema.mjs`
+   dan `pg_get_constraintdef()`, jangan percaya "OK" dari skripnya.
+3. Pindahkan data. `backup-db.mjs` hanya **dump**; repo ini **belum punya skrip restore**,
+   jadi pakai `pg_dump`/`psql`.
+4. Ganti `DATABASE_URL` di Vercel (Production + Preview) ke URL pooler `6543`, lalu
+   redeploy — env var Vercel baru berlaku di deployment baru.
+5. Rollback: kembalikan `DATABASE_URL` ke Neon dan redeploy, atau set `DB_DRIVER=neon`
+   selama URL-nya masih Neon.
+
+Tiga hal yang bisa menggigit:
+
+- **Versi Postgres.** Neon di sini PG 18.6, Supabase biasanya 15/17. Baca ulang migrasi
+  001–008 kalau ada sintaks yang hanya ada di 18.
+- **IPv6.** Host direct `db.<ref>.supabase.co` IPv6-only tanpa add-on IPv4. Kalau mesinmu
+  IPv4-only, pakai pooler port `5432` (session mode) untuk `DATABASE_URL_UNPOOLED`.
+- **Transaction pooler dan prepared statement.** postgres.js dijalankan dengan
+  `prepare:false` — jangan dihidupkan, Supavisor memultipleks koneksi per-transaksi.
 
 ---
 
@@ -279,4 +317,5 @@ of the deployed `index.html` instead.
 Code is deliberately dense: single-line components, chained ternaries in JSX, minimal
 whitespace. Match the surrounding style — reformatting existing lines destroys the diff.
 Comments and user-facing copy are Indonesian, identifiers are English, content is Japanese.
-UI is mobile-first and pink/kawaii, with mascots from `public/assets/hellokitty/`.
+UI is mobile-first and kawaii, with original characters from `public/assets/characters/`
+(the Sanrio assets are gone — do not reintroduce third-party IP).

@@ -142,7 +142,9 @@
 @keyframes pingRing{0%{transform:scale(.9);opacity:.9}100%{transform:scale(1.35);opacity:0}}
 
 /* ---------- rich e-book materi deck ---------- */
-.richMateriPage{max-width:760px!important}
+/* Kolom baca di ponsel. !important sudah TIDAK diperlukan — override desktopnya
+   sekarang ada di berkas yang sama (bawah), jadi cascade-nya cukup. */
+.richMateriPage{max-width:760px}
 .materiTop{display:flex;align-items:center;gap:12px;margin:6px 0 16px}
 .materiTop .back{padding-bottom:0;white-space:nowrap}
 .materiDots{display:flex;gap:5px;flex:1;min-width:0}
@@ -156,7 +158,10 @@
    min-width 10->6px di layar sempit: s1l1 punya 10 dot, dan 10x10px + gap 5px x9 = 145px
    sudah lebih lebar dari sisa ruang .materiTop sesudah .back & .langSwitch di 320/360px. */
 @media(max-width:480px){.materiDots{gap:4px;flex-wrap:wrap}.materiDots button{min-width:6px}}
-.materiDots button.done{background:var(--kk-pink-300)}.materiDots button.active{background:var(--pink-deep)}
+/* background-COLOR, bukan shorthand: `background:` me-reset background-clip ke
+   border-box, sehingga titik done/active mengecat seluruh kotak ketuk 44px dan
+   berubah jadi pil tebal, bukan batang 8px. */
+.materiDots button.done{background-color:var(--kk-pink-300)}.materiDots button.active{background-color:var(--pink-deep)}
 .richMateriCard{padding:28px 32px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:var(--shadow-pink);text-align:left;animation:popIn .3s ease;min-height:280px}
 .richMateriCard h2{font:600 24px/1.35 Fredoka;margin:0 0 16px;text-align:left;color:var(--ink)}
 /* h2 materi dirender Furigana (punya .fg), jadi butuh spesifisitas ekstra biar ukuran
@@ -400,3 +405,22 @@
 .finalReviewNote{margin:12px 0 0;font-size:12px;line-height:1.55;color:var(--muted)}
 .finalResultNav{display:flex;flex-direction:column;gap:10px;margin-top:18px}
 @media(min-width:600px){.finalResultNav{flex-direction:row}.finalResultNav a{flex:1}}
+
+/* ---------- materi di layar lebar (kanvas DesktopMateri) ----------
+   Bilah atas, kartu, daftar istilah, dan navigasi SEMUANYA dibatasi 960px dan
+   ditengahkan, supaya tepinya sejajar. Sebelumnya cuma kartunya yang dibatasi
+   sementara bilah atas & navigasi selebar halaman, jadi terlihat tidak lurus.
+   Kolom baca 34em ikut ditengahkan di dalam kartu — kalau dibiarkan rata kiri,
+   teks menggantung di sisi kiri kartu selebar 960px dan sisi kanannya kosong. */
+@media (min-width:960px){
+  .richMateriPage{max-width:none;padding:22px 52px 44px}
+  .materiTop,.richMateriCard,.materiTerms,.richMateriNav{max-width:960px;margin-left:auto;margin-right:auto}
+  .richMateriCard{padding:42px 54px;min-height:360px}
+  /* max-width px, BUKAN em: judul 24px dan badan 20px sama-sama 34em, tapi 34em
+     itu 816px vs 680px — tepi kirinya jadi tidak sejajar setelah ditengahkan. */
+  .richMateriCard .fg{font-size:20px;letter-spacing:.01em;max-width:680px;margin-left:auto;margin-right:auto}
+  .richMateriCard .japaneseTerm{font-size:56px}
+  /* 60px bikin istilah 8 kanji (8.8em = 527px) luber dari kartu; 56px muat. */
+  .richMateriCard .compareTerm{font-size:28px}
+  .materiSkip{margin-top:16px}
+}

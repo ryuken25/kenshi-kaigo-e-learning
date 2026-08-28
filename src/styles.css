@@ -296,12 +296,11 @@ nav a.active{color:var(--pink-text)}
 }
 
 @media (min-width:960px){
-  .richMateriPage{max-width:1100px!important;padding-left:52px;padding-right:52px}
-  .richMateriCard{max-width:960px;margin:0 auto;padding:42px 54px;min-height:360px}
-  .richMateriCard .fg{font-size:20px;letter-spacing:.01em}
-  /* 60px bikin istilah 8 kanji (8.8em = 527px) luber dari kartu 506px; 56px = 493px, muat. */
-  .richMateriCard .japaneseTerm{font-size:56px}
-  .richMateriCard .compareTerm{font-size:28px}
+  /* Aturan materi desktop TIDAK di sini lagi — ada di routing.css.
+     routing.css dimuat SESUDAH styles.css, dan di sana ada
+     .richMateriPage{max-width:760px!important}. Dua !important berspesifisitas
+     sama: yang belakangan menang, jadi seluruh blok materi desktop di berkas ini
+     mati diam-diam dan halaman materi terkunci 760px di layar 1440px. */
   /* Sidebar itu position:fixed, jadi .app harus menyisakan tempatnya sendiri.
      Tanpa padding-left ini .app tetap terkunci 720px dan ditengahkan viewport,
      sehingga di 960–1250px kolom isi tertimpa sidebar — dan seluruh aturan
