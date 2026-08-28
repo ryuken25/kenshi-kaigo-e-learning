@@ -8,7 +8,7 @@ import Furigana,{CompareTerm,stripRuby} from './Furigana.jsx';
 import s1l1Content from './content/s1l1.json';
 import s1l1Ja from './content/s1l1-ja.json';
 import glossaryData from './content/glossary.index.json';
-import {Avatar,ToastProvider,useLangMode,CHARACTERS,useCharExpr,applyChar,applyDark,readDark,themeSkinOf,useDarkMode,useAchToast} from './lib/social.jsx';
+import {Avatar,ToastProvider,useLangMode,CHARACTERS,useCharExpr,applyChar,applyDark,readDark,themeSkinOf,useDarkMode,useAchToast,THEMES,patchProfile} from './lib/social.jsx';
 import {AuthProvider, useAuth} from './context/AuthContext.jsx';
 import {ProgressProvider, useProgress} from './context/ProgressContext.jsx';
 import {dailyQuote} from './data/quotes.js';
@@ -178,13 +178,32 @@ function SideRail(){
   </aside>;
 }
 
+/* Swatch tema. Kelas warnanya sudah ada di social.css sejak picker lama; yang hilang
+   cuma UI-nya (themeDotClass di Social.jsx tinggal kode mati, tanpa satu pun pemakai).
+   Nilai kunci 'kitty'/'sora'/'yozora' TIDAK boleh diganti jadi momo/yuki/luna: itu
+   nilai kolom app_users.theme yang dijaga CHECK constraint di migrasi 006/007, jadi
+   menggantinya berarti migrasi + backfill. themeSkinOf yang memetakannya ke palet. */
+const THEME_DOTS={kitty:'themeDotKitty',sora:'themeDotSora',matcha:'themeDotMatcha',yozora:'themeDotYozora'};
+
 function Shell({children}){
   const loc=useLocation();
   const {isAuthenticated, loading, streakCurrent, totalXp} = useProgress();
-  const {status} = useAuth();
+  const {status, user, refresh} = useAuth();
   const brandSrc=useCharExpr('idle');
   const cheerSrc=useCharExpr('happy');
   const [dark,setDark]=useDarkMode();
+  // Tema optimistis: atribut dipasang SEBELUM request supaya warnanya berganti
+  // seketika. Kalau PATCH-nya gagal, ThemeApply mengembalikannya ke nilai server
+  // pada refresh berikutnya — jadi tidak perlu rollback manual di sini.
+  const [temaLokal,setTemaLokal]=useState(null);
+  const temaAktif=temaLokal ?? (user?.theme || 'kitty');
+  const pilihTema=async k=>{
+    setTemaLokal(k);
+    const skin=themeSkinOf(k);
+    if(skin==='momo') document.documentElement.removeAttribute('data-theme');
+    else document.documentElement.setAttribute('data-theme',skin);
+    try{ await patchProfile({theme:k}); await refresh(); }catch{}
+  };
   const navItems = [
     {to:'/belajar', kind:'learn', label:'Belajar', match:p=>p==='/belajar'},
     {to:'/final', kind:'exam', label:'Ujian', match:p=>p.startsWith('/final')},
@@ -218,6 +237,7 @@ function Shell({children}){
       {navItems.map(n=><Link key={n.label} className={`tap ${n.cls||''} ${n.match(loc.pathname)?'active':''}`} to={n.to}><span className="navEmoji"><NavIcon kind={n.kind}/></span><span>{n.label}</span></Link>)}
       <span className="sideSpacer"/>
       <div className="sideCheer"><span className="sideCheerArt"><img src={cheerSrc} alt=""/></span><small className="sideCheerText">Sedikit setiap hari,<br/>hasil luar biasa!</small></div>
+      <div className="sideTheme"><small className="sideThemeLabel">Tema</small><div className="sideThemeDots">{THEMES.map(t=><button key={t.key} type="button" className={`themeDot tap ${THEME_DOTS[t.key]} ${temaAktif===t.key?'on':''}`} onClick={()=>pilihTema(t.key)} aria-pressed={temaAktif===t.key} aria-label={`Tema ${t.name}`} title={`${t.name} — ${t.desc}`}><i aria-hidden="true"/></button>)}</div></div>
       <div className="sideDark"><button type="button" className={dark?"darkRow tap on":"darkRow tap"} onClick={()=>setDark(!dark)} aria-pressed={dark}><span className="darkRowIcon">{dark?"☀︎":"☾︎"}</span><span className="darkRowLabel">Mode gelap</span><span className="darkSwitch" aria-hidden="true"><i/></span></button></div>
     </nav>
   </div>;

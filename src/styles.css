@@ -597,3 +597,23 @@ a.homeCard .homeCardArt{background:var(--lavender)}
   /* Landing & login tidak punya sesi: tidak ada angka untuk ditampilkan. */
   .appBare{padding-right:0}
 }
+
+/* ---------- pemilih tema di sidebar (>=960px) ----------
+   Kelas warna swatch (.themeDotKitty dkk) sudah ada di social.css dari picker lama
+   yang UI-nya sempat dicabut; di sini cuma kerangkanya yang dibangun ulang.
+   44px WAJIB: check-overflow.mjs mengukur SETIAP <a>/<button> di dalam .app
+   terhadap ambang target sentuh 44px, dan ini <button>. Titik warnanya sendiri
+   22px, sisanya area sentuh transparan. */
+.sideTheme{display:none;flex-direction:column;gap:7px;margin-bottom:10px}
+.sideThemeLabel{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.04em;padding-left:4px}
+.sideThemeDots{display:flex;align-items:center;gap:4px}
+.themeDot{width:44px;height:44px;flex:none;display:grid;place-items:center;border-radius:14px;background:none;border:1px solid transparent;padding:0;cursor:pointer}
+.themeDot i{display:block;width:22px;height:22px;border-radius:50%;border:1px solid color-mix(in srgb,var(--ink) 14%,transparent);transition:transform .18s cubic-bezier(.34,1.56,.64,1)}
+/* Titik AKTIF: cincin di kotaknya, bukan sekadar titik yang membesar — di tema
+   gelap perbedaan ukuran saja nyaris tak terbaca. */
+.themeDot.on{background:var(--pink-pale);border-color:color-mix(in srgb,var(--pink) 45%,transparent)}
+.themeDot.on i{transform:scale(1.18)}
+@media(hover:hover){.themeDot:hover i{transform:scale(1.12)}}
+@media (min-width:960px){
+  .sideTheme{display:flex}
+}
