@@ -43,8 +43,13 @@ env vars in README.md, or the deployed site.
   code, so a real failure reads as `EXIT=0`. Run them bare.
 - `validate:furigana` and `validate:browsers` exit **2**, not 0, when they find no browser/engine
   to measure with — "measured nothing" must never look like "passed". Only 0 is green.
-- The gate count drifted: `ci.yml`'s comment and README both still say "8 gates" from before
-  `validate:romaji` joined the chain. It is 9.
+- The gate count drifted: README used to say "8 gates" from before `validate:romaji` joined the
+  chain. It is 9, and README now says so.
+- `validate:overflow` settles **1800ms** before measuring, not 700. The staggered `riseIn`
+  animation in `social.css` runs to ~570ms and `.currentPing` animates continuously, so a short
+  settle catches elements mid-animation and reports touch targets under 44px that do not exist —
+  a failure that disappears on re-run. A gate that goes red for no reason teaches people to
+  ignore it.
 
 Two gates exist because of outages, and undoing either re-opens a white screen:
 
@@ -84,7 +89,8 @@ no dotenv loader, so export it first.
 node scripts/run-migration.mjs scripts/001_init.sql   # apply a migration (README: use DATABASE_URL_UNPOOLED)
 node scripts/verify-schema.mjs                        # dump columns + constraints
 node scripts/verify-consistency.mjs                   # total_xp vs level+final xp sums; must print []
-node scripts/backup-db.mjs out.json                   # dump 4 tables to JSON
+node scripts/backup-db.mjs .backup/d.json             # dump ALL public tables to JSON
+node scripts/restore-db.mjs .backup/d.json --yes       # replay that dump into an empty DB
 node scripts/e2e-make-token.mjs [email]               # mint a magic token for /api/auth/verify?token=
 node scripts/smoke-social.mjs                         # in-process E2E of the social APIs against prod Neon
 node scripts/cleanup-e2e-test.mjs                     # delete the e2e-smoke-test user
@@ -112,7 +118,20 @@ Vite + React SPA (`src/`) plus Vercel Functions (`api/`, ESM `.mjs`), deployed t
 routes rewritten to `index.html` (`vercel.json`; Vercel matches `api/` before the rewrite).
 **Deploys are manual**: the Vercel project has no Git integration, so pushing to `main` releases
 nothing — run `npx vercel deploy --prod --yes --token "$VERCEL_TOKEN"`. See README.md.
-Persistence is Neon Postgres via `@neondatabase/serverless`. Production: `https://kaigo.wyna.dev`.
+Persistence is Postgres. **`api/_db.mjs` picks the driver from the host in `DATABASE_URL`**:
+`*.neon.tech` → `@neondatabase/serverless` (HTTP), anything else → `postgres` (postgres.js, TCP).
+The call surface is identical either way (tagged template + `.query(text, params)`, both returning
+plain arrays), so no other call site knows which driver is live. `DB_DRIVER=postgres|neon`
+overrides the host check — needed because Neon's unpooled host is still `*.neon.tech`, so the
+postgres.js branch is untestable without it. Three parity traps are patched in that file and two
+of them fail **silently**: jsonb double-encoding (postgres.js re-stringifies an already-stringified
+value, so the idempotency caches store a scalar string with no error), `undefined` (neon sends
+NULL, postgres.js throws), and client-only URL params (`channel_binding`, `pgbouncer`) being
+forwarded to the startup packet. Production: `https://kaigo.wyna.dev`.
+
+Accent colours used as **text** go through `--pink-text` / `--gold-text`, never `--pink-deep` /
+`--gold-deep` — the latter are 2.4–2.9:1 on light surfaces and stay for fills, borders, and icons.
+`.brand b` and `.sideBrandName` are deliberate exceptions (WCAG exempts logotypes).
 
 **Vercel needs one file per API path.** `api/final/local-merge.mjs` exists as its own file for that
 reason; shared logic between it and `api/final.mjs` lives in `api/_final.mjs`. Underscore-prefixed
@@ -317,9 +336,39 @@ Note on `005_section_level_ranges.sql`: the explicit `section_id BETWEEN 1 AND 1
 the CHECK real — without it an out-of-range array subscript yields NULL, and a CHECK evaluating to
 NULL is treated as *satisfied*.
 
-## Previously known bugs — both fixed
+## Previously known bugs — all fixed
 
 Kept as history because the fixes are load-bearing and easy to undo by accident.
+
+**Characters ignored the theme.** `applyChar()` writes the SKIN (`momo`/`yuki`/`luna`) to
+`<html data-char>`, but `useCharExpr()` validated that attribute against `CHARACTER_IDS`, which
+holds DB ids (`momo`/`sora`/`kurumi`/…). `yuki` and `luna` never passed, so the hook always fell
+back to `momo` and **every character image in the app showed Momo** for blue and purple accounts.
+It survived because `momo` happens to be both a DB id and a skin name, so the pink theme always
+looked right. `CHAR_SKINS` is now exported separately and `skinOf()` is idempotent (it accepts a
+DB id or a skin). Do not merge those two lists again.
+
+**Streak reset every morning.** `yesterday` was `Date.now() - 86400000` in UTC while `today` and
+`last_active_date` use the user's timezone (Asia/Tokyo). Between JST 00:00–08:59 the UTC date is
+still H-1, so `yesterday` became H-2, `last === yesterday` failed, and the streak of anyone
+studying at night or early morning reset to 1 — a nine-hour window, every day. It is now calendar
+arithmetic on the local date string.
+
+**Onboarding dead-end for new users.** `characters_unlocked` defaults to `ARRAY['momo']`. Migration
+008 backfilled the per-gender starter pair for *existing* users, but no path granted it to *new*
+ones, so picking Yuki or Luna during onboarding always returned `403 character_locked` and step 1
+could never complete. `STARTER_PAIRS` now lives in `api/_characters.mjs` and is granted when gender
+is set.
+
+**Leaderboard cached per-user data publicly.** The response carries a `me` block, per-row `isMe`,
+and `newAchievements`, but was sent with `Cache-Control: public` — a shared cache may serve one
+user's identity fragments to another. It is `private` for signed-in users now.
+
+**Desktop materi was capped at 760px.** `routing.css` had `.richMateriPage{max-width:760px!important}`
+and routing.css loads *after* styles.css, so between two equally specific `!important` rules the
+later file won and the whole desktop materi block in styles.css was dead. The fix was to move the
+desktop rules into routing.css, not to add another `!important`. **If a desktop override looks
+ignored, check file order before reaching for `!important`.**
 
 **1. Generated furigana rendered as literal HTML source.** `scripts/gen-furigana.mjs` used to emit
 `<ruby>…<rt>…</rt></ruby>`, which the bracket parser cannot read, so tag text appeared verbatim in
