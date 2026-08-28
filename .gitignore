@@ -41,3 +41,8 @@ docs/design/canvas/*.dc.html
 docs/design/canvas/canvas.json
 docs/design/canvas/kenshi-kaigo-semua-layar.html
 docs/design/canvas/_verify.png
+
+# Referensi desain lokal (halaman Duolingo yang disimpan lengkap dengan asetnya).
+# Bahan banding tata letak saja — bukan bagian produk, dan isinya aset pihak ketiga
+# yang tidak boleh ikut ke repo.
+contoh/
