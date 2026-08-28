@@ -416,7 +416,9 @@
    Kolom baca 34em ikut ditengahkan di dalam kartu — kalau dibiarkan rata kiri,
    teks menggantung di sisi kiri kartu selebar 960px dan sisi kanannya kosong. */
 @media (min-width:960px){
-  .richMateriPage{max-width:none;padding:22px 52px 44px}
+  /* 32px, bukan 52px: .page{padding-left:32px} di blok bawah berspesifisitas sama dan
+     ditulis belakangan, jadi 52px sudah tidak pernah berlaku. Angkanya dijujurkan. */
+  .richMateriPage{max-width:none;padding:22px 32px 44px}
   .materiTop,.richMateriCard,.materiTerms,.richMateriNav{max-width:960px;margin-left:auto;margin-right:auto}
   .richMateriCard{padding:42px 54px;min-height:360px}
   /* max-width px, BUKAN em: judul 24px dan badan 20px sama-sama 34em, tapi 34em
