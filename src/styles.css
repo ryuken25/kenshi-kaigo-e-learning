@@ -469,10 +469,30 @@ a.homeCard .homeCardArt{background:var(--lavender)}
    Bentuk kelopak/bulan/pagoda dipakai sebagai mask, bukan <svg> di JSX: path-nya
    sama persis dengan docs/design/canvas/nightsky.mjs, tapi warnanya jadi ikut
    token tema karena yang dicat adalah background elemennya. */
-.nightSky{display:none;position:absolute;inset:0 0 auto;height:min(680px,100%);overflow:hidden;pointer-events:none;z-index:-1}
-:root[data-mode=dark] .nightSky{display:block}
-.nightStar{position:absolute;width:calc(var(--r)*2);height:calc(var(--r)*2);border-radius:50%;background:var(--ink);box-shadow:0 0 calc(var(--r)*2.5) color-mix(in srgb,var(--pink) 50%,transparent)}
-.nightPetal{position:absolute;background:var(--pink);opacity:.3;-webkit-mask:var(--petal) center/100% 100% no-repeat;mask:var(--petal) center/100% 100% no-repeat}
+/* Lapisan partikel SEKARANG HIDUP DI KEDUA MODE dan bergerak.
+   Dulu seluruh lapisan display:none di mode terang, jadi beranda siang hari tidak
+   punya latar sama sekali, dan yang di mode gelap pun diam total. Sekarang:
+   kelopak melayang turun di terang maupun gelap, bintang berkelip hanya di gelap
+   (bintang di siang hari cuma bikin bingung), bulan & pagoda tetap khusus gelap.
+   Warnanya var(--pink)/var(--gold)/var(--ink) — ikut tema karakter, tidak dipaku.
+   Animasi murni transform+opacity (GPU), pointer-events:none, dan dimatikan
+   seluruhnya oleh guard prefers-reduced-motion di social.css (berkas terakhir
+   yang diimport, pakai !important, jadi menang atas seluruh sheet lain). */
+.nightSky{display:block;position:absolute;inset:0 0 auto;height:min(680px,100%);overflow:hidden;pointer-events:none;z-index:-1}
+.nightStar{display:none;position:absolute;width:calc(var(--r)*2);height:calc(var(--r)*2);border-radius:50%;background:var(--ink);box-shadow:0 0 calc(var(--r)*2.5) color-mix(in srgb,var(--pink) 50%,transparent);animation:twinkle var(--t,4s) ease-in-out var(--d,0s) infinite}
+:root[data-mode=dark] .nightStar{display:block}
+/* Kelopak: turun perlahan sambil berputar, lalu mengulang dari atas. translate3d
+   memaksa layer sendiri supaya scroll beranda tidak ikut tersendat. */
+.nightPetal{position:absolute;background:var(--pink);opacity:.28;-webkit-mask:var(--petal) center/100% 100% no-repeat;mask:var(--petal) center/100% 100% no-repeat;animation:petalDrift var(--t,18s) linear var(--d,0s) infinite;will-change:transform}
+:root[data-mode=dark] .nightPetal{opacity:.34}
+@keyframes twinkle{0%,100%{opacity:var(--o,.4);transform:scale(1)}50%{opacity:calc(var(--o,.4) * 2.1);transform:scale(1.35)}}
+@keyframes petalDrift{
+  0%{transform:translate3d(0,-40px,0) rotate(var(--rot,0deg));opacity:0}
+  12%{opacity:.28}
+  50%{transform:translate3d(26px,320px,0) rotate(calc(var(--rot,0deg) + 180deg))}
+  88%{opacity:.24}
+  100%{transform:translate3d(-10px,660px,0) rotate(calc(var(--rot,0deg) + 360deg));opacity:0}
+}
 .nightMoon{position:absolute;top:4%;right:16%;width:64px;height:64px;background:var(--gold);opacity:.85;filter:drop-shadow(0 0 18px color-mix(in srgb,var(--gold) 40%,transparent));-webkit-mask:var(--moon) center/100% 100% no-repeat;mask:var(--moon) center/100% 100% no-repeat}
 .nightPagoda{position:absolute;top:9%;right:4%;width:min(220px,42vw);aspect-ratio:220/180;background:var(--pink-pale);opacity:.5;-webkit-mask:var(--pagoda) center/100% 100% no-repeat;mask:var(--pagoda) center/100% 100% no-repeat}
 

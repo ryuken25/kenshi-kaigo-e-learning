@@ -53,6 +53,27 @@
 .obSkip{background:none;color:var(--muted);font-size:12px;font-weight:600;text-decoration:underline;margin-top:12px}
 .obError{color:var(--bad);font-size:12px;font-weight:600;margin:6px 0 0}
 
+/* ---------- halaman Tema (rute /tema) ----------
+   Grid kartu karakter dibuat auto-fit sejak awal: daftar karakter akan bertambah,
+   dan halaman ini harus tetap rapi pada 3, 6, maupun 9 kartu tanpa disentuh lagi. */
+.themePage{max-width:760px}
+.themeCharGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,168px),1fr));gap:12px;margin:16px 0 6px}
+.themeCharCard{position:relative;display:flex;flex-direction:column;align-items:center;gap:3px;padding:18px 14px 16px;border-radius:var(--radius-lg);background:var(--card);border:1.5px solid var(--line);box-shadow:var(--shadow-pink);cursor:pointer;color:inherit}
+.themeCharArt{display:block;width:96px;height:96px;border-radius:50%;background:var(--pink-paler);display:grid;place-items:center;overflow:hidden;margin-bottom:6px}
+.themeCharArt img{display:block;width:84px;height:auto}
+.themeCharCard b{font:700 17px Fredoka;color:var(--ink)}
+.themeCharCard small{font-size:12px;color:var(--muted)}
+.themeCharCard em{font-style:normal;font-size:11.5px;color:var(--faint);text-align:center;line-height:1.4}
+.themeCharCard.on{border-color:var(--pink-text);background:var(--pink-pale)}
+.themeCharCard.on b{color:var(--pink-text)}
+.themeCharCard.locked{cursor:default;background:var(--soft)}
+.themeCharCard.locked .themeCharArt img{filter:grayscale(1);opacity:.5}
+.themeCharCard.locked b{color:var(--muted)}
+.themeCharBadge{position:absolute;top:10px;right:10px;padding:4px 10px;border-radius:999px;background:var(--btn-bg);color:var(--btn-text);font:700 10.5px 'DM Sans';letter-spacing:.03em}
+.themeMsg{margin:2px 0 0;font-size:12.5px;font-weight:600;color:var(--ok)}
+.themeSubHead{font:600 16px Fredoka;color:var(--ink);margin:26px 0 10px}
+.themePage .darkRow{min-height:56px}
+
 /* ---------- form handle (onboarding + profil) ---------- */
 .handleForm{max-width:390px;margin:0 auto;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:var(--radius-lg);padding:16px;box-shadow:var(--shadow-pink)}
 .handleForm label{display:block;font-size:12px;color:var(--faint);font-weight:700}

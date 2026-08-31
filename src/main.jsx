@@ -8,6 +8,7 @@ import Furigana,{CompareTerm,stripRuby} from './Furigana.jsx';
 import s1l1Content from './content/s1l1.json';
 import s1l1Ja from './content/s1l1-ja.json';
 import glossaryData from './content/glossary.index.json';
+import {useTermSheet} from './lib/termSheet.jsx';
 import {Avatar,ToastProvider,useLangMode,CHARACTERS,useCharExpr,applyChar,applyDark,readDark,themeSkinOf,useDarkMode,useAchToast,patchProfile,PICKABLE_CHARS,charPath,skinOf,charThemeOf,applyCharTheme} from './lib/social.jsx';
 import {AuthProvider, useAuth} from './context/AuthContext.jsx';
 import {ProgressProvider, useProgress} from './context/ProgressContext.jsx';
@@ -55,6 +56,7 @@ const LeaderboardPage=lazyReload(()=>import('./Social.jsx').then(m=>({default:m.
 const AchievementsPage=lazyReload(()=>import('./Social.jsx').then(m=>({default:m.AchievementsPage})));
 const OnboardingWizard=lazyReload(()=>import('./Social.jsx').then(m=>({default:m.OnboardingWizard})));
 const ProfileEditor=lazyReload(()=>import('./Social.jsx').then(m=>({default:m.ProfileEditor})));
+const ThemePage=lazyReload(()=>import('./Social.jsx').then(m=>({default:m.ThemePage})));
 
 /* ---------- 3-mode language switch: 漢字(kanji) / ふりがな(furigana) / ID (Indonesia) ----------
    Icon-button kecil di pojok kanan atas tiap card (soal, choice, explanation, materi paragraf).
@@ -75,8 +77,8 @@ function LangSwitch({mode,setMode,className=''}){
 /* Semua teks Jepang WAJIB lewat <Furigana> (src/Furigana.jsx) — satu-satunya jalur render
    ruby di app ini. Jangan render <ruby>/<rt> mentah lagi di file ini: bug furigana berulang
    tiga kali justru karena dulu ada beberapa jalur render yang berbeda. */
-function LangText({ja,id,mode,as='p',className='',variant}){
-  return <Furigana field={{ja,id}} mode={mode} as={as} className={className} variant={variant}/>;
+function LangText({ja,id,mode,as='p',className='',variant,glossary,onTerm}){
+  return <Furigana field={{ja,id}} mode={mode} as={as} className={className} variant={variant} glossary={glossary} onTerm={onTerm}/>;
 }
 
 /* Maskot = karakter orisinal aktif (doc 49). Ekspresi ikut variant; SVG kecil
@@ -107,18 +109,26 @@ function ScrollToTop(){
 }
 
 function NavIcon({kind}){
-  const paths={learn:<><path d="M3 10.5 12 4l9 6.5"/><path d="M5.5 9.5V20h13V9.5"/><path d="M9 20v-6h6v6"/></>,exam:<><path d="M6 3h12v18H6z"/><path d="M9 7h6M9 11h6M9 15h3"/><path d="m16 18 1.5 1.5L21 16"/></>,terms:<><path d="M5 4h10a4 4 0 0 1 4 4v12H9a4 4 0 0 1-4-4z"/><path d="M9 4v16"/><path d="M12 9h4M12 12h4"/></>,friends:<><circle cx="9" cy="8" r="3"/><path d="M3.5 19c.7-2.8 2.9-4.5 5.5-4.5s4.8 1.7 5.5 4.5"/><circle cx="17" cy="9" r="2.4"/><path d="M15.6 14.6c2.6.2 4.3 1.7 4.9 4.4"/></>,rank:<><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4a2 2 0 0 0 2 4h1"/><path d="M17 6h3a2 2 0 0 1-2 4h-1"/></>,profile:<><circle cx="12" cy="8" r="3"/><path d="M5 20c.8-3.2 3.1-5 7-5s6.2 1.8 7 5"/></>};
+  const paths={learn:<><path d="M3 10.5 12 4l9 6.5"/><path d="M5.5 9.5V20h13V9.5"/><path d="M9 20v-6h6v6"/></>,exam:<><path d="M6 3h12v18H6z"/><path d="M9 7h6M9 11h6M9 15h3"/><path d="m16 18 1.5 1.5L21 16"/></>,terms:<><path d="M5 4h10a4 4 0 0 1 4 4v12H9a4 4 0 0 1-4-4z"/><path d="M9 4v16"/><path d="M12 9h4M12 12h4"/></>,friends:<><circle cx="9" cy="8" r="3"/><path d="M3.5 19c.7-2.8 2.9-4.5 5.5-4.5s4.8 1.7 5.5 4.5"/><circle cx="17" cy="9" r="2.4"/><path d="M15.6 14.6c2.6.2 4.3 1.7 4.9 4.4"/></>,rank:<><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4a2 2 0 0 0 2 4h1"/><path d="M17 6h3a2 2 0 0 1-2 4h-1"/></>,profile:<><circle cx="12" cy="8" r="3"/><path d="M5 20c.8-3.2 3.1-5 7-5s6.2 1.8 7 5"/></>,theme:<><path d="M12 3a9 9 0 1 0 0 18c1 0 1.7-.8 1.7-1.7 0-.5-.2-.9-.5-1.2-.3-.3-.5-.7-.5-1.1 0-.9.8-1.7 1.7-1.7H16a5 5 0 0 0 5-5c0-4-4-7.3-9-7.3z"/><circle cx="7.5" cy="11" r="1.2"/><circle cx="11" cy="7.5" r="1.2"/><circle cx="15.5" cy="8.5" r="1.2"/></>};
   return <svg className="navSvg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{paths[kind]}</svg>;
 }
 
 const NIGHT_STARS=[[6,8,1.4,.5],[12,22,1,.35],[17,5,1.8,.6],[21,34,1.1,.3],[26,12,1.3,.45],[31,27,1,.3],[34,6,1.6,.55],[39,18,1.2,.4],[43,31,1,.28],[47,9,1.5,.5],[52,24,1.1,.35],[56,4,1.7,.6],[59,16,1.2,.4],[63,29,1,.3],[66,8,1.4,.5],[70,20,1.1,.35],[74,33,1.3,.4],[77,6,1.6,.55],[81,26,1,.3],[85,14,1.4,.45],[88,30,1.1,.32],[91,5,1.5,.5],[94,21,1.2,.38],[97,11,1,.3]];
-const NIGHT_PETALS=[[22,14,13,18],[33,30,10,-24],[58,11,12,40],[72,26,14,-12],[83,9,10,28],[46,22,11,-38]];
-/* Dekorasi mode gelap. SELALU ada di DOM dan disembunyikan CSS saat terang —
-   kalau dilepas-pasang, toggle mode memicu remount seluruh subtree beranda. */
+/* Kelopak melayang: [kiri%, ukuran px, rotasi awal, durasi detik, delay detik].
+   Posisi awal vertikal tidak lagi disetel di sini — animasinya yang membawa tiap
+   kelopak dari atas layar ke bawah; `delay` NEGATIF membuat sebagian kelopak sudah
+   berada di tengah perjalanan pada render pertama, sehingga layar tidak pernah
+   terlihat kosong lalu tiba-tiba penuh. Nilainya tetap (bukan acak) supaya
+   susunannya identik di tiap render dan tidak ada hydration mismatch. */
+const NIGHT_PETALS=[[8,13,18,19,-3],[22,10,-24,24,-11],[33,12,40,21,-17],[46,14,-12,26,-6],[58,11,28,18,-21],[67,13,-38,23,-14],[76,9,52,20,-9],[88,12,-16,25,-2]];
+/* Lapisan latar beranda. SELALU ada di DOM: kalau dilepas-pasang, toggle mode
+   memicu remount seluruh subtree beranda. CSS yang memutuskan bagian mana yang
+   tampil di mode terang (kelopak) dan mana yang khusus gelap (bintang, bulan,
+   pagoda) — lihat komentar di styles.css. */
 function NightSky(){
   return <div className="nightSky" aria-hidden="true">
-    {NIGHT_STARS.map(([x,y,r,o],i)=><i key={i} className="nightStar" style={{left:x+'%',top:y+'%',['--r']:r+'px',opacity:o}}/>)}
-    {NIGHT_PETALS.map(([x,y,sz,rot],i)=><i key={i} className="nightPetal" style={{left:x+'%',top:y+'%',width:sz,height:sz,transform:'rotate('+rot+'deg)'}}/>)}
+    {NIGHT_STARS.map(([x,y,r,o],i)=><i key={i} className="nightStar" style={{left:x+'%',top:y+'%',['--r']:r+'px',['--o']:o,['--t']:(3+(i%5)*.8)+'s',['--d']:(i%7)*.45+'s'}}/>)}
+    {NIGHT_PETALS.map(([x,sz,rot,dur,del],i)=><i key={i} className="nightPetal" style={{left:x+'%',top:0,width:sz,height:sz,['--rot']:rot+'deg',['--t']:dur+'s',['--d']:del+'s'}}/>)}
     <i className="nightMoon"/><i className="nightPagoda"/>
   </div>;
 }
@@ -185,24 +195,13 @@ function Shell({children}){
   const brandSrc=useCharExpr('idle');
   const cheerSrc=useCharExpr('happy');
   const [dark,setDark]=useDarkMode();
-  // Karakter optimistis (pengganti pemilih tema): skin+palet dipasang SEBELUM
-  // request supaya berganti seketika. Tema warna MENGIKUTI karakter — PATCH-nya
-  // selalu characterId+theme berpasangan (charThemeOf). Kalau PATCH gagal,
-  // ThemeApply mengembalikannya ke nilai server pada refresh berikutnya.
-  const [charLokal,setCharLokal]=useState(null);
-  const skinAktif=skinOf(charLokal ?? (user?.characterId||'momo'));
-  const unlockedChars=user?.charactersUnlocked||['momo'];
-  const pilihChar=async id=>{
-    setCharLokal(id);
-    applyCharTheme(id);
-    try{ await patchProfile({characterId:id,theme:charThemeOf(id)}); await refresh(); }catch{}
-  };
   const navItems = [
     {to:'/belajar', kind:'learn', label:'Belajar', match:p=>p==='/belajar'},
     {to:'/ujian', kind:'exam', label:'Ujian', match:p=>p.startsWith('/ujian')||p.startsWith('/final')},
     {to:'/glossary', kind:'terms', label:'Istilah', match:p=>p.startsWith('/glossary')},
     {to:'/friends', kind:'friends', label:'Teman', cls:'navFriends', match:p=>p.startsWith('/friends')},
     {to:'/leaderboard', kind:'rank', label:'Peringkat', cls:'navRank', match:p=>p.startsWith('/leaderboard')},
+    {to:'/tema', kind:'theme', label:'Tema', match:p=>p.startsWith('/tema')},
     {to:'/profile', kind:'profile', label:'Profil', match:p=>p==='/profile'||p==='/login'},
   ];
   /* appBare: landing & login belum punya sesi, jadi keenam tautan nav semuanya
@@ -230,7 +229,6 @@ function Shell({children}){
       {navItems.map(n=><Link key={n.label} className={`tap ${n.cls||''} ${n.match(loc.pathname)?'active':''}`} to={n.to}><span className="navEmoji"><NavIcon kind={n.kind}/></span><span>{n.label}</span></Link>)}
       <span className="sideSpacer"/>
       <div className="sideCheer"><span className="sideCheerArt"><img src={cheerSrc} alt=""/></span><small className="sideCheerText">Sedikit setiap hari,<br/>hasil luar biasa!</small></div>
-      <div className="sideChars"><small className="sideCharsLabel">Karakter <span className="sideCharsHint">· tema warna ikut karakter</span></small><div className="sideCharGrid">{PICKABLE_CHARS.map(id=>{const unlocked=unlockedChars.includes(id),aktif=skinAktif===skinOf(id);return <button key={id} type="button" disabled={!unlocked} className={`sideChar tap ${!aktif?'':'on'} ${!unlocked?'locked':''}`} onClick={()=>unlocked&&pilihChar(id)} aria-pressed={aktif} title={`${CHARACTERS[id].name} — ${unlocked?CHARACTERS[id].species:'Belum terbuka'}`}><img src={charPath(id,'idle')} alt=""/><b>{CHARACTERS[id].name}</b><small>{unlocked?CHARACTERS[id].species:'Belum terbuka'}</small></button>})}</div></div>
       <div className="sideDark"><button type="button" className={dark?"darkRow tap on":"darkRow tap"} onClick={()=>setDark(!dark)} aria-pressed={dark}><span className="darkRowIcon">{dark?"☀︎":"☾︎"}</span><span className="darkRowLabel">Mode gelap</span><span className="darkSwitch" aria-hidden="true"><i/></span></button></div>
     </nav>
   </div>;
@@ -482,7 +480,7 @@ function RichCardBody({card,mode,glossary,onTerm}){
 
 /* ---------- shared quiz pieces (dipakai Quiz level & Practice) ---------- */
 
-function QuestionFlipCard({q,mode='kanji',setMode}){
+function QuestionFlipCard({q,mode='kanji',setMode,glossary,onTerm}){
   const [localMode,setLocalMode]=useLangMode();
   const activeMode = setMode ? mode : localMode;
   const changeMode = setMode || setLocalMode;
@@ -492,11 +490,11 @@ function QuestionFlipCard({q,mode='kanji',setMode}){
           tidak bermakna buat user) — dulu bocor ke UI. Dicabut, bukan diterjemahkan. */}
       <LangSwitch mode={activeMode} setMode={changeMode}/>
     </div>
-    <LangText as="h1" ja={q.questionJa} id={q.questionId} mode={activeMode}/>
+    <LangText as="h1" ja={q.questionJa} id={q.questionId} mode={activeMode} glossary={glossary} onTerm={onTerm}/>
   </div>;
 }
 
-function ChoiceCard({choice,choiceId,index,selected,correctIndex,onAnswer,mode,setMode}){
+function ChoiceCard({choice,choiceId,index,selected,correctIndex,onAnswer,mode,setMode,glossary,onTerm}){
   const [localMode,setLocalMode]=useLangMode();
   const activeMode = setMode ? mode : localMode;
   const answered = selected!==null;
@@ -504,7 +502,7 @@ function ChoiceCard({choice,choiceId,index,selected,correctIndex,onAnswer,mode,s
   const isWrong = answered && index===selected && index!==correctIndex;
   return <div className={`choiceCard tap ${answered?'answered':''} ${isCorrect?'isCorrect':''} ${isWrong?'isWrong':''}`} onClick={()=>onAnswer(index)}>
     <div className="choiceRow">
-      <LangText as="span" ja={choice} id={choiceId} mode={activeMode} className="choiceText"/>
+      <LangText as="span" ja={choice} id={choiceId} mode={activeMode} className="choiceText" glossary={glossary} onTerm={onTerm}/>
       {setMode ? null : <LangSwitch mode={activeMode} setMode={setLocalMode} className="mini"/>}
       {isCorrect && <Check className="checkIcon" size={18}/>}
       {isWrong && <X className="xIcon" size={18}/>}
@@ -576,6 +574,8 @@ function Quiz(){
   const [submitErr,setSubmitErr]=useState(null);
   const [popup,setPopup]=useState(null);
   const [quizMode,setQuizMode]=useLangMode();
+  // Kanji di soal & pilihan jawaban bisa disentuh untuk membuka arti istilahnya.
+  const {glossary:gloss,openTerm,sheet:termSheetEl}=useTermSheet(quizMode);
   const nav=useNavigate();
   const {available,speaking,play}=useTTS();
   const {submitAttempt} = useProgress();
@@ -634,13 +634,14 @@ function Quiz(){
   const nextLabel = saving ? 'Menyimpan…' : !isLastInRound ? 'Lanjut' : (wrongThisRound.length>0 ? 'Ulangi soal yang salah ↻' : 'Selesai');
 
   return <main className="page quizPage">
+    {termSheetEl}
     {popup!==null && <AnswerPopup correct={popup} onClose={()=>setPopup(null)}/>}
     <div className="quizTop"><Link to={`/section/${s.id}/level/${l.id}`} className="back">‹ Exit</Link><span>{phase==='retry'?'RETRY · ':''}{qi+1} / {roundQuestions.length}</span></div>
     <div className="quizProgress"><i style={{width:`${(qi+1)/roundQuestions.length*100}%`}}/></div>
     {phase==='retry' && <div className="retryBanner"><RotateCcw/><div><b>Yuk ulangi soal yang belum tepat!</b><span>Ronde retry #{retryRound} · {roundQuestions.length} soal tersisa</span></div><div className="retryDots">{roundQuestions.map((rq,idx)=><i key={rq.id+idx} className={idx<qi?'done':''}/>)}</div></div>}
-    <QuestionFlipCard q={q} mode={quizMode} setMode={setQuizMode} key={`qc-${q.id}-${phase}-${qi}`}/>
+    <QuestionFlipCard q={q} mode={quizMode} setMode={setQuizMode} glossary={gloss} onTerm={openTerm} key={`qc-${q.id}-${phase}-${qi}`}/>
     {available&&<button className="listen tap" type="button" onClick={()=>play(toKana(q.questionJa))}><Volume2 size={17}/> {speaking?'止める · Berhenti':'聞く · Dengarkan soal'}</button>}
-    <div className="choices">{q.choices.map((c,i)=><ChoiceCard key={`${q.id}-${i}-${phase}-${qi}`} choice={c} choiceId={q.choiceIds?.[i]||''} index={i} selected={selected} correctIndex={q.correctIndex} onAnswer={answer} mode={quizMode} setMode={setQuizMode}/>)}</div>
+    <div className="choices">{q.choices.map((c,i)=><ChoiceCard key={`${q.id}-${i}-${phase}-${qi}`} choice={c} choiceId={q.choiceIds?.[i]||''} index={i} selected={selected} correctIndex={q.correctIndex} onAnswer={answer} mode={quizMode} setMode={setQuizMode} glossary={gloss} onTerm={openTerm}/>)}</div>
     {selected!==null && <ExplanationBox q={q}/>}
     <div className="quizFooter">{submitErr&&<div className="submitError" role="alert">{submitErr}</div>}<button className="primary big tap" disabled={selected===null||saving} onClick={next}>{nextLabel} <ChevronRight/></button></div>
   </main>;
@@ -831,6 +832,7 @@ function AppShell(){
         /login?next=<tujuan> dan magic-link mengembalikan mereka ke tujuan itu. */}
     <Route element={<RequireAuth/>}>
       <Route path="/belajar" element={<Home/>}/>
+      <Route path="/tema" element={<ThemePage/>}/>
       <Route path="/onboarding" element={<OnboardingWizard/>}/>
       <Route path="/friends" element={<FriendsPage/>}/>
       <Route path="/leaderboard" element={<LeaderboardPage/>}/>

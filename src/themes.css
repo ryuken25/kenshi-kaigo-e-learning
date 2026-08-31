@@ -23,6 +23,7 @@
   --shadow-pink:0 10px 30px -8px rgba(255,110,160,.35);
   --shadow-pink-lg:0 18px 45px -10px rgba(255,110,160,.4);
   --kk-furi:#745c68;--kk-pink-300:#ff9ec1;--kk-pink-50:#fff4f9;
+  --overlay:rgba(68,30,52,.45);--sheet-shadow:0 -12px 40px -16px rgba(68,30,52,.5);
 }
 :root body,:root[data-theme=momo] body{
   background:
@@ -42,6 +43,7 @@
   --shadow-pink:0 10px 30px -8px rgba(80,160,220,.32);
   --shadow-pink-lg:0 18px 45px -10px rgba(80,160,220,.38);
   --kk-furi:#4a647a;--kk-pink-300:#8ecdf0;--kk-pink-50:#f0f9ff;
+  --overlay:rgba(16,48,74,.45);--sheet-shadow:0 -12px 40px -16px rgba(16,48,74,.5);
 }
 :root[data-theme=yuki] body{
   background:
@@ -61,6 +63,7 @@
   --shadow-pink:0 10px 30px -8px rgba(120,90,200,.32);
   --shadow-pink-lg:0 18px 45px -10px rgba(120,90,200,.38);
   --kk-furi:#62587c;--kk-pink-300:#b79bf5;--kk-pink-50:#f6f1ff;
+  --overlay:rgba(38,26,72,.45);--sheet-shadow:0 -12px 40px -16px rgba(38,26,72,.5);
 }
 :root[data-theme=luna] body{
   background:
@@ -109,6 +112,7 @@
   --lavender:#2a1f3d;--gold:#ffd47e;--gold-deep:#f5bf5c;--mint:#1e3a35;
   --soft:#120d1a;--card:#171020;--line:#2e2038;
   --shadow-pink:0 14px 34px -12px rgba(0,0,0,.85);
+  --overlay:rgba(0,0,0,.62);--sheet-shadow:0 -12px 40px -14px rgba(0,0,0,.9);
   --shadow-pink-lg:0 24px 54px -14px rgba(0,0,0,.9);
   --kk-furi:#b89ac4;--kk-pink-300:#ff7bb0;--kk-pink-50:#2a1a2e;
 }
@@ -127,6 +131,7 @@
   --lavender:#182c42;--gold:#ffd966;--gold-deep:#eec24c;--mint:#153b36;
   --soft:#0b131d;--card:#101a26;--line:#20344a;
   --shadow-pink:0 14px 34px -12px rgba(0,0,0,.85);
+  --overlay:rgba(0,0,0,.62);--sheet-shadow:0 -12px 40px -14px rgba(0,0,0,.9);
   --shadow-pink-lg:0 24px 54px -14px rgba(0,0,0,.9);
   --kk-furi:#86a6c2;--kk-pink-300:#4fb4f0;--kk-pink-50:#14263a;
 }
@@ -145,6 +150,7 @@
   --lavender:#291f45;--gold:#ffe08a;--gold-deep:#efcb6e;--mint:#1f3446;
   --soft:#0e0a18;--card:#151027;--line:#2c2246;
   --shadow-pink:0 14px 34px -12px rgba(0,0,0,.85);
+  --overlay:rgba(0,0,0,.62);--sheet-shadow:0 -12px 40px -14px rgba(0,0,0,.9);
   --shadow-pink-lg:0 24px 54px -14px rgba(0,0,0,.9);
   --kk-furi:#9689bd;--kk-pink-300:#a084f9;--kk-pink-50:#241b3a;
 }

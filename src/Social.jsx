@@ -1,5 +1,5 @@
 import React,{useEffect,useState} from 'react';
-import {Navigate} from 'react-router-dom';
+import {Navigate,Link} from 'react-router-dom';
 import {ChevronRight,Search,UserPlus,Check,X,Users,Trophy,Medal,Sparkles} from 'lucide-react';
 import {useAuth} from './context/AuthContext.jsx';
 import {GENDERS,CHARACTERS,PICKABLE_CHARS,GENDER_PAIRS,COMING_SOON,charPath,applyCharTheme,charThemeOf,useDarkMode,CATEGORY_META,FRAME_META,HANDLE_RE,patchProfile,friendsAction,Avatar,useAchToast} from './lib/social.jsx';
@@ -24,6 +24,13 @@ export function OnboardingWizard({onDone}){
   const [error,setError] = useState('');
   // Guard SETELAH semua hook — hook order harus konsisten antar render.
   if(!isAuthenticated) return <Navigate to="/login" replace/>;
+  /* Onboarding SELESAI -> keluar dari wizard. Tanpa baris ini rute /onboarding
+     memutar balik ke Langkah 1: `step` diturunkan dari onboardedStep, dan begitu
+     nilainya 'done' ia tidak lagi cocok 'handle' sehingga jatuh ke 'gender'. Dulu
+     jalan keluarnya cuma prop onDone, tetapi rute /onboarding di main.jsx merender
+     wizard TANPA prop itu — jadi user yang menyimpan handle langsung terlempar ke
+     layar pertama lagi dan tidak pernah bisa masuk aplikasi. */
+  if(user?.onboardedStep==='done') return <Navigate to="/belajar" replace/>;
 
   // Pilih gender → tampilkan pasangan awal gender itu; karakter default ikut.
   const pickGender = (g)=>{
@@ -158,23 +165,9 @@ export function ProfileEditor(){
       <button className="secondary tap" disabled={busy || cooldownActive || !handle.trim() || handle.trim()===(p.handle||'')} onClick={()=>save({handle:handle.trim()},'Handle')}>{cooldownActive?'Terkunci':'Simpan'}</button>
     </div>
     {cooldownActive && <p className="cooldownNote">Handle bisa diganti lagi setelah {new Date(data.handleCooldownEndsAt).toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'})} (aturan 7 hari).</p>}
-    <div><p className="muted" style={{margin:'4px 0 8px'}}>Karakter <small style={{fontWeight:400}}>· tema warna mengikuti karakter, ganti kapan saja</small></p>
-      <div className="charGrid">{PICKABLE_CHARS.map(id=>{const unlocked=(p.charactersUnlocked||[]).includes(id),soon=COMING_SOON.includes(id);
-        return <button key={id} type="button" disabled={!unlocked} className={`charTile tap ${p.characterId===id?'on':''} ${!unlocked?'locked':''}`} onClick={()=>unlocked&&p.characterId!==id&&(applyCharTheme(id),save({characterId:id,theme:charThemeOf(id)},'Karakter'))}>
-          <img src={charPath(id,'idle')} alt={CHARACTERS[id].name}/>
-          <b>{CHARACTERS[id].name}</b>
-          <small>{unlocked?CHARACTERS[id].species:soon?'Segera hadir':'Belum terbuka'}</small>
-        </button>;})}
-      </div>
-    </div>
-    <div><p className="muted" style={{margin:'4px 0 8px'}}>Tampilan</p>
-      <button type="button" className={dark?'darkRow tap on':'darkRow tap'} onClick={()=>setDark(!dark)} aria-pressed={dark}>
-        <span className="darkRowIcon">{dark?'☀︎':'☾︎'}</span>
-        <span className="darkRowLabel">Mode gelap</span>
-        <span className="darkSwitch" aria-hidden="true"><i/></span>
-      </button>
-      <p className="cooldownNote">Tersimpan di perangkat ini saja — ponsel bisa gelap tanpa mengubah tampilan di laptop.</p>
-    </div>
+    {/* Karakter & mode gelap TIDAK lagi di sini — keduanya punya halaman sendiri di
+        /tema, yang juga jadi tempat karakter-karakter baru ditambahkan nanti. */}
+    <p className="cooldownNote">Karakter dan tampilan gelap diatur di halaman <Link to="/tema">Tema</Link>.</p>
     <div><p className="muted" style={{margin:'4px 0 8px'}}>Visibilitas di papan peringkat global</p>
       <div className="visibilityToggle">
         <button className={p.visibility==='public'?'on':''} onClick={()=>p.visibility!=='public'&&save({visibility:'public'},'Visibilitas')}>◉ Publik</button>
@@ -183,6 +176,57 @@ export function ProfileEditor(){
     </div>
     {msg && <p className="cooldownNote" style={{color:msg.includes('✓')?'var(--ok)':'var(--bad)',fontWeight:600}}>{msg}</p>}
   </div>;
+}
+
+/* ---------- Halaman Tema (rute /tema) ----------
+   Rumah tetap untuk pemilihan karakter beserta paletnya, dipisah dari editor profil
+   dan dari sudut kiri-bawah sidebar. Alasannya bukan kerapian semata: daftar karakter
+   akan bertambah, dan grid yang tumbuh butuh halaman penuh — bukan sela 200px di
+   bawah sakelar mode gelap. Mode gelap ikut ke sini karena satu pertanyaan yang sama:
+   "aplikasi ini kelihatan seperti apa buat saya". */
+export function ThemePage(){
+  const {user,refresh,isAuthenticated} = useAuth();
+  const toast = useAchToast();
+  const [dark,setDark] = useDarkMode();
+  const [busy,setBusy] = useState(false);
+  const [msg,setMsg] = useState('');
+  const [lokal,setLokal] = useState(null); // karakter pilihan optimistis
+  if(!isAuthenticated) return <Navigate to="/login" replace/>;
+  const aktif = lokal ?? (user?.characterId || 'momo');
+  const terbuka = user?.charactersUnlocked || ['momo'];
+  const pilih = async (id)=>{
+    if(id===aktif) return;
+    setLokal(id); applyCharTheme(id); setBusy(true); setMsg('');
+    const r = await patchProfile({characterId:id, theme:charThemeOf(id)});
+    setBusy(false);
+    if(!r.ok){ setLokal(null); return setMsg(r.data?.message || 'Gagal menyimpan karakter.'); }
+    toast(r.data.newAchievements);
+    await refresh();
+    setMsg(`${CHARACTERS[id].name} dipakai ✓`);
+  };
+  return <main className="page themePage">
+    <h1 className="pageTitle">Tema</h1>
+    <p className="muted">Pilih teman belajarmu. Warna seluruh aplikasi — tombol, kartu, ikon bab — mengikuti karakter yang kamu pakai.</p>
+    <div className="themeCharGrid">{PICKABLE_CHARS.map(id=>{
+      const unlocked = terbuka.includes(id), soon = COMING_SOON.includes(id);
+      return <button key={id} type="button" disabled={!unlocked||busy} aria-pressed={aktif===id}
+        className={`themeCharCard tap ${aktif===id?'on':''} ${!unlocked?'locked':''}`} onClick={()=>unlocked&&pilih(id)}>
+        <span className="themeCharArt"><img src={charPath(id,aktif===id?'happy':'idle')} alt=""/></span>
+        <b>{CHARACTERS[id].name}</b>
+        <small>{CHARACTERS[id].species}</small>
+        <em>{unlocked?CHARACTERS[id].desc:soon?'Segera hadir':'Belum terbuka'}</em>
+        {aktif===id&&<span className="themeCharBadge">Dipakai</span>}
+      </button>;})}
+    </div>
+    {msg&&<p className="themeMsg">{msg}</p>}
+    <h2 className="themeSubHead">Tampilan</h2>
+    <button type="button" className={dark?'darkRow tap on':'darkRow tap'} onClick={()=>setDark(!dark)} aria-pressed={dark}>
+      <span className="darkRowIcon">{dark?'☀︎':'☾︎'}</span>
+      <span className="darkRowLabel">Mode gelap</span>
+      <span className="darkSwitch" aria-hidden="true"><i/></span>
+    </button>
+    <p className="cooldownNote">Mode gelap tersimpan di perangkat ini saja — ponsel bisa gelap tanpa mengubah tampilan di laptop. Pilihan karakter tersimpan di akun, jadi ikut ke perangkat mana pun.</p>
+  </main>;
 }
 
 /* ---------- Halaman teman ---------- */
