@@ -1,4 +1,10 @@
 import {TOPIC,REVIEW,SECTION_ID_DESC,BODY_ID,HOOK_ID,POINT_ID,TIP_HEADING} from './content/translations.js';
+/* Rujukan soal ujian ASLI per level: {"<bab>-<level>": [[tahun,nomor] x5]} — 8,8 KB,
+   dibangun scripts/build-level-quiz.mjs dari kecocokan topik level dengan teks soal.
+   Yang disimpan cuma rujukan; teksnya dimuat DINAMIS oleh Quiz dari chunk ujian, jadi
+   bundle utama tidak menanggung 2 MB bank soal. Soal template di bawah tetap ada dan
+   dipakai sebagai cadangan bila chunk itu gagal dimuat (offline, jaringan putus). */
+import LEVEL_QUIZ from './content/level-quiz.json' with { type: 'json' };
 
 export const glossary = [
   ['尊厳','そんげん','Martabat manusia'],['自立支援','じりつしえん','Dukungan kemandirian'],['自己決定','じこけってい','Penentuan diri'],['QOL','Quality of Life','Kualitas hidup'],['アドボカシー','advocacy','Advokasi hak pengguna'],['傾聴','けいちょう','Mendengar aktif'],['共感','きょうかん','Empati'],['介護保険','かいごほけん','Asuransi perawatan'],['地域包括ケアシステム','ちいきほうかつケアシステム','Sistem care berbasis komunitas'],['認知症','にんちしょう','Demensia'],['BPSD','behavioral and psychological symptoms','Gejala perilaku dan psikologis demensia'],['誤嚥','ごえん','Aspirasi/tersedak masuk saluran napas'],['褥瘡','じょくそう','Luka tekan'],['喀痰吸引','かくたんきゅういん','Suction dahak'],['介護過程','かいごかてい','Proses介護']
@@ -124,7 +130,7 @@ function makeLevel(sectionId, plan, levelId, topic){
  // 5 soal per level = 5 template BERBEDA (stride 5 coprime dengan 12 → tidak ada yang terulang).
  const start=hashSeed(`s${sectionId}-l${levelId}`)%qTemplates.length;
  const questions=[0,1,2,3,4].map(i=>makeQuestion({sectionId,levelId,topic,topicId:titleId,qIndex:i,tpl:qTemplates[(start+i*5)%qTemplates.length],difficulty}));
- return {id:levelId,titleJa:`${topic}`,titleId,objective:`${topic}の基本を理解し、事例に応用する`,objectiveId:`Memahami ${titleId} dan menerapkannya pada kasus.`,isReview,materi:[makeGeneratedJapaneseCard({sectionId,levelId,topic,titleId,cardIndex:0,type:'hook'}),makeGeneratedJapaneseCard({sectionId,levelId,topic,titleId,cardIndex:1,type:'explain'}),makeGeneratedJapaneseCard({sectionId,levelId,topic,titleId,cardIndex:2,type:'explain'}),makeGeneratedJapaneseCard({sectionId,levelId,topic,titleId,cardIndex:3,type:isReview?'tip':'explain'}),makeGeneratedJapaneseCard({sectionId,levelId,topic,titleId,cardIndex:4,type:'recap'}),{id:`generated-s${sectionId}l${levelId}m5`,type:'terms',heading:{ja:'関連用語',id:'Istilah terkait'},terms:levelTerms(sectionId,levelId)}],questions};
+ return {id:levelId,titleJa:`${topic}`,titleId,objective:`${topic}の基本を理解し、事例に応用する`,objectiveId:`Memahami ${titleId} dan menerapkannya pada kasus.`,isReview,questionRefs:LEVEL_QUIZ[`${sectionId}-${levelId}`]||null,materi:[makeGeneratedJapaneseCard({sectionId,levelId,topic,titleId,cardIndex:0,type:'hook'}),makeGeneratedJapaneseCard({sectionId,levelId,topic,titleId,cardIndex:1,type:'explain'}),makeGeneratedJapaneseCard({sectionId,levelId,topic,titleId,cardIndex:2,type:'explain'}),makeGeneratedJapaneseCard({sectionId,levelId,topic,titleId,cardIndex:3,type:isReview?'tip':'explain'}),makeGeneratedJapaneseCard({sectionId,levelId,topic,titleId,cardIndex:4,type:'recap'}),{id:`generated-s${sectionId}l${levelId}m5`,type:'terms',heading:{ja:'関連用語',id:'Istilah terkait'},terms:levelTerms(sectionId,levelId)}],questions};
 }
 
 

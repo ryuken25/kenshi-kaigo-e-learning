@@ -199,7 +199,7 @@ function Shell({children}){
   };
   const navItems = [
     {to:'/belajar', kind:'learn', label:'Belajar', match:p=>p==='/belajar'},
-    {to:'/final', kind:'exam', label:'Ujian', match:p=>p.startsWith('/final')},
+    {to:'/ujian', kind:'exam', label:'Ujian', match:p=>p.startsWith('/ujian')||p.startsWith('/final')},
     {to:'/glossary', kind:'terms', label:'Istilah', match:p=>p.startsWith('/glossary')},
     {to:'/friends', kind:'friends', label:'Teman', cls:'navFriends', match:p=>p.startsWith('/friends')},
     {to:'/leaderboard', kind:'rank', label:'Peringkat', cls:'navRank', match:p=>p.startsWith('/leaderboard')},
@@ -292,7 +292,7 @@ function Home(){
         </div>
         <span className="homeCardBadge"><Star size={18} fill="currentColor"/><b>{completedCount} selesai</b></span>
       </div>
-      <Link className="homeCard tap" to="/final">
+      <Link className="homeCard tap" to="/ujian">
         <span className="homeCardArt"><Icon name="stetoskop" size={30} fill="var(--pink-deep)" tint="var(--card)"/></span>
         <div className="homeCardBody"><b>Ujian Akhir</b><p>Soal asli 2021–2026 · 125 butir tiap tahun</p></div>
         <span className="homeCardGo"><ChevronRight size={18}/></span>
@@ -540,10 +540,33 @@ function AnswerPopup({correct,onClose}){
 
 /* ---------- Quiz (level mode, dengan retry round + preview handling) ---------- */
 
+/* Ubah satu soal ujian asli jadi bentuk soal level. Bentuk level (choices/choiceIds/
+   correctIndex) sengaja dipertahankan supaya seluruh alur Quiz — retry, XP, submit —
+   tidak berubah sama sekali. explanationJa dikosongkan: penjelasan yang kita punya
+   memang cuma bahasa Indonesia, dan LangText jatuh ke `id` saat `ja` kosong. */
+const adaptSoalUjian=(fq,sid,lid,i,year)=>({id:`s${sid}-l${lid}-q0${i+1}`,difficulty:'medium',questionJa:fq.prompt.ja,questionId:fq.prompt.id,choices:fq.options.map(o=>o.text.ja),choiceIds:fq.options.map(o=>o.text.id),correctIndex:fq.options.findIndex(o=>o.key===fq.answer),explanationJa:'',explanationId:fq.explanation.id,sourceYear:`${year} 問題${fq.no}`});
+
 function Quiz(){
   const {sectionId,levelId}=useParams();const s=getSection(sectionId),l=getLevel(sectionId,levelId);
   const [phase,setPhase]=useState('main');
   const [roundQuestions,setRoundQuestions]=useState(()=>l?.questions||[]);
+  /* Soal ujian asli dimuat sekali saat masuk level, SEBELUM soal pertama tampil —
+     kalau di-set belakangan, jawaban yang sudah dipilih ikut ter-reset. Gagal muat
+     (offline) tidak menghentikan apa pun: roundQuestions tetap berisi soal template. */
+  const [memuatSoal,setMemuatSoal]=useState(()=>Boolean(l?.questionRefs));
+  useEffect(()=>{
+    const refs=l?.questionRefs;
+    if(!refs||!refs.length){setMemuatSoal(false);return}
+    let batal=false;setMemuatSoal(true);
+    import('./content/final/index.js').then(m=>{
+      if(batal)return;
+      const bank=m.default,hasil=[];
+      refs.forEach(([y,no],i)=>{const fq=bank[y]?.questions?.[no-1];if(fq&&fq.no===no)hasil.push(adaptSoalUjian(fq,sectionId,levelId,i,y))});
+      if(hasil.length===refs.length)setRoundQuestions(hasil);
+      setMemuatSoal(false);
+    }).catch(()=>{if(!batal)setMemuatSoal(false)});
+    return ()=>{batal=true};
+  },[sectionId,levelId]);
   const [qi,setQi]=useState(0);
   const [selected,setSelected]=useState(null);
   const [correctFirstTry,setCorrectFirstTry]=useState(()=>new Set());
@@ -562,7 +585,9 @@ function Quiz(){
   if(!s||!l)return <Navigate to="/belajar"/>;
   const totalCount = l.questions.length;
   const q = roundQuestions[qi];
-  if(!q) return <KawaiiLoader/>;
+  // Tahan render sampai soal ujian selesai dimuat: menampilkan soal template dulu lalu
+  // menukarnya di tengah jalan membuat soal berganti di depan mata user.
+  if(memuatSoal||!q) return <KawaiiLoader/>;
 
   const answer=(i)=>{
     if(selected!==null) return;
@@ -725,6 +750,11 @@ function Profile(){
 
 /* Terapkan karakter + tema pilihan user ke root (doc 49: karakter menentukan
    skin). Keluar/di-logout → atribut dicabut (momo default). */
+/* Redirect tautan lama /final/... ke /ujian/... — parameter tahun & bagian dibawa
+   ikut supaya bookmark ke satu bagian tertentu mendarat di tempat yang sama. */
+function RedirectFinalYear(){const {year}=useParams();return <Navigate to={`/ujian/${year}`} replace/>}
+function RedirectFinalPart({result}){const {year,part}=useParams();return <Navigate to={`/ujian/${year}/bagian/${part}${result?'/hasil':''}`} replace/>}
+
 function ThemeApply(){
   const {user} = useAuth();
   // Mode gelap dipasang lebih dulu & tidak bergantung sesi: tamu di /login pun
@@ -808,11 +838,19 @@ function AppShell(){
       <Route path="/profile" element={<Profile/>}/>
       <Route path="/glossary" element={<Glossary/>}/>
       <Route path="/glossary/:slug" element={<GlossaryDetail/>}/>
-      <Route path="/final" element={<FinalHome/>}/>
-      <Route path="/final/unlimited" element={<UnlimitedFinal/>}/>
-      <Route path="/final/:year" element={<FinalYear/>}/>
-      <Route path="/final/:year/part/:part" element={<FinalQuiz/>}/>
-      <Route path="/final/:year/part/:part/result" element={<FinalResult/>}/>
+      <Route path="/ujian" element={<FinalHome/>}/>
+      <Route path="/ujian/latihan" element={<UnlimitedFinal/>}/>
+      <Route path="/ujian/:year" element={<FinalYear/>}/>
+      <Route path="/ujian/:year/bagian/:part" element={<FinalQuiz/>}/>
+      <Route path="/ujian/:year/bagian/:part/hasil" element={<FinalResult/>}/>
+      {/* Tautan lama /final tetap hidup: user bisa punya bookmark, dan riwayat
+          chat/e-mail memuat URL itu. Redirect, bukan rute kembar — supaya cuma
+          ada SATU alamat kanonik yang muncul di address bar. */}
+      <Route path="/final" element={<Navigate to="/ujian" replace/>}/>
+      <Route path="/final/unlimited" element={<Navigate to="/ujian/latihan" replace/>}/>
+      <Route path="/final/:year" element={<RedirectFinalYear/>}/>
+      <Route path="/final/:year/part/:part" element={<RedirectFinalPart/>}/>
+      <Route path="/final/:year/part/:part/result" element={<RedirectFinalPart result/>}/>
       <Route path="/practice" element={<Practice/>}/>
       <Route path="/section/:sectionId" element={<SectionOverview/>}/>
       <Route path="/section/:sectionId/recap" element={<Recap/>}/>

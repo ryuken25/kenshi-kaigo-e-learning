@@ -361,6 +361,37 @@
 /* halaman Ujian Akhir — semua class di FinalTest.jsx ini belum pernah punya rule sama sekali,
    jadi kartu tampil sebagai display:inline (satu baris teks 21px) dan tombol tanpa bentuk. */
 .finalHero{text-align:center;padding:6px 0 16px}
+/* ---------- beranda ujian: dua kartu aksi ----------
+   Latihan bebas dulunya pita tipis di atas grid tahun dan tidak terbaca sebagai
+   tombol. Sekarang kartu setinggi 64px dengan kotak ikon, dan varian Main memakai
+   warna aksen supaya jelas mana pintu yang dipakai sehari-hari. */
+.examActions{display:grid;gap:10px;margin:0 0 22px}
+.examAction{display:flex;align-items:center;gap:14px;min-height:64px;padding:14px 16px;border-radius:var(--radius-md);background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow-pink);text-decoration:none;color:inherit}
+.examActionIcon{flex:none;width:44px;height:44px;border-radius:16px;display:grid;place-items:center;font-size:20px;background:var(--pink-pale);color:var(--pink-text)}
+.examActionBody{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.examActionBody b{font:700 17px Fredoka;color:var(--ink)}
+.examActionBody small{font-size:12px;line-height:1.45;color:var(--muted)}
+.examAction svg{flex:none;color:var(--pink-text)}
+/* Kartu utama: isian aksen penuh. --btn-text dipakai, bukan putih mati — token itu
+   yang tahu warna teks mana yang kontras di tiap karakter & mode. */
+.examActionMain{background:var(--btn-bg);border-color:transparent}
+.examActionMain .examActionBody b,.examActionMain svg{color:var(--btn-text)}
+.examActionMain .examActionBody small{color:color-mix(in srgb,var(--btn-text) 78%,transparent)}
+.examActionMain .examActionIcon{background:color-mix(in srgb,var(--btn-text) 18%,transparent);color:var(--btn-text)}
+.examYearHead{font:600 17px Fredoka;color:var(--ink);margin:0 0 10px}
+/* ---------- pemilih mode di halaman tahun (sebelum mulai) ---------- */
+.examModePick{margin:4px 0 18px}
+.examModeLabel{font-size:11px;font-weight:700;letter-spacing:.04em;color:var(--muted);margin:0 0 7px}
+.examModeRow{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:9px}
+.examModeBtn{display:flex;flex-direction:column;align-items:flex-start;gap:3px;text-align:left;min-height:64px;padding:12px 14px;border-radius:var(--radius-md);background:var(--card);border:1.5px solid var(--line);color:inherit;cursor:pointer}
+.examModeBtn b{font:700 14.5px 'DM Sans';color:var(--ink)}
+.examModeBtn small{font-size:11.5px;line-height:1.4;color:var(--muted)}
+.examModeBtn.on{background:var(--pink-pale);border-color:var(--pink-text)}
+.examModeBtn.on b{color:var(--pink-text)}
+.examModeHint{margin:2px 0 24px;padding:13px 15px;border-radius:14px;background:var(--amber-1);border:1px solid color-mix(in srgb,var(--gold) 35%,transparent);font-size:12.5px;line-height:1.6;color:var(--ink)}
+/* Penanda mode di dalam quiz — menggantikan <select> yang dulu di bilah atas. */
+.quizModeTag{flex:none;padding:6px 12px;border-radius:999px;background:var(--soft);border:1px solid var(--line);font:700 11.5px 'DM Sans';color:var(--muted)}
+.quizModeTagPractice{background:var(--pink-pale);border-color:color-mix(in srgb,var(--pink) 40%,transparent);color:var(--pink-text)}
 .finalYearGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:12px;padding:0 0 18px}
 .finalYearCard{display:flex;flex-direction:column;gap:2px;padding:16px 18px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius-md);box-shadow:var(--shadow-pink);text-decoration:none;color:inherit}
 .finalYearCard b{font:600 26px Fredoka;color:var(--pink-text)}
