@@ -2,7 +2,7 @@ import { db } from './_db.mjs';
 import { requireUser, recomputeAllXp } from './_auth.mjs';
 import { reportClientAchievements } from './_achievements.mjs';
 import finalData from '../src/content/final/index.js';
-import { PARTS, PER_PART, UUID_RE, sanitizeAnswers, finalXpFor, buildReview } from './_final.mjs';
+import { PARTS, PER_PART, UUID_RE, sanitizeAnswers, finalXpFor, buildReview, isCorrectAnswer } from './_final.mjs';
 
 // GET  /api/final              — progress ujian semua tahun {progress, prefMode}.
 // POST /api/final              — submit satu bagian (25 soal).
@@ -109,7 +109,7 @@ export default async function handler(req, res) {
       // Hitung ulang jawaban benar dari bank soal — klaim client tidak dipakai.
       const qs = finalData[year].questions.slice((part - 1) * PER_PART, part * PER_PART);
       let correct = 0;
-      for (const x of qs) if (clean[String(x.no)] === x.answer) correct++;
+      for (const x of qs) if (clean[String(x.no)] !== undefined && isCorrectAnswer(x, clean[String(x.no)])) correct++;
       const answered = Object.keys(clean).length;
 
       const existing = await sql`SELECT * FROM final_progress WHERE user_id = ${user.id} AND year = ${year} AND part = ${part}`;

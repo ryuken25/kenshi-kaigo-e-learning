@@ -24,6 +24,11 @@ export function finalXpFor({ correct, isRepeat }) {
   return isRepeat ? Math.max(2, Math.round(full * 0.2)) : full;
 }
 
+// Kunci non-tunggal soal asli: `accepted` (array) menang atas `answer` — dipakai untuk
+// soal dianulir resmi (semua jawaban dihitung benar, meniru 全員に得点) dan kunci ganda.
+// DUPLIKAT SADAR dari src/content/final/index.js — ubah dua-duanya bersama.
+export const isCorrectAnswer = (q, v) => Array.isArray(q.accepted) ? q.accepted.includes(v) : v === q.answer;
+
 // Review per-soal untuk layar hasil. Bentuk entri SENGAJA cuma {no, chosen, correct}:
 // kunci jawaban, teks opsi benar, maupun indeksnya TIDAK BOLEH ikut keluar — soal yang
 // salah harus tetap salah sampai user mencoba ulang. Soal tak terjawab / nilai di luar
@@ -32,6 +37,6 @@ export function buildReview(questions, answers) {
   const src = answers && typeof answers === 'object' && !Array.isArray(answers) ? answers : {};
   return (Array.isArray(questions) ? questions : []).map(q => {
     const v = src[String(q.no)], chosen = ['1', '2', '3', '4', '5'].includes(v) ? v : null;
-    return { no: q.no, chosen, correct: chosen !== null && chosen === q.answer };
+    return { no: q.no, chosen, correct: chosen !== null && isCorrectAnswer(q, chosen) };
   }).sort((a, b) => a.no - b.no);
 }

@@ -374,6 +374,12 @@
 .finalQuizTop a{color:var(--muted);text-decoration:none;padding:8px 4px;min-height:44px;display:inline-flex;align-items:center}
 .finalQuizTop select{font:inherit;font-size:13px;min-height:44px;padding:8px 10px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:inherit}
 .finalQuestion{background:var(--card);border:1px solid var(--line);border-radius:var(--radius-md);padding:18px 16px;box-shadow:var(--shadow-pink)}
+/* Soal asli membawa \n untuk pemisah 〔事例〕 dan paragraf kasus — tanpa pre-line
+   seluruh kasus 総合問題 menggumpal jadi satu baris panjang. */
+.finalQuestion h2{white-space:pre-line}
+/* Figur soal asli (crop PDF resmi, mis. 第38回問49 arah 清拭). Latar putih SENGAJA
+   dipaku: crop-nya raster putih, dan di mode gelap tanpa latar ini tepiannya lenyap. */
+.finalQFigure{display:block;max-width:100%;margin:12px auto 2px;border-radius:12px;border:1px solid var(--line);background:#fff}
 .finalOptions{display:grid;gap:8px;padding-top:12px}
 .finalOptions button{display:flex;gap:10px;align-items:flex-start;text-align:left;width:100%;padding:14px 14px;border-radius:14px;border:1px solid var(--line);background:var(--soft);min-height:44px}
 .finalOptions button.selected{border-color:var(--pink-text);background:var(--pink-pale)}
