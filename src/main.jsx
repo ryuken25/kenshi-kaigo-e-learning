@@ -213,7 +213,11 @@ function Shell({children}){
      SEMUA rute dan SideRail yang membawa runtun & XP; appHome tinggal mengurus
      pita 960-1099px, tempat header lama masih tampil. */
   const bare = loc.pathname==='/' || loc.pathname==='/login';
-  return <div className={bare?"app appBare":loc.pathname==='/belajar'?"app appHome":"app"}>
+  /* appTheme: di halaman /tema sakelar mode gelap sudah ada di badan halaman, jadi
+     salinannya di sidebar dimatikan — dua sakelar yang sama di satu layar bikin ragu
+     mana yang berlaku. Di rute lain sakelar sidebar tetap ada sebagai akses cepat. */
+  const cls = bare ? "app appBare" : loc.pathname==='/belajar' ? "app appHome" : loc.pathname.startsWith('/tema') ? "app appTheme" : "app";
+  return <div className={cls}>
     <ScrollToTop/>
     <header>
       <Link to="/belajar" className="brand"><div className="kitty"><img src={brandSrc} alt="Kenshi Kaigo E-Learning"/></div><div><b>kenshi kaigo e-learning</b><small>belajar kaigo</small></div></Link>

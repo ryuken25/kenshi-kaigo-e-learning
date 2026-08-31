@@ -596,6 +596,9 @@ a.homeCard .homeCardArt{background:var(--lavender)}
   .sectionGrid{grid-template-columns:repeat(3,minmax(0,1fr))}
 }
 
+/* Halaman /tema memegang sakelar mode gelapnya sendiri; salinan di sidebar dimatikan. */
+.appTheme .sideDark{display:none}
+
 /* Landing & login: tanpa sesi, nav dan header cuma menyajikan tautan mati. */
 .appBare>nav,.appBare>header{display:none}
 .appBare{padding-bottom:24px}
