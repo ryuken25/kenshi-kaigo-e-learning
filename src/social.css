@@ -52,10 +52,6 @@
 .charToast img.achToastChar{width:56px;height:auto;flex:none}
 .obSkip{background:none;color:var(--muted);font-size:12px;font-weight:600;text-decoration:underline;margin-top:12px}
 .obError{color:var(--bad);font-size:12px;font-weight:600;margin:6px 0 0}
-.themeDotKitty{background:linear-gradient(135deg,#ffd3e7,#ff9ec1)}
-.themeDotSora{background:linear-gradient(135deg,#cfe9fb,#7cc0ec)}
-.themeDotMatcha{background:linear-gradient(135deg,#dcf0d4,#9ccb90)}
-.themeDotYozora{background:linear-gradient(135deg,#e6dcf8,#b39ae6)}
 
 /* ---------- form handle (onboarding + profil) ---------- */
 .handleForm{max-width:390px;margin:0 auto;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:var(--radius-lg);padding:16px;box-shadow:var(--shadow-pink)}

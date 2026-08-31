@@ -312,9 +312,11 @@ nav a{background:none;color:var(--muted);display:flex;flex-direction:column;gap:
 nav a:active .navEmoji{transform:scale(.82)}
 nav a.active .navEmoji{background:var(--pink-pale);transform:translateY(-2px);box-shadow:0 4px 10px -3px color-mix(in srgb,var(--pink) 50%,transparent);animation:bounceIn .4s ease}
 nav a.active{color:var(--pink-text)}
-/* Mobile (<1024px) nav cuma 4 item: Teman & Peringkat disembunyikan, tetap bisa lewat
-   kartu di halaman profil & sidebar desktop. nav a flex:1, jadi 4 item sisa tetap rata — tanpa gap. */
-@media (max-width:1023.98px){nav a.navFriends,nav a.navRank{display:none}}
+/* Ponsel (<768px) nav cuma 4 item: Teman & Peringkat disembunyikan, tetap bisa lewat
+   kartu di halaman profil. nav a flex:1, jadi 4 item sisa tetap rata — tanpa gap.
+   Ambangnya dulu 1023.98px — ikut menelan sidebar 960-1023px DAN nav bawah iPad
+   potret 768-959px, dua tempat yang lebarnya lebih dari cukup untuk 6 item. */
+@media (max-width:767.98px){nav a.navFriends,nav a.navRank{display:none}}
 
 /* Desktop shell: sidebar kiri seperti learning apps desktop; mobile tetap bottom nav 4 item */
 @media (max-width:600px){
@@ -483,6 +485,22 @@ a.homeCard .homeCardArt{background:var(--lavender)}
   .statRow{grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;padding-right:170px}
   .summaryArt{display:block}
 }
+/* ---------- iPad / tablet potret (768-959px) ----------
+   Di rentang ini layout ponsel cuma diregangkan: kolom 720px + nav bawah 4 item,
+   semua grid satu kolom — sisa lebar iPad (768/810/834px) kebuang. Kanvas naik ke
+   880px, grid beranda 2 kolom (bab & kartu) / 4 kolom (statistik), dan nav bawah
+   membawa 6 item penuh (aturan sembunyi Teman/Peringkat turun ke <768px).
+   Ditulis SETELAH blok min-width:360px supaya aturan .statRow-nya yang menang —
+   dua-duanya aktif di 768-959 dan spesifisitasnya sama, urutan file penentunya. */
+@media (min-width:768px) and (max-width:959.98px){
+  .app{max-width:880px}
+  nav{width:min(880px,100%)}
+  .welcome .quoteJa{font-size:clamp(24px,3.6vw,34px)}
+  .sectionGrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+  .sectionCard{min-height:120px}
+  .homeCards{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+  .statRow{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
 /* Blok desktop ini SENGAJA ditaruh paling akhir. Aturan display:none sidebar di
    atas punya spesifisitas sama, jadi kalau penyalaannya ditulis di @media yang
    lebih awal, yang menang justru yang belakangan — sidebar ikut hilang di 1440px
@@ -549,6 +567,9 @@ a.homeCard .homeCardArt{background:var(--lavender)}
 @media (min-width:960px) and (max-height:660px){
   .sideBrand{margin-bottom:10px}
   nav{padding-block:14px}
+  /* Baris spesies pemilih karakter ikut dikorbankan di jendela pendek — namanya
+     cukup, dan ubin turun ~12px sehingga sakelar gelap tetap di atas lipatan. */
+  .sideChar small{display:none}
 }
 /* Tiga kolom mulai 1600px: di 1920 kartu bab jadi 782px dan teksnya berhenti di 60%. */
 @media (min-width:1600px){
@@ -625,24 +646,33 @@ a.homeCard .homeCardArt{background:var(--lavender)}
   .appBare{padding-right:0}
 }
 
-/* ---------- pemilih tema di sidebar (>=960px) ----------
-   Kelas warna swatch (.themeDotKitty dkk) sudah ada di social.css dari picker lama
-   yang UI-nya sempat dicabut; di sini cuma kerangkanya yang dibangun ulang.
-   44px WAJIB: check-overflow.mjs mengukur SETIAP <a>/<button> di dalam .app
-   terhadap ambang target sentuh 44px, dan ini <button>. Titik warnanya sendiri
-   22px, sisanya area sentuh transparan. */
-.sideTheme{display:none;flex-direction:column;gap:7px;margin-bottom:10px}
-.sideThemeLabel{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.04em;padding-left:4px}
-.sideThemeDots{display:flex;align-items:center;gap:4px}
-.themeDot{width:44px;height:44px;flex:none;display:grid;place-items:center;border-radius:14px;background:none;border:1px solid transparent;padding:0;cursor:pointer}
-.themeDot i{display:block;width:22px;height:22px;border-radius:50%;border:1px solid color-mix(in srgb,var(--ink) 14%,transparent);transition:transform .18s cubic-bezier(.34,1.56,.64,1)}
-/* Titik AKTIF: cincin di kotaknya, bukan sekadar titik yang membesar — di tema
-   gelap perbedaan ukuran saja nyaris tak terbaca. */
-.themeDot.on{background:var(--pink-pale);border-color:color-mix(in srgb,var(--pink) 45%,transparent)}
-.themeDot.on i{transform:scale(1.18)}
-@media(hover:hover){.themeDot:hover i{transform:scale(1.12)}}
+/* ---------- pemilih karakter di sidebar (>=960px) ----------
+   Menggantikan pemilih tema titik warna: tema warna sekarang MENGIKUTI karakter
+   (charThemeOf), satu pilihan untuk dua hal — Shell.pilihChar mem-PATCH
+   characterId+theme berpasangan. Kolom theme tetap sumber palet di ThemeApply,
+   jadi akun lama yang belum menyentuh karakter tidak berubah warna.
+   min-height 44px WAJIB: check-overflow.mjs mengukur SETIAP <a>/<button> di
+   dalam .app terhadap ambang target sentuh 44px, dan ubin ini <button>. */
+.sideChars{display:none;flex-direction:column;gap:7px;margin-bottom:10px}
+.sideCharsLabel{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.04em;padding-left:4px}
+.sideCharsHint{font-weight:600;letter-spacing:0;opacity:.8}
+.sideCharGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.sideChar{display:flex;flex-direction:column;align-items:center;gap:3px;min-height:44px;padding:9px 3px 7px;border-radius:14px;background:none;border:1px solid transparent;cursor:pointer}
+.sideChar img{display:block;width:40px;height:auto;transition:transform .18s cubic-bezier(.34,1.56,.64,1)}
+.sideChar b{font:700 11px 'DM Sans';color:var(--ink)}
+.sideChar small{font-size:9px;font-weight:600;line-height:1.25;text-align:center;color:var(--muted)}
+/* Ubin AKTIF: cincin di kotaknya, bukan sekadar gambar membesar — di tema gelap
+   perbedaan ukuran saja nyaris tak terbaca (pola sama titik tema lama). */
+.sideChar.on{background:var(--pink-pale);border-color:color-mix(in srgb,var(--pink) 45%,transparent)}
+.sideChar.on img{transform:scale(1.08)}
+.sideChar.locked{cursor:default}
+.sideChar.locked img{filter:grayscale(1);opacity:.5}
+.sideChar.locked b{color:var(--muted)}
+.sideChar.locked small{font-style:italic}
+:root[data-mode=dark] .sideChar.on{background:color-mix(in srgb,var(--pink) 22%,transparent)}
+@media(hover:hover){.sideChar:not(:disabled):hover img{transform:scale(1.08)}}
 @media (min-width:960px){
-  .sideTheme{display:flex}
+  .sideChars{display:flex}
 }
 
 /* Kotak ikon di header bab (/section/N dan layar recap). Menggantikan emoji mentah

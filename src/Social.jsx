@@ -2,7 +2,7 @@ import React,{useEffect,useState} from 'react';
 import {Navigate} from 'react-router-dom';
 import {ChevronRight,Search,UserPlus,Check,X,Users,Trophy,Medal,Sparkles} from 'lucide-react';
 import {useAuth} from './context/AuthContext.jsx';
-import {THEMES,GENDERS,CHARACTERS,CHARACTER_IDS,PICKABLE_CHARS,GENDER_PAIRS,COMING_SOON,charPath,applyChar,useDarkMode,CATEGORY_META,FRAME_META,HANDLE_RE,patchProfile,friendsAction,Avatar,useAchToast} from './lib/social.jsx';
+import {GENDERS,CHARACTERS,PICKABLE_CHARS,GENDER_PAIRS,COMING_SOON,charPath,applyCharTheme,charThemeOf,useDarkMode,CATEGORY_META,FRAME_META,HANDLE_RE,patchProfile,friendsAction,Avatar,useAchToast} from './lib/social.jsx';
 
 /* ============================================================================
    KOMPONEN SOSIAL — onboarding, teman, papan peringkat, achievement, editor profil.
@@ -10,7 +10,6 @@ import {THEMES,GENDERS,CHARACTERS,CHARACTER_IDS,PICKABLE_CHARS,GENDER_PAIRS,COMI
    achievements.mjs). Tamu (belum login) diarahkan ke /login.
    ========================================================================== */
 
-const themeDotClass = (key)=>`themeDot${key.charAt(0).toUpperCase()}${key.slice(1)}`;
 const REL_LABEL = {self:'Kamu',friend:'Teman',incoming:'Minta berteman',outgoing:'Menunggu',blocked:'Diblokir',none:'Belum berteman'};
 
 /* ---------- Onboarding: gender+karakter → handle (doc 49: karakter menentukan tema) ---------- */
@@ -33,13 +32,15 @@ export function OnboardingWizard({onDone}){
   };
   const pickChar = (id)=>{
     setCharId(id);
-    applyChar(id); // skin ganti instan bahkan sebelum disimpan
+    applyCharTheme(id); // skin + palet tema ganti instan bahkan sebelum disimpan
   };
 
   const submitIdentity = async ()=>{
     if(!gender) return setError('Pilih salah satu dulu ya.');
     setSaving(true); setError('');
-    const r = await patchProfile({gender,characterId:charId,onboardedStep:'handle'});
+    // theme ikut dikirim segandeng characterId (charThemeOf) — pemetaan karakter→tema
+    // memang tanggung jawab client, lihat komentar gender di api/profile.mjs.
+    const r = await patchProfile({gender,characterId:charId,theme:charThemeOf(charId),onboardedStep:'handle'});
     setSaving(false);
     if(!r.ok) return setError(r.data?.message || 'Gagal menyimpan — coba lagi.');
     toast(r.data.newAchievements);
@@ -159,7 +160,7 @@ export function ProfileEditor(){
     {cooldownActive && <p className="cooldownNote">Handle bisa diganti lagi setelah {new Date(data.handleCooldownEndsAt).toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'})} (aturan 7 hari).</p>}
     <div><p className="muted" style={{margin:'4px 0 8px'}}>Karakter <small style={{fontWeight:400}}>· tema warna mengikuti karakter, ganti kapan saja</small></p>
       <div className="charGrid">{PICKABLE_CHARS.map(id=>{const unlocked=(p.charactersUnlocked||[]).includes(id),soon=COMING_SOON.includes(id);
-        return <button key={id} type="button" disabled={!unlocked} className={`charTile tap ${p.characterId===id?'on':''} ${!unlocked?'locked':''}`} onClick={()=>unlocked&&p.characterId!==id&&save({characterId:id},'Karakter')}>
+        return <button key={id} type="button" disabled={!unlocked} className={`charTile tap ${p.characterId===id?'on':''} ${!unlocked?'locked':''}`} onClick={()=>unlocked&&p.characterId!==id&&(applyCharTheme(id),save({characterId:id,theme:charThemeOf(id)},'Karakter'))}>
           <img src={charPath(id,'idle')} alt={CHARACTERS[id].name}/>
           <b>{CHARACTERS[id].name}</b>
           <small>{unlocked?CHARACTERS[id].species:soon?'Segera hadir':'Belum terbuka'}</small>

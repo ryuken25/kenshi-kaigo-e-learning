@@ -44,6 +44,22 @@ export const CHAR_SKINS=['momo','yuki','luna'];
 // Idempoten: menerima id DB ('sora') maupun skin ('yuki'). Tanpa ini charPath('yuki')
 // jatuh ke 'momo' karena 'yuki' bukan kunci CHAR_SKIN.
 export const skinOf=(id)=>CHAR_SKIN[id]||(CHAR_SKINS.includes(id)?id:'momo');
+// Karakter → key tema DB (app_users.theme, CHECK 006/007). "Tema warna mengikuti
+// karakter" dieksekusi DI SISI TULIS: tiap PATCH characterId wajib membawa theme
+// hasil peta ini (server sengaja tidak menggandeng — lihat komentar gender di
+// api/profile.mjs). ThemeApply tetap membaca kolom theme, jadi akun lama yang
+// belum pernah menyentuh karakter tidak berubah warna. Key kanan = nilai sah CHECK.
+export const CHAR_THEME={momo:'kitty',yuki:'sora',luna:'yozora'};
+export const charThemeOf=(id)=>CHAR_THEME[skinOf(id)]||'kitty';
+// Optimistis: palet + skin + token tombol berganti seketika sebelum PATCH selesai.
+// Skin momo = hapus atribut (:root polos sudah palet momo) — pola sama ThemeApply.
+export function applyCharTheme(id){
+  if(typeof document==='undefined')return;
+  const skin=skinOf(CHARACTER_IDS.includes(id)?id:'momo');
+  if(skin==='momo')document.documentElement.removeAttribute('data-theme');
+  else document.documentElement.setAttribute('data-theme',skin);
+  applyChar(id);
+}
 export const CHARACTERS={
   momo:   {name:'Momo',   species:'Kucing putih',  desc:'Hangat & telaten',    btnText:'#3a2a33'},
   sora:   {name:'Yuki',   species:'Anjing awan',   desc:'Tenang & penyabar',   btnText:'#ffffff'},
