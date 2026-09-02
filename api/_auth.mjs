@@ -23,6 +23,30 @@ export function getSessionToken(req) {
   return raw ? decodeURIComponent(raw) : null;
 }
 
+/* Lapis kedua anti-CSRF. Cookie sesi sudah SameSite=Lax, yang menahan POST lintas
+   situs di semua browser arus utama — ini pengaman berikutnya, bukan penggantinya:
+   berguna untuk browser lama dan untuk menutup celah kalau suatu saat cookie-nya
+   diubah ke SameSite=None demi keperluan lain.
+   Aturannya: kalau permintaan MEMBAWA Origin (browser selalu mengirimnya pada
+   POST/PATCH/DELETE), asalnya wajib sama dengan host yang melayani. Permintaan
+   tanpa Origin — curl, skrip smoke test, health check — dibiarkan lewat: yang
+   begitu tidak membawa cookie korban, jadi bukan CSRF.
+   Header host diambil dari x-forwarded-host dulu karena di belakang proxy Vercel
+   `host` bisa berisi hostname internal. */
+export function sameOrigin(req) {
+  const origin = req.headers.origin;
+  if (!origin) return true;
+  const host = String(req.headers['x-forwarded-host'] || req.headers.host || '');
+  try { return new URL(origin).host === host; } catch { return false; }
+}
+
+/** Tolak mutasi lintas situs. Kembalikan true kalau permintaan sudah ditolak. */
+export function rejectCrossSite(req, res) {
+  if (sameOrigin(req)) return false;
+  res.status(403).setHeader('Cache-Control', 'no-store').json({ error: 'cross_site_blocked', message: 'Permintaan lintas situs ditolak' });
+  return true;
+}
+
 // Loads authenticated user (full profile incl xp/streak). Returns null if not signed in / expired.
 export async function requireUser(sql, req) {
   const raw = getSessionToken(req);

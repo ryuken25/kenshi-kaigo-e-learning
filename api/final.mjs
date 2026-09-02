@@ -1,5 +1,5 @@
 import { db } from './_db.mjs';
-import { requireUser, recomputeAllXp } from './_auth.mjs';
+import { requireUser, recomputeAllXp, rejectCrossSite } from './_auth.mjs';
 import { reportClientAchievements } from './_achievements.mjs';
 import finalData from '../src/content/final/index.js';
 import { PARTS, PER_PART, UUID_RE, sanitizeAnswers, finalXpFor, buildReview, isCorrectAnswer } from './_final.mjs';
@@ -55,6 +55,8 @@ export default async function handler(req, res) {
     const sql = db();
     const user = await requireUser(sql, req);
     if (!user) return res.status(401).json({ error: 'Not signed in' });
+    // Mutasi lintas situs ditolak (lapis kedua di luar cookie SameSite=Lax).
+    if (req.method !== 'GET' && rejectCrossSite(req, res)) return;
 
     if (req.method === 'GET') {
       res.setHeader('Cache-Control', 'private, no-store');

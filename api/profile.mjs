@@ -1,5 +1,5 @@
 import { db } from './_db.mjs';
-import { requireUser } from './_auth.mjs';
+import { requireUser, rejectCrossSite } from './_auth.mjs';
 import { evaluateAchievements } from './_achievements.mjs';
 import { CHARACTERS, STARTER_PAIRS } from './_characters.mjs';
 
@@ -53,6 +53,8 @@ export default async function handler(req, res) {
     const sql = db();
     const user = await requireUser(sql, req);
     if (!user) return res.status(401).json({ error: 'Not signed in' });
+    // Mutasi lintas situs ditolak (lapis kedua di luar cookie SameSite=Lax).
+    if (req.method !== 'GET' && rejectCrossSite(req, res)) return;
 
     if (req.method === 'GET') {
       res.setHeader('Cache-Control', 'private, no-store');

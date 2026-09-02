@@ -1,5 +1,5 @@
 import { db } from '../_db.mjs';
-import { requireUser } from '../_auth.mjs';
+import { requireUser, rejectCrossSite } from '../_auth.mjs';
 import finalData from '../../src/content/final/index.js';
 import { PARTS, PER_PART, sanitizeAnswers } from '../_final.mjs';
 
@@ -21,6 +21,8 @@ export default async function handler(req, res) {
     const sql = db();
     const user = await requireUser(sql, req);
     if (!user) return res.status(401).json({ error: 'Not signed in' });
+    // Mutasi lintas situs ditolak (lapis kedua di luar cookie SameSite=Lax).
+    if (req.method !== 'GET' && rejectCrossSite(req, res)) return;
 
     const entries = Array.isArray(req.body?.entries) ? req.body.entries : [];
     if (entries.length > 40) return res.status(400).json({ error: 'invalid_input', message: 'too many entries' });
